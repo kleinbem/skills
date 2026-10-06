@@ -14,6 +14,11 @@
       "name": "kleinbem-fleet",
       "source": "./plugins/kleinbem-fleet",
       "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace"
+    },
+    {
+      "name": "buzz",
+      "source": "./plugins/buzz",
+      "description": "block/buzz contribution workflow: title, DCO, PR template, tests and checks"
     }
   ]
 }
