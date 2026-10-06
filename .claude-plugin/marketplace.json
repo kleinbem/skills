@@ -1,0 +1,19 @@
+{
+  "name": "kleinbem",
+  "description": "Agent skills from the kleinbem workspace",
+  "owner": {
+    "name": "Martin Kleinberger"
+  },
+  "plugins": [
+    {
+      "name": "nixpkgs",
+      "source": "./plugins/nixpkgs",
+      "description": "Nixpkgs contribution workflow: base branch, commit and meta conventions, pre-push checks"
+    },
+    {
+      "name": "kleinbem-fleet",
+      "source": "./plugins/kleinbem-fleet",
+      "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace"
+    }
+  ]
+}

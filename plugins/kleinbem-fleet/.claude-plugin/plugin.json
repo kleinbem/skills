@@ -1,0 +1,7 @@
+{
+  "name": "kleinbem-fleet",
+  "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

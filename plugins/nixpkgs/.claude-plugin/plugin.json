@@ -1,0 +1,7 @@
+{
+  "name": "nixpkgs",
+  "description": "Nixpkgs contribution workflow: base branch, commit and meta conventions, pre-push checks",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}
