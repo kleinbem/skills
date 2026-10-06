@@ -5,6 +5,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | Plugin | Skill | What it covers |
 | --- | --- | --- |
 | `nixpkgs` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks |
+| `buzz` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 
 ## Install in Claude Code
