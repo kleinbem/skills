@@ -19,6 +19,11 @@
       "name": "buzz",
       "source": "./plugins/buzz",
       "description": "block/buzz contribution workflow: title, DCO, PR template, tests and checks"
+    },
+    {
+      "name": "mesh-llm",
+      "source": "./plugins/mesh-llm",
+      "description": "Mesh-LLM/mesh-llm contribution workflow: just builds, validation by change type, Conventional Commits, no agent trailers, PR template"
     }
   ]
 }
