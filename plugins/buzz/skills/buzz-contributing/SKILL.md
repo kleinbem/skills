@@ -58,7 +58,28 @@ Environment notes (NixOS):
   environment of a Nix build (`nix-shell -A buzz-desktop`, unpack/patch/configure, `pnpm build`).
 - Use one jj workspace per PR branch so the main checkout isn't disturbed.
 
-## 5. After opening
+## 5. What the reviewers check
+Most reviews are automated agents run by the maintainers (`chatgpt-codex-connector`, "Jude's
+code review agent" via jedwards27, "Carl" via wesbillman, wpfleger96's 🤖 reviews). They review
+the exact head commit, rate findings P0–P3, block on P1/P2, and re-review after every push.
+Recurring findings (#7991, #7121, #4741, #6583, #7261, #7756, #2633, #2968):
+- **Edge-case correctness:** races, lifecycle (work outliving teardown), two processes or turns
+  overwriting each other's state, recovery paths that delete newer data.
+- **Falsifiable tests:** a regression test must fail without the fix and exercise the real
+  path; "can pass without exercising repair" is a blocker.
+- **Error classification:** each failure maps to the right user-facing category (a storage
+  failure must not surface as "sign in again"); don't lose the underlying message.
+- **Subprocesses:** check exit status and stderr, not only stdout.
+- **Required CI on every platform** (incl. Windows) green; the PR's own new tests failing blocks.
+- **`unsafe`:** needs explicit maintainer authorization, and SECURITY.md/CONTRIBUTING must match.
+- **Big PRs** get "structurally blocked" (e.g. migration-number collisions with `main`); keep
+  them focused and rebased.
+
+Etiquette among contributors: don't open a competing PR. If someone already has one, build on
+it (a PR against their branch, or a review comment), keep their authorship, and credit them.
+Downstream (nixpkgs) can carry their commits with `fetchpatch2` meanwhile.
+
+## 6. After opening
 - Outside PRs wait until a maintainer authorises the Codex security review; until then the
   main CI is skipped. That is normal, not a failure.
 - Don't ping individuals or teams. If nothing moves for a couple of weeks, open one issue

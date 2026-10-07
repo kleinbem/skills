@@ -68,6 +68,26 @@ before acting on a rule from memory.
 7. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
    Tick a box only once it is true for the exact commits being pushed.
 
+## 4. What reviewers commonly ask for
+Recurring themes from committer reviews of comparable PRs (Tauri/Rust apps, services with
+modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148, #287923, #278454).
+- **Explain every non-obvious choice in a Nix comment**, including why a test is skipped or
+  `doCheck = false` (e.g. "no tests", "skipped in upstream CI too" with a link).
+- **Patches:** turn non-trivial inline `substituteInPlace` into patch files. For each hunk ask
+  "does it need Nix-specific knowledge?"; if not, it belongs upstream (link the upstream PR).
+- **Build FOSS from source**; prebuilt binaries are for unfree software. When compiling from
+  source, don't `patchelf` rpaths: `buildInputs` already end up in the rpath.
+- `fetchFromGitHub` with `tag = "v${version}"` rather than `rev`; `lib.getExe pkg` rather than
+  `${pkg}/bin/pkg`; build tools (`pkg-config`, `cmake`) in `nativeBuildInputs`.
+- **Tests:** link `passthru.tests` to `nixosTests`; new-style NixOS tests (no `handleTest`).
+- **NixOS modules:**
+  - configuration as RFC 42 `settings` (freeform, via `pkgs.formats.*`, with sensible defaults);
+  - secrets never in `settings` or the store, only loaded from files (`EnvironmentFile=` or
+    systemd credentials);
+  - a full systemd hardening set (e.g. generated with `shh`), `systemd.tmpfiles.settings` for dirs.
+- **Process:** read the whole review before pushing, apply every suggestion or answer it, and
+  don't make reviewers repeat themselves.
+
 Practical notes:
 - Run heavy builds one at a time; parallel Rust/CUDA/VM builds fail on memory.
 - A test suite that fails fast hides the next failure. Find them all in one pass with a
