@@ -9,7 +9,11 @@ Sources of truth, in the Nixpkgs checkout: `CONTRIBUTING.md`, `pkgs/README.md`,
 `pkgs/by-name/README.md`, `maintainers/README.md`. Read the relevant section
 before acting on a rule from memory.
 
-## 0. Decide the base branch FIRST
+## 0. Before starting
+- Search open and closed PRs (and issues) for the package first:
+  `gh search prs --repo NixOS/nixpkgs "<attr>"`. Build on or credit existing work instead of duplicating it.
+
+### Decide the base branch first
 - Check rebuild count (CI `rebuild` labels; estimate locally beforehand).
   - < 500 → `master`
   - 500–999 → `master`, but consider `staging`
@@ -28,6 +32,13 @@ before acting on a rule from memory.
 - Use unversioned set names (`python3Packages.foo`, not `python313Packages.foo`).
 - LLM-assisted work: `Assisted-by: <tool> (<model + version>)` trailer. `Co-authored-by` does not count.
   Disclose in the PR description too. Every line must be reviewed and understood by the human submitter.
+- The trailer is free-form but needs at least the tool name and the model name with version
+  (e.g. `Assisted-by: Claude Code (claude-opus-5-5)`). Attributions in another format can get a
+  PR closed (`CONTRIBUTING.md`, "Enforcement").
+- Draft PRs are exempt from the full self-review requirement, as long as some review was done and
+  the full review happens before marking ready. Useful to run CI or nixpkgs-review-gha early.
+- Running `nix-update` or other standard community automation is exempt; an LLM writing the
+  change or its commit message is not.
 - The disclosure also applies to PR comments and reviews, and to any tooling used to verify
   the output (`CONTRIBUTING.md`, "Automation/AI policy").
 
@@ -65,7 +76,11 @@ before acting on a rule from memory.
 6. `nixpkgs-review wip` (pre-commit) or `nixpkgs-review pr <N>` (after push) to build dependents.
    In a shallow clone, nixpkgs-review's fetch of the base fails ("unrelated histories"): create a
    local base branch and pass `--remote file://<clone> --branch <base>`.
-7. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
+   Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
+   run that comments) is a public action that needs the submitter's explicit OK.
+7. A new NixOS module gets an entry under "New Modules" in
+   `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`.
+8. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
    Tick a box only once it is true for the exact commits being pushed.
 
 ## 4. What reviewers commonly ask for
@@ -88,6 +103,11 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   - secrets never in `settings` or the store, only loaded from files (`EnvironmentFile=` or
     systemd credentials);
   - a full systemd hardening set (e.g. generated with `shh`), `systemd.tmpfiles.settings` for dirs.
+- **Derivation shape** (from review feedback collected by others): `strictDeps = true`;
+  `finalAttrs` instead of `rec`; `makeBinaryWrapper` when the wrapper needs no shell logic;
+  no top-level `with lib;`; keep build-only tools out of the runtime closure; `--set-default`
+  rather than `--set` for env vars users may want to override; install shell completions,
+  desktop files and icons when upstream ships them.
 - **Process:** read the whole review before pushing, apply every suggestion or answer it, and
   don't make reviewers repeat themselves.
 
