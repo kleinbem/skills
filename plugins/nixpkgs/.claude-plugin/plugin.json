@@ -1,6 +1,6 @@
 {
   "name": "nixpkgs",
-  "description": "Nixpkgs contribution workflow: base branch, commit and meta conventions, pre-push checks",
+  "description": "Nixpkgs contribution and maintenance: base branch, commit and meta conventions, pre-push checks, update PRs, merge bot, teams",
   "author": {
     "name": "Martin Kleinberger"
   }
