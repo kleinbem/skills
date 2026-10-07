@@ -75,6 +75,9 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   `doCheck = false` (e.g. "no tests", "skipped in upstream CI too" with a link).
 - **Patches:** turn non-trivial inline `substituteInPlace` into patch files. For each hunk ask
   "does it need Nix-specific knowledge?"; if not, it belongs upstream (link the upstream PR).
+  The reviewer checklist (`pkgs/README.md`, "Reviewing contributions") requires every patch to
+  have a comment with either the upstream URL or the reason it wasn't upstreamed; an upstream
+  PR is a plus, not a condition. Patches available remotely are fetched (`fetchpatch2`), not vendored.
 - **Build FOSS from source**; prebuilt binaries are for unfree software. When compiling from
   source, don't `patchelf` rpaths: `buildInputs` already end up in the rpath.
 - `fetchFromGitHub` with `tag = "v${version}"` rather than `rev`; `lib.getExe pkg` rather than
