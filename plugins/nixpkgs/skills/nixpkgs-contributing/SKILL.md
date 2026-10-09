@@ -78,6 +78,9 @@ before acting on a rule from memory.
    local base branch and pass `--remote file://<clone> --branch <base>`.
    Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
    run that comments) is a public action that needs the submitter's explicit OK.
+   A nixpkgs-review-gha run shows "success" even when packages failed to build; judge it with
+   `scripts/review-result <run-id>` (per-system built/failed from the report, non-zero exit on
+   any failure, `--wait` to block until done), never by the run status.
 7. A new NixOS module gets an entry under "New Modules" in
    `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`.
 8. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
@@ -113,5 +116,8 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
 
 Practical notes:
 - Run heavy builds one at a time; parallel Rust/CUDA/VM builds fail on memory.
+- Check `substituteInPlace`/`--replace-fail` patterns against the source *after* `patches`
+  (`nix-shell -A <attr>`, then `unpackPhase` and `patchPhase`), not the raw `src`: a patch may
+  already have changed the line.
 - A test suite that fails fast hides the next failure. Find them all in one pass with a
   `nix-shell -A <attr>` replay of the build and `cargo test --no-fail-fast` (or the equivalent).
