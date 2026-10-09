@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# Summarise a nixpkgs-review-gha run from its report artifact.
+#
+# A run's status is "success" even when packages failed to build: the
+# workflow only fails on infrastructure errors. This reads the per-system
+# nixpkgs-review results instead and exits non-zero on any failed package
+# or missing report.
+#
+# Usage: review-result [--wait] [--repo OWNER/REPO] RUN_ID
+#   --repo  the nixpkgs-review-gha fork (default: <your GitHub login>/nixpkgs-review-gha)
+#   --wait  poll until the run has completed
+# Exit: 0 all built, 1 failures or missing reports, 2 still running.
+# Needs: gh (authenticated), jq.
+set -euo pipefail
+
+repo="" wait=0 run=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo) repo="$2"; shift 2 ;;
+    --wait) wait=1; shift ;;
+    -h | --help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) run="$1"; shift ;;
+  esac
+done
+[ -n "$run" ] || { echo "usage: review-result [--wait] [--repo OWNER/REPO] RUN_ID" >&2; exit 64; }
+[ -n "$repo" ] || repo="$(gh api user --jq .login)/nixpkgs-review-gha"
+
+while :; do
+  status=$(gh api "repos/$repo/actions/runs/$run" --jq .status)
+  [ "$status" = completed ] && break
+  if [ "$wait" = 0 ]; then
+    echo "run $run: $status"
+    exit 2
+  fi
+  sleep 300
+done
+
+# Review jobs, named "review (<system>)".
+jobs=$(gh api "repos/$repo/actions/runs/$run/jobs" --paginate --jq '.jobs[]
+  | select(.name | startswith("review ("))
+  | {system: (.name | ltrimstr("review (") | rtrimstr(")")), conclusion}')
+mapfile -t systems < <(jq -r .system <<<"$jobs")
+
+# Artifacts are uploaded unzipped, which `gh run download` can't extract;
+# the artifact's download URL returns the file itself.
+artifact=$(gh api "repos/$repo/actions/runs/$run/artifacts" \
+  --jq '.artifacts[] | select(.name == "reports.json") | .id')
+if [ -n "$artifact" ]; then
+  reports=$(gh api "repos/$repo/actions/artifacts/$artifact/zip")
+else
+  reports='[]'
+fi
+
+rc=0
+for system in "${systems[@]}"; do
+  report=$(jq --arg s "$system" '.[] | select(.system == $s)' <<<"$reports")
+  if [ -z "$report" ]; then
+    conclusion=$(jq -r --arg s "$system" 'select(.system == $s) | .conclusion' <<<"$jobs")
+    echo "✗ $system: no report (job $conclusion)"
+    rc=1
+    continue
+  fi
+  jq -r --arg s "$system" '
+    def names($k): [.result[$k][]?.name];
+    (names("failed") + names("still_failing")) as $bad
+    | "\(if ($bad | length) == 0 then "✓" else "✗" end) \($s) @ \(.head[:12]): "
+      + "\(names("built") | length) built"
+      + (if ($bad | length) > 0 then ", failed: \($bad | join(" "))" else "" end)
+      + (if (names("broken") | length) > 0 then ", broken: \(names("broken") | join(" "))" else "" end)
+      + (if (names("tests") | length) > 0 then ", tests: \(names("tests") | join(" "))" else "" end)
+  ' <<<"$report"
+  if jq -e '(.result.failed + .result.still_failing) | length > 0' <<<"$report" >/dev/null; then
+    rc=1
+  fi
+done
+
+[ "${#systems[@]}" -gt 0 ] || { echo "✗ run $run has no review jobs"; rc=1; }
+exit "$rc"
