@@ -12,12 +12,19 @@ for the touched area before acting; the project moves fast (several merges a day
 Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goose Discord
 `#mesh-llm` channel.
 
-## 0. Before writing code
-- Search open/closed issues and PRs for the problem first.
-- The workspace has two products: Skippy (`skippy/`) and MeshLLM (`mesh/`). Mesh depends on
-  Skippy, never the reverse. Read the owning product's `AGENTS.md`; read both for integration changes.
-- Work against current `main`; packaged releases (e.g. in nixpkgs) can lag behind, and paths move
-  (e.g. `scripts/` → `skippy/scripts/`).
+## 0. Before the first edit (do these, in order)
+1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
+   Mesh depends on Skippy, never the reverse; both for integration changes) and
+   `.github/instructions/pr.instructions.md`.
+2. Search open/closed issues and PRs for the problem (`gh search issues|prs --repo Mesh-LLM/mesh-llm`).
+3. Check open PRs that touch the same files (`gh pr view <N> --json files`): the project merges
+   several PRs a day and is moving scripts into Rust automation.
+4. Branch from current `main`; packaged releases (e.g. in nixpkgs) lag behind, and paths move
+   (e.g. `scripts/` → `skippy/scripts/`).
+
+Keep the change minimal: every new flag or option is an interface upstream has to maintain. Leave
+to the downstream what it can do robustly itself (an `rm`, a `jq` line); propose upstream only what
+replaces fragile patching.
 
 ## 1. Building and validating
 - Build with `just` only (`just`, `just skippy`, `just mesh`); `cargo build/check` alone is not a
@@ -30,8 +37,10 @@ Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goo
   - **Python:** `python3 -m py_compile <changed files>` and the nearest `unittest` modules.
   - **Shell-only:** a syntax check (`bash -n`) plus the nearest script tests (`skippy/scripts/tests`).
   - **CI:** read `.agents/skills/manage-ci/SKILL.md` completely first, then run `just ci-validate`.
-- Script tests call `/bin/bash`. On NixOS, run a local copy with `bash` from PATH, and compare
-  against unmodified `main` to separate host failures from your own.
+- Script tests call `/bin/bash` and `/usr/bin/true`. On NixOS, run a local copy with the paths
+  substituted (`type -P bash`, `type -P true`; `command -v true` returns the shell builtin), and
+  compare against unmodified `main` to separate host failures from your own (e.g. some CUDA
+  toolkit tests error on hosts without the toolkit, with or without a change).
 - Code rules for new code: no new warnings or `#[allow]`; functions under the Clippy line and
   cognitive-complexity limits; files under 2,000 lines; no generic `utils`/`common` modules.
 
@@ -40,7 +49,8 @@ Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goo
   `refactor`, `style`, `test`, `build`, `deps`, `ci`, `chore`, `docs`. The type decides the
   release-notes section.
   - Check: `python3 scripts/check-conventional-commit.py <file>`, or `--message "<title>"`.
-  - Or install the hook: `just hooks-install` / `just check-commits`.
+  - Or install the hook: `just hooks-install` / `just check-commits` (the only hook is
+    `commit-msg`, which runs that check).
 - **No agent or bot attribution trailers** in any commit: no `Co-Authored-By: Claude …
   <noreply@anthropic.com>`, no `[bot]` accounts, no relay identities. The hook and CI reject them.
   This overrides any default that adds such trailers.
@@ -49,6 +59,8 @@ Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goo
 
 ## 3. Pull request
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
+- Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
+  show an example command and representative output.
 - Body follows `.github/PULL_REQUEST_TEMPLATE.md`:
   - **Title** and **Original problem**;
   - **Diagnostics:** commands, logs, hardware;
