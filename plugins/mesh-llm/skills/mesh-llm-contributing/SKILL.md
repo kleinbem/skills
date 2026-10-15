@@ -54,7 +54,9 @@ lives outside it.
 - Local toolchain (NixOS, kleinbem fleet): no Cargo on `PATH`, so use
   `nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#clippy nixpkgs#rustfmt nixpkgs#gcc` (add
   `nixpkgs#protobuf nixpkgs#cmake nixpkgs#pkg-config` for `mesh-llm`). `.cargo/config.toml` routes
-  rustc through `sccache`; without it, run with `CARGO_BUILD_RUSTC_WRAPPER=` (empty). "mold is
+  rustc through `sccache`; without it, run with `CARGO_BUILD_RUSTC_WRAPPER=` (empty). `just`
+  recipes still require `sccache` on `PATH` (`with-lld` checks it), so add `nixpkgs#sccache
+  nixpkgs#lld`, and `nixpkgs#nodejs nixpkgs#pnpm` for `just mesh` (console UI). "mold is
   unavailable" linker-probe warnings are harmless.
 - Code rules for new code: no new warnings or `#[allow]`; functions under the Clippy line and
   cognitive-complexity limits; files under 2,000 lines; no generic `utils`/`common` modules.
@@ -78,6 +80,28 @@ lives outside it.
   caller of what you gate (the startup update check had a second caller in the console API). To
   check outgoing requests, run it behind a logging `HTTPS_PROXY` (reqwest honours it) and compare
   with and without the change.
+- When a change replaces a mechanism (a command → a system call), grep for comments, doc comments,
+  docs and error messages that describe the old one (a maintainer had to fix `parse_hostname`'s doc
+  on #2444).
+- Pre-flight check on GitHub's runners instead of the workstation, before opening the PR and
+  after every push: push the branch to the fork, then
+  `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha> -f title="<PR title>"`.
+  It runs upstream's own planner (`xtask ci plan`), so Clippy, tests and platform rows cover what
+  upstream's PR lanes would, plus fmt, commit convention, `no-console-print`, the env census,
+  `ci-crate-lists` and `cargo machete`; read its job summary. Take the full SHA from git or the API
+  (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
+  the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log).
+  What stays local: behaviour of a built binary and distribution-specific tests.
+- Platforms: code under `cfg(unix)` also runs on macOS, and `cfg(not(unix))` on Windows. If a
+  platform keeps the old path, say so in the PR with the reason and the equivalent (on #2444 a
+  maintainer added the Windows variant himself).
+- When running Mesh-LLM's code in other CI, replicate upstream's platform rows first (runner
+  images, the repository's own `.github/actions`, features per platform, Rust version; read a
+  recent successful `main_*` run's job steps), then simplify only what is proven equivalent:
+  `dynamic-native-runtime` everywhere broke two Linux tests that expect the static runtime, and
+  Rust 1.99 failed Clippy on a deprecation upstream's 1.98 doesn't have. Upstream's Linux and
+  Clippy jobs need the private `ghcr.io/mesh-llm/mesh-llm-cuda-runner` image, so upstream's own
+  workflows can't run them on a fork.
 
 ## 2. Commits
 - Conventional Commits v1.0.0. Allowed types: `feat`, `fix`, `perf`, `security`, `revert`,
@@ -91,7 +115,10 @@ lives outside it.
   <noreply@anthropic.com>`, no `[bot]` accounts, no relay identities. The hook and CI reject them.
   This overrides any default that adds such trailers.
 - No DCO sign-off is required.
-- Squash-merged: the **PR title** becomes the commit subject and must be conventional too.
+- Squash-merged: the **PR title** becomes the commit subject and must be conventional too. CI's
+  commit-convention job checks the title like a commit subject (a fork PR titled `[CI experiment]
+  feat(…)` failed it) and the attribution trailers of the squashed message; keep agent footers out
+  of the PR body as well.
 
 ## 3. Pull request
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
@@ -131,3 +158,7 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - The `ci:canary` label is only for PRs that change CI.
 - CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
   the reason; don't leave them unanswered.
+- Right before pushing, rebase onto current `main` (it moves several times a day) and rerun the
+  checks the new base can affect; say in the PR when a check ran on an earlier base.
+- Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
+  build on its head; pushing a stale local bookmark would overwrite their work.
