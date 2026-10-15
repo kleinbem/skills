@@ -58,6 +58,26 @@ lives outside it.
   unavailable" linker-probe warnings are harmless.
 - Code rules for new code: no new warnings or `#[allow]`; functions under the Clippy line and
   cognitive-complexity limits; files under 2,000 lines; no generic `utils`/`common` modules.
+- Run locally what the PR's Quality lane runs for the change (`ci-quality-slice.yml`), so the PR
+  doesn't wait for an approval only to fail:
+  - any `std::env::set_var`/`remove_var` added, moved or wrapped:
+    `cargo xtool repository env-mutation-census` (a build script's mutation needs a `SAFETY:`
+    comment that says "build script"; other files have stricter rules);
+  - dependencies changed: `cargo machete`; crates or workspace members changed:
+    `cargo xtool repo-consistency ci-crate-lists`;
+  - `mesh-llm-cli` parser files changed: `just cli-inventory-check` (needs npm).
+- Docs: authored docs live in `mesh/docs/` and `skippy/docs/`; the website copy
+  (`mesh/website/src/docs/pages/`) is synced by the release commits, so edit only the authored file.
+  Some tests read docs (`include_str!`, e.g. `mesh/docs/CLI.md` in the host-runtime plugin config
+  tests): grep for the touched file and run those tests.
+- Tests for a fix must fail on the old code: run them once against the code before the fix. Don't
+  change process-wide state such as `PATH` inside a test (tests run in parallel, and `set_var` is
+  `unsafe` in Rust 2024); re-run the test binary as a child with `--exact <test>` and the
+  environment set on the child.
+- Claims about runtime behaviour need a built binary, not only reading the code. Grep for every
+  caller of what you gate (the startup update check had a second caller in the console API). To
+  check outgoing requests, run it behind a logging `HTTPS_PROXY` (reqwest honours it) and compare
+  with and without the change.
 
 ## 2. Commits
 - Conventional Commits v1.0.0. Allowed types: `feat`, `fix`, `perf`, `security`, `revert`,
@@ -94,3 +114,20 @@ lives outside it.
   non-obvious follow-up work in comments (`.github/instructions/pr.instructions.md`).
 - The human submitter reviews the change before it is opened. Never claim review or testing in
   their name that they did not do.
+
+## 4. CI on the pull request
+Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI work) and
+`.github/workflows/`.
+- Five required checks, one workflow each: Quality, Website, Linux, macOS, Windows. A planner
+  selects the work from the changed paths and crates; unselected lanes succeed without running.
+  Quality runs commit convention, `cargo fmt`, Clippy over the affected crates and their reverse
+  dependencies, CI contracts and consistency (incl. `no-console-print`, the env-mutation census) and
+  `cargo machete`; Linux runs the Rust tests of the affected crates and their reverse dependencies.
+- Fork PRs wait in `action_required` until a maintainer approves the run, and each new push can need
+  approval again: push once the change is complete, not in small steps. Runs left unapproved are
+  closed as "failed" (zero jobs) when the PR merges; those notification emails are harmless.
+- The first failing job cancels the other lanes of the same revision; a cancelled lane is not a
+  failure of its own.
+- The `ci:canary` label is only for PRs that change CI.
+- CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
+  the reason; don't leave them unanswered.
