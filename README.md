@@ -7,6 +7,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `nixpkgs` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks |
 | `buzz` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
+| `mesh-llm` | `mesh-llm-contributing` | Pull requests to Mesh-LLM/mesh-llm: builds, validation, commit and PR rules |
+| `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
 
 ## Install in Claude Code
 
