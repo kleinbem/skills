@@ -5,20 +5,37 @@ description: Use when preparing, updating, or reviewing a pull request to block/
 
 # block/buzz Contribution & PR Workflow
 
-Source of truth: `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the repo.
-Read them before acting on a rule from memory; they change.
+Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
+repo. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
+contract, the ready-for-review checklist and upstream's own "Review-Proven Rules".
 
 ## 0. Before writing code
 - Search open PRs and issues for duplicates. The PR must link the closest one, or say "none found".
 - Anything beyond a small fix: open an issue first and get the approach acknowledged.
   Large refactors, dependency swaps and style-only churn without one are usually closed.
 - One logical change per PR. A bug fix plus a refactor is two PRs.
+- Non-trivial changes: read `VISION.md`, the `VISION_*.md` docs for the affected surface and
+  `TESTING.md` (plus any package-local one) first; the design must not work against them
+  (`AGENTS.md`, "Product Contract").
+- Apply `AGENTS.md`'s **Review-Proven Rules** before writing code; upstream mined them from its
+  own review threads, and authors fix 70–100% of these findings once flagged:
+  1. every caught failure leaves a durable retry record or propagates (no catch-log-succeed);
+  2. fence async results by generation, clear derived metadata on every removal path;
+  3. regression tests bind the production seam and are falsifiable (`TESTING.md`);
+  4. bound every resource, loop and process tree;
+  5. one user action = one atomic persist;
+  6. a guard must not hide the only recovery affordance;
+  7. new UI: audit assistive semantics (one owner per label, no duplicate screen-reader stops);
+  8. every input modality (keyboard, pointer, hotkey) is a first-class seam.
+- Architecture conventions (`AGENTS.md`, "Key Patterns"): prefer a new Nostr event kind
+  (`buzz-core/src/kind.rs`, handler in `buzz-relay`) over a new HTTP endpoint; channels scope by
+  `h` tag; agent-facing operations go into `buzz-cli` first.
 
 ## 1. Commits and title
 - Squash-merged: the PR title becomes the commit subject. Conventional Commits, type required
   (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`), scope encouraged: `fix(relay): …`.
-- Every commit needs a DCO sign-off (`Signed-off-by: Name <email>`); the DCO Check blocks the PR
-  without it. With jj, put the trailer in the description; when rewriting a pushed PR, keep it.
+- Every commit needs a DCO sign-off (`Signed-off-by: Name <email>`, `git commit -s`); the DCO
+  Check blocks the PR without it. `git rebase` and `git cherry-pick` need `--signoff` too. With jj, put the trailer in the description; when rewriting a pushed PR, keep it.
   The sign-off certifies the human owner wrote the change: only add it once they have reviewed it.
 - AI-assisted PRs are welcome and need no disclosure, but the human owns and must have reviewed
   the final code. Clearly unreviewed submissions get closed.
@@ -58,10 +75,22 @@ Environment notes (NixOS):
   environment of a Nix build (`nix-shell -A buzz-desktop`, unpack/patch/configure, `pnpm build`).
 - Use one jj workspace per PR branch so the main checkout isn't disturbed.
 
-## 5. What the reviewers check
-Most reviews are automated agents run by the maintainers (`chatgpt-codex-connector`, "Jude's
-code review agent" via jedwards27, "Carl" via wesbillman, wpfleger96's 🤖 reviews). They review
-the exact head commit, rate findings P0–P3, block on P1/P2, and re-review after every push.
+## 5. Ready for review
+`AGENTS.md`: open work as a **draft** and mark it ready only when, scaled to the change:
+1. an agent review ran and its blockers were fixed or explicitly declined by the human;
+2. an agent exercised the changed behaviour (app flow, local relay, or the changed command);
+3. **the human tested it themselves**. The agent gives exact steps and what working looks like,
+   then waits for explicit confirmation; never mark this step done for them;
+4. then `buzz-review-completed` goes into the PR description. Automated reviewers may skip a PR
+   because of it, so it is an attestation: remove it (and go back to draft) if later edits
+   change behaviour.
+
+## 6. What the reviewers check
+Most reviews are automated agents run by the maintainers: `chatgpt-codex-connector`, "Jude's
+code review agent" (jedwards27), "Carl"/"Star Lord" (wesbillman) and wpfleger96's 🤖 reviews.
+They review the exact head commit, rate findings P0–P3, block on P1/P2, and re-review after
+every push. Per `AGENTS.md` they post findings as comments, never as Request Changes, so a
+comment saying "Blocking" or "recommend blocking" is a blocker without a formal review state.
 Recurring findings (#7991, #7121, #4741, #6583, #7261, #7756, #2633, #2968):
 - **Edge-case correctness:** races, lifecycle (work outliving teardown), two processes or turns
   overwriting each other's state, recovery paths that delete newer data.
@@ -79,9 +108,19 @@ Etiquette among contributors: don't open a competing PR. If someone already has 
 it (a PR against their branch, or a review comment), keep their authorship, and credit them.
 Downstream (nixpkgs) can carry their commits with `fetchpatch2` meanwhile.
 
-## 6. After opening
-- Outside PRs wait until a maintainer authorises the Codex security review; until then the
-  main CI is skipped. That is normal, not a failure.
+## 7. After opening
+- Outside PRs only get the DCO, Semgrep, zizmor and security-authorisation checks. The main CI
+  (builds, tests, desktop E2E) starts when a maintainer authorises it, often by closing and
+  reopening the PR (#5997, #7216). That is normal, not a failure.
+- Expect weeks to months. Of the last 300 merged PRs, 12 came from outside contributors (not bots or Block staff); they
+  took 6 days to 75 days to merge (median about 8 weeks), while internal PRs often merge within
+  hours. The maintainer triaging outside PRs (ngthuydiem) validates the fix before and after
+  with concrete commands (#7998, #2669, #7619), so put copy-paste reproduction steps and the
+  expected before/after output in `### Testing`.
+- Independent confirmation helps: a linked issue where others reproduced the bug on their
+  platform (#3700, #5600).
 - Don't ping individuals or teams. If nothing moves for a couple of weeks, open one issue
   that lists the related PRs and asks for triage.
-- Updating a PR (force-push, editing the description) is fine and doesn't ping anyone.
+- Keep the PR mergeable: rebase when it conflicts with `main` (triagers resolve conflicts
+  otherwise, #2255). Before any review, force-pushing is fine; **once a review started, push new
+  commits instead** (`CONTRIBUTING.md`: "don't force-push during review").
