@@ -31,7 +31,52 @@ Verify the downstream premise before designing an upstream change: inspect the b
 expression. A planned CUDA toolkit change was dropped once the bundle showed the backend library
 lives outside it.
 
-## 1. Building and validating
+## 1. Designing the change: follow the repository's patterns
+Before designing, find the closest existing feature and mirror its shape: grep for an analogous
+setting, flag or type, and read the commit that introduced it (`git log -S '<symbol>'`); its file
+list is the checklist of touchpoints. Read the comments next to lists, tripwires and registries you extend:
+they often say what else has to change with them. Maintainers review against these patterns (from reviews on
+merged PRs; numbers are examples):
+- **Settings:** a user-facing option is a config setting in `mesh-llm-config`, not only an
+  environment variable (#2446: an env-only opt-out was sent back for a TOML setting with the
+  variable as override). Template: `analytics.enabled` (#1993). Touchpoints: the field in
+  `MeshConfig` and `RawMeshConfig` (a small type in its own `model/` module), the schema
+  declaration (`built_in_schema/declarations.rs`, `setting_schema.rs`), its presentation, the
+  wiring manifest, `mesh/website/src/docs/pages/config-reference.md` (canonical and checked by the
+  docs parity tests) and `mesh/docs/CONFIGURATION_PR8_CLOSEOUT_AUDIT.md`; struct literals of
+  `MeshConfig` in tests need the new field.
+  - An environment variable only overrides a setting: apply it in
+    `env_overrides.rs::apply_env_overrides` and add it to `CONFIG_OVERRIDE_ENV_NAMES` (two
+    tripwire tests pin that list); don't read a `MESH_LLM_*` override with `std::env::var`
+    elsewhere. An invalid value is a hard error, never a silent default. Each override also gets
+    a test through host-runtime's production `load_config` wrapper (`plugin/config/tests.rs`
+    asks for it in the comment above its tripwire).
+  - Schema metadata (apply mode, restart scope) and the docs row match what the host really does
+    (#2142); reject invalid values in typed validation instead of clamping them (#2113); add a
+    save/reload round-trip test, plus the protocol conversion if the setting syncs (#2133).
+  - Prefer a default-off setting over removing a capability users may rely on (#2307).
+- **File size:** when touching a file over 1,000 lines, put a separable new responsibility into
+  its own module (root `AGENTS.md`, "1k LoC refactoring rule"; #2300 asked to move a type out of a
+  1,681-line file); never let a file pass 2,000 lines.
+- **Persisted state:** write atomically (temporary file, rename, directory sync) and treat only
+  `NotFound` as "no record"; other read errors must not reset state (#2057, #2102, #2142).
+- **Protocol and wire changes:** keep them additive (new fields, subprotocol feature strings),
+  test a mixed mesh with an older release, and say whether a protocol version bump is needed
+  (#2285, #2299, #2316).
+- **Native patches (Skippy):** fold a fix into the patch that owns the code instead of adding a
+  patch (#2258, #2259, #2280, `skippy/AGENTS.md`); bump the ABI in lockstep in the header and
+  `skippy-ffi`, and list the ABI changes in the PR body (#2089, #2252).
+- **Tests:** an extracted test file keeps its env-mutation audit registration (#2291); tests
+  pass in the bare Linux lane without extra environment (#2364); every PR of a stack is green at
+  its own merge point (#2359, #2374).
+- **Docs follow the code:** doc comments that state a contract, README examples and the API
+  reference for new API objects change with it (#2291, #2300); a UI change needs a screenshot and
+  documented behaviour (#2315).
+- **Claims:** title and body claim no more than the code does (#2298: "phase 1" instead of
+  enforcement; #2377: "one body claim is false"). Reviewers reproduce stated test counts at the
+  head commit, so give exact commands and counts.
+
+## 2. Building and validating
 - Build with `just` only (`just`, `just skippy`, `just mesh`); `cargo build/check` alone is not a
   complete product build.
 - Run Cargo commands one at a time (lock conflicts otherwise).
@@ -59,7 +104,8 @@ lives outside it.
   nixpkgs#lld`, and `nixpkgs#nodejs nixpkgs#pnpm` for `just mesh` (console UI). "mold is
   unavailable" linker-probe warnings are harmless.
 - Code rules for new code: no new warnings or `#[allow]`; functions under the Clippy line and
-  cognitive-complexity limits; files under 2,000 lines; no generic `utils`/`common` modules.
+  cognitive-complexity limits; the file-size rule from section 1; no generic `utils`/`common`
+  modules.
 - Run locally what the PR's Quality lane runs for the change (`ci-quality-slice.yml`), so the PR
   doesn't wait for an approval only to fail:
   - any `std::env::set_var`/`remove_var` added, moved or wrapped:
@@ -103,7 +149,7 @@ lives outside it.
   Clippy jobs need the private `ghcr.io/mesh-llm/mesh-llm-cuda-runner` image, so upstream's own
   workflows can't run them on a fork.
 
-## 2. Commits
+## 3. Commits
 - Conventional Commits v1.0.0. Allowed types: `feat`, `fix`, `perf`, `security`, `revert`,
   `refactor`, `style`, `test`, `build`, `deps`, `ci`, `chore`, `docs`. The type decides the
   release-notes section.
@@ -120,7 +166,7 @@ lives outside it.
   feat(…)` failed it) and the attribution trailers of the squashed message; keep agent footers out
   of the PR body as well.
 
-## 3. Pull request
+## 4. Pull request
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
 - Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
   show an example command and representative output.
@@ -142,7 +188,7 @@ lives outside it.
 - The human submitter reviews the change before it is opened. Never claim review or testing in
   their name that they did not do.
 
-## 4. CI on the pull request
+## 5. CI on the pull request
 Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI work) and
 `.github/workflows/`.
 - Five required checks, one workflow each: Quality, Website, Linux, macOS, Windows. A planner
@@ -157,8 +203,14 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   failure of its own.
 - The `ci:canary` label is only for PRs that change CI.
 - CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
-  the reason; don't leave them unanswered.
-- Right before pushing, rebase onto current `main` (it moves several times a day) and rerun the
-  checks the new base can affect; say in the PR when a check ran on an earlier base.
+  the reason; don't leave them unanswered. It tends to ask for backward compatibility with
+  features that were never released; a maintainer said to take that with a grain of salt (#2132).
+- A push dismisses earlier approvals (repository ruleset; #2073, #2257), another reason to push
+  only complete changes.
+- Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
+  ask for a cherry-pick because it was off.
+- Right before pushing or opening, always rebase onto current `main` (it moves several times a
+  day), even when the new commits look unrelated, and rerun the checks; don't replace the rebase
+  with a note in the PR.
 - Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
   build on its head; pushing a stale local bookmark would overwrite their work.
