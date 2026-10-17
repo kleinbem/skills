@@ -10,7 +10,8 @@ Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGEN
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
 for the touched area before acting; the project moves fast (several merges a day).
 Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goose Discord
-`#mesh-llm` channel (https://discord.gg/goose-oss).
+`#mesh-llm` channel (https://discord.gg/n8R5VaWDAn; the `goose-oss` invite in the
+mesh-llm repo is dead).
 
 ## 0. Before the first edit (do these, in order)
 1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
