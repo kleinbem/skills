@@ -36,6 +36,8 @@ Verify the downstream premise before designing an upstream change: inspect the b
 (manifest, `patchelf --print-needed`, bundle layout) instead of reasoning from the package
 expression. A planned CUDA toolkit change was dropped once the bundle showed the backend library
 lives outside it.
+For what a package depends on (products, runtime discovery, network calls, paths), start from
+`references/packaging.md`; it says which facts are still unverified.
 
 ## 1. Designing the change: follow the repository's patterns
 Before designing, find the closest existing feature and mirror its shape: grep for an analogous
