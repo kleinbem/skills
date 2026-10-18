@@ -22,6 +22,11 @@ mesh-llm repo is dead).
    several PRs a day and is moving scripts into Rust automation.
 4. Branch from current `main`; packaged releases (e.g. in nixpkgs) lag behind, and paths move
    (e.g. `scripts/` → `skippy/scripts/`).
+5. Read the design docs for the area (`mesh/docs/design/`: crate ownership, testing, message
+   protocol) and the notes in `references/` (e.g. `references/config-lifecycle.md` for anything
+   in `MeshConfig`). Trace where a value you add goes (load, snapshot, apply, save) before
+   designing: #2446 put an env override into a field that an owner's config apply would have
+   written to `config.toml`.
 
 Keep the change minimal: every new flag or option is an interface upstream has to maintain. Leave
 to the downstream what it can do robustly itself (an `rm`, a `jq` line); propose upstream only what
@@ -51,14 +56,18 @@ merged PRs; numbers are examples):
     tripwire tests pin that list); don't read a `MESH_LLM_*` override with `std::env::var`
     elsewhere. An invalid value is a hard error, never a silent default. Each override also gets
     a test through host-runtime's production `load_config` wrapper (`plugin/config/tests.rs`
-    asks for it in the comment above its tripwire).
+    asks for it in the comment above its tripwire). Keep the override out of the persisted field
+    (a `#[serde(skip)]` field the getter prefers), or a config apply saves it
+    (`references/config-lifecycle.md`).
   - Schema metadata (apply mode, restart scope) and the docs row match what the host really does
     (#2142); reject invalid values in typed validation instead of clamping them (#2113); add a
     save/reload round-trip test, plus the protocol conversion if the setting syncs (#2133).
   - Prefer a default-off setting over removing a capability users may rely on (#2307).
 - **File size:** when touching a file over 1,000 lines, put a separable new responsibility into
   its own module (root `AGENTS.md`, "1k LoC refactoring rule"; #2300 asked to move a type out of a
-  1,681-line file); never let a file pass 2,000 lines.
+  1,681-line file); never let a file pass 2,000 lines. Reviewers (and CodeRabbit) also object to
+  a few added lines of new logic in a file already over 2,000 lines (`run_auto.rs`, #2446): put
+  the logic in a small module named for it and leave one call in the big file.
 - **Persisted state:** write atomically (temporary file, rename, directory sync) and treat only
   `NotFound` as "no record"; other read errors must not reset state (#2057, #2102, #2142).
 - **Protocol and wire changes:** keep them additive (new fields, subprotocol feature strings),
@@ -69,7 +78,9 @@ merged PRs; numbers are examples):
   `skippy-ffi`, and list the ABI changes in the PR body (#2089, #2252).
 - **Tests:** an extracted test file keeps its env-mutation audit registration (#2291); tests
   pass in the bare Linux lane without extra environment (#2364); every PR of a stack is green at
-  its own merge point (#2359, #2374).
+  its own merge point (#2359, #2374). A gate (a setting that turns something off) needs a test
+  that the gated work really doesn't happen, not only that the value parses: pass the request
+  in as a closure so the test can make it panic (#2446).
 - **Docs follow the code:** doc comments that state a contract, README examples and the API
   reference for new API objects change with it (#2291, #2300); a UI change needs a screenshot and
   documented behaviour (#2315).
