@@ -93,3 +93,30 @@ Use Nix instead:
 
 nixpkgs packages goose as `goose-cli` (maintainers asiantuntija, cloudripper, thardin). A packaging problem fixed
 upstream helps them; mention the nixpkgs angle in the issue when it applies.
+
+## 6. What reviews show
+
+From the last 80 closed or merged pull requests from forks (2026-10, 37 merged, 43 closed); numbers are examples.
+- **Most closed PRs never got a review.** 26 of 43 got the automated issue-first notice (`buzz:issue-first`) and were
+  closed because their issue wasn't Ready (#12414, #12415: "Issue #12413 is not Ready yet, so I'm closing this PR").
+  18 added a server to the retired MCP directory. Waiting for Ready is the single most important rule.
+- **Duplicates and stale fixes get closed:** check open PRs and `main` for the same fix first (#12500 closed as a
+  duplicate of #12509; #12654 "should be fixed on main now"). If a maintainer can't reproduce the problem, the
+  discussion moves to the issue (#12584).
+- **Scope is enforced:** reviewers ask to remove what the issue didn't agree on, including extra tests (#12528: "remove
+  this provider-specific wiring test to keep the PR within the agreed scope") and costly live tests whose data
+  changes over time (#12823). Smaller is better: unneeded parameters and flags get removed (#12629).
+- **Provider data is checked against the live service:** model IDs, context limits and prices must match the
+  provider's catalog, and custom providers that can list their models set `"dynamic_models": true` (#12528).
+- **Tests must prove the fix:** a regression test that fails against the previous implementation, all-target Clippy
+  and green CI are what approvals cite (#12710).
+- **Maintainers' own agents review too** (comments marked 🤖). They are suggestions; a maintainer may overrule them
+  (#12720), and contributors answer them like Codex comments: fix, or one line why not.
+- **The Codex reviewer enforces AGENTS.md:** most findings were P1 (15 of 19): the retired directory, `anyhow::Result`
+  in tests, missing `goose-self-test.yaml` coverage for a feature, and regressions in behaviour that has to survive a
+  change (vision support across provider updates, cancel through the submission path). It commented on only 4 of the
+  37 merged PRs, so a clean change usually gets none.
+- **Maintainers push fixes to contributors' branches** (#12236) and help with signing or platform builds (#12869);
+  keep "Allow edits by maintainers" on and fetch the fork before every push.
+- **Known pre-existing CI failures** (for example MCP conformance) don't block a merge when the maintainer confirms
+  them (#12580); say so in the PR instead of "fixing" unrelated tests.
