@@ -113,6 +113,8 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   desktop files and icons when upstream ships them.
 - **Process:** read the whole review before pushing, apply every suggestion or answer it, and
   don't make reviewers repeat themselves.
+- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
+  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 
 Practical notes:
 - Run heavy builds one at a time; parallel Rust/CUDA/VM builds fail on memory.

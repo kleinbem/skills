@@ -184,6 +184,8 @@ merged PRs; numbers are examples):
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
 - Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
   show an example command and representative output.
+- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
+  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 - Body follows `.github/PULL_REQUEST_TEMPLATE.md`:
   - **Title** and **Original problem**;
   - **Diagnostics:** commands, logs, hardware. Reproduce through the code path that actually runs

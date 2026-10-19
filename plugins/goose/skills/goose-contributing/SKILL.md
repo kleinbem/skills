@@ -83,6 +83,8 @@ Use Nix instead:
 - Template: `Fixes: #<Ready issue>`, `## Summary`, `### Testing` (how the issue's **verification plan** was carried
   out), `### Related Issues`, screenshots for UX changes.
 - Write for humans: lead with the conclusion, short, no work log, one summary instead of many incremental comments.
+- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
+  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 - Don't open many PRs at once: submit in order of preference and wait for them to land.
 - An AI reviewer (Codex) comments on PRs. **Answer every comment**: fix it, or reply in one line why it isn't an
   issue. Unanswered AI review comments can get the PR closed.
