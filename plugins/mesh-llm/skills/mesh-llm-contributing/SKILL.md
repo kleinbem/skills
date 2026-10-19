@@ -183,7 +183,8 @@ merged PRs; numbers are examples):
 ## 4. Pull request
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
 - Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
-  show an example command and representative output.
+  show an example command and representative output. The template's **Original problem** comes
+  first, so say what the user can now do in its first sentences or in **Fix**.
 - **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
   name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 - Body follows `.github/PULL_REQUEST_TEMPLATE.md`:
@@ -201,6 +202,15 @@ merged PRs; numbers are examples):
 - AI assistance can be stated in the PR text. Keep it out of commit trailers (see above).
 - After opening, don't retitle the PR or rewrite its description for later updates; summarise
   non-obvious follow-up work in comments (`.github/instructions/pr.instructions.md`).
+- **Right before opening, check (all of them, every PR):**
+  - main hasn't moved since the last rebase (`gh api repos/Mesh-LLM/mesh-llm/commits/main`);
+  - no open PR touches the same files (`gh pr view <N> --json files` over the open PRs); if one
+    does, compare the hunks and mention a real overlap in the body;
+  - Diagnostics names the PR that introduced the behaviour (`git log -S '<symbol>'` on main;
+    follow moves back to the original PR, e.g. #2494: #452 introduced it, #1082 moved it);
+  - the pre-flight ran on the exact head commit, also after a message-only amend (an identical
+    tree can be shown with `git rev-parse <old>^{tree} <new>^{tree}`, but run it anyway);
+  - the body has no `TODO` left and all PR cross-links are filled in.
 - The human submitter reviews the change before it is opened. Never claim review or testing in
   their name that they did not do.
 
