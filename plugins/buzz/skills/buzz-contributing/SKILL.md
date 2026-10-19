@@ -51,6 +51,8 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 - **Description** follows the template: `## Summary`, `### Related issue` (link or "none found"),
   `### Testing` (exactly what was run). Also the key decisions/trade-offs and any deferred
   follow-up.
+- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
+  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 
 ## 3. Code style
 - `cargo fmt --all` (default rustfmt). `cargo clippy --all-targets --all-features -- -D warnings`.
