@@ -54,9 +54,20 @@ before acting on a rule from memory.
   - Need another version: factor out a function that builds multiple versions, including the main one.
   - Need an option: add an explicit argument to the package and use `override`.
   - Need a patch in a dependency: ask its maintainers whether it can go into the main version.
+- `strictDeps = true` and `__structuredAttrs = true`: nixpkgs-vet fails new top-level packages
+  that don't evaluate with both (NPV-164 to 167, v0.3.x; `buildRustPackage` already sets
+  `strictDeps`). Check with `nix-instantiate --eval -E 'with import ./. {}; { inherit (<attr>)
+  strictDeps __structuredAttrs; }'`.
 - Variants that are just an `override` (`foo-cuda`, `foo-vulkan`) get their own by-name package and
   a `# nixpkgs-update: no auto update` comment, like `llama-cpp-vulkan`. So does any package whose
   version must not be bumped on its own; update it from the script of the package that pins it.
+- Build with the default `stdenv` compiler. A build error from a newer GCC (a missing `#include`,
+  a stricter warning) gets a patch with the upstream issue or PR linked, not `gcc14Stdenv` or
+  `overrideCC`. Only about 15 packages pin an older GCC, mostly unmaintained code (procmail,
+  cuneiform); the others document why and when the pin can go (`libpqxx`: "solved when 8.x is
+  released"); old GCCs get removed (gcc9/gcc10 in 2025), which breaks their pins. CUDA's
+  `backendStdenv` picks its own GCC for nvcc (GCC 14 with CUDA 12.9), so a CUDA build can fail
+  where the CPU build passes, and the other way round: build every backend.
 - Don't run prebuilt tools during the build either: e.g. replace `protoc-bin-vendored` with
   nixpkgs' `protobuf` (`PROTOC`), as `gitlab` does. Vendored Rust crates live under `$cargoDepsCopy`.
 - `meta` last:
@@ -111,6 +122,34 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   no top-level `with lib;`; keep build-only tools out of the runtime closure; `--set-default`
   rather than `--set` for env vars users may want to override; install shell completions,
   desktop files and icons when upstream ships them.
+- **Scan of 299 merged `init at` and `nixos/` PRs (2026-10-19, about 2000 reviewer comments),
+  by number of PRs where reviewers raised it.** Most are one-line `suggestion` blocks, so get
+  them right before review:
+  - `finalAttrs` instead of `rec` (58 PRs), with `tag = "v${finalAttrs.version}"` (28) and
+    `changelog = ".../releases/tag/${finalAttrs.src.tag}"`;
+  - maintainers (39): one set for every new package, added in its own first commit
+    `maintainers: add <handle>`; `maintainers = with lib.maintainers; [ … ]` is fine, `meta = with
+    lib;` is not (20, an ongoing removal effort);
+  - `meta.description` (34): short, no article, no package name; the rest goes in
+    `longDescription`;
+  - commits (23): squash fixups, lowercase `<attr>: init at <version>`, PR title matching;
+  - `versionCheckHook` (`doInstallCheck = true; nativeInstallCheckInputs = [ versionCheckHook ];`)
+    and `passthru.updateScript = nix-update-script { };` are common suggestions (14 PRs each);
+  - `doCheck = false` set explicitly with the reason, even though it's the default for some
+    builders (#569767);
+  - `makeBinaryWrapper` over `makeWrapper`; build-time tools and hooks in `nativeBuildInputs`;
+  - build from source instead of downloading a release binary, also for plugins (#546167);
+  - usual attribute order: `pname`, `version`, `src`, `nativeBuildInputs`, `buildInputs`, phases,
+    `passthru`, `meta` (#383450).
+  - Reviewers object to LLM-style text: "LLM comments are usually way too long and verbose"
+    (#571214), and some only review PRs whose template checkboxes, incl. the AI policy, are
+    filled in (#556686).
+- **NixOS modules, official checklist** (`nixos/README.md`, "Reviewing contributions"): every
+  option has a type, a default, an example and a description; module `meta.maintainers` and
+  `meta.doc` set; module tests added to the package's `passthru.tests`; nothing unneeded in
+  `environment.systemPackages`; the module works with other modules. Reviewers also ask for
+  `environmentFiles` (a list) over a single file and for documented `settings` keys the module
+  reads itself, so `cfg.settings.x or default` isn't needed (#519655, #552984).
 - **Process:** read the whole review before pushing, apply every suggestion or answer it, and
   don't make reviewers repeat themselves.
 - **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
