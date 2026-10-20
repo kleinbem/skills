@@ -26,6 +26,11 @@
       "description": "Mesh-LLM/mesh-llm contribution workflow: just builds, validation by change type, Conventional Commits, no agent trailers, PR template"
     },
     {
+      "name": "berd",
+      "source": "./plugins/berd",
+      "description": "block/berd contribution workflow: issues only (outside PRs are closed automatically), the bug and feature forms, building Berd on NixOS, what the history shows"
+    },
+    {
       "name": "matepad-pro",
       "source": "./plugins/matepad-pro",
       "description": "Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09) fleet tablet: headless APK installation, GBox sandboxing, Shizuku privilege escalation, ADB reverse tunnels, battery preservation, and diagnostic telemetry"

@@ -1,0 +1,7 @@
+{
+  "name": "berd",
+  "description": "block/berd contribution workflow: issues only (outside PRs are closed automatically), the bug and feature forms, building Berd on NixOS, what the history shows",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}
