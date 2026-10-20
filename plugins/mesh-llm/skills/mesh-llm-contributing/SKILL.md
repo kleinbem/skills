@@ -238,5 +238,11 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - Right before pushing or opening, always rebase onto current `main` (it moves several times a
   day), even when the new commits look unrelated, and rerun the checks; don't replace the rebase
   with a note in the PR.
+- The planner (`.github/actions/plan-ci`) requires a PR head's `ci/slices.yml` and
+  `ci/ownership.yml` to be byte-identical to main's. Every catalog change on main (e.g. #2449,
+  #2474) makes Plan fail on all older PRs ("source slice catalog differs from the protected planner
+  catalog"), even on approved ones, and only a rebase fixes it; check with
+  `git diff <head> origin/main -- ci/slices.yml ci/ownership.yml` before expecting CI to pass.
+  A push dismisses approvals, so rebase all affected PRs in one go, pre-flight first.
 - Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
   build on its head; pushing a stale local bookmark would overwrite their work.
