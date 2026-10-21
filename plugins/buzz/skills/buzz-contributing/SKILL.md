@@ -5,9 +5,10 @@ description: Use when preparing, updating, or reviewing a pull request to block/
 
 # block/buzz Contribution & PR Workflow
 
-Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
-rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
-specific to block/buzz and wins where the two differ.
+Load `upstream-contributing` and `block-contributing` too: the first holds the workflow every upstream
+contribution shares (search, rebase, draft until ready, voice, bot reviews, downstream patches), the
+second Block's org-wide rules (DCO, org checks, security reports). This skill adds only what is
+specific to block/buzz and wins where they differ.
 
 Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
 repo. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product

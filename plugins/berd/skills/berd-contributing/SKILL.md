@@ -5,9 +5,10 @@ description: Use when preparing an issue for block/berd (Block's Tauri + React d
 
 # block/berd Contribution Workflow
 
-Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
-rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
-specific to Berd and wins where the two differ.
+Load `upstream-contributing` and `block-contributing` too: the first holds the workflow every upstream
+contribution shares (search, rebase, draft until ready, voice, bot reviews, downstream patches), the
+second Block's org-wide rules (DCO, org checks, security reports). This skill adds only what is
+specific to Berd and wins where they differ.
 
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (also `CLAUDE.md`), `LAWS/`, `DESIGN.md`,
 `.github/ISSUE_TEMPLATE/{bug-report,feature-request}.yml`, `.github/PULL_REQUEST_TEMPLATE.md`,
