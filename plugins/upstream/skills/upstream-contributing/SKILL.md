@@ -1,12 +1,15 @@
 ---
 name: upstream-contributing
-description: Use for any issue, pull request, review reply or patch going to a repository outside kleinbem/* (nixpkgs, block/buzz, aaif-goose/goose, Mesh-LLM, llama.cpp, block/berd or a project without its own skill); covers the workflow every contribution shares (search first, verify, rebase, draft until Martin says ready, short texts in his voice, bot reviews, carrying the fix downstream) and the per-project switches table. Load the project's own <project>-contributing skill too; it wins on conflict.
+description: Use for any issue, pull request, review reply or patch going to a repository outside kleinbem/* (nixpkgs, block/buzz, aaif-goose/goose, Mesh-LLM, llama.cpp, block/berd or a project without its own skill); covers the workflow every contribution shares (search first, verify, rebase, draft until Martin says ready, short texts in his voice, bot reviews, carrying the fix downstream) and the per-project switches table. Load the organization skill (block-contributing for block/*) and the project's own <project>-contributing skill too; the more specific one wins on conflict.
 ---
 
 # Contributing upstream: the shared workflow
 
 Every `<project>-contributing` skill builds on this one. This skill holds what is true for all of
-them; the project skill holds only that project's rules and **wins where the two differ**. For a
+them; the project skill holds only that project's rules and **wins where the two differ**.
+Where an organization has its own rules for all its repos, an organization skill sits in between
+(`block-contributing` for `block/*`: DCO, org checks, security reports); the order is this skill,
+then the organization skill, then the project skill, the more specific one winning. For a
 project without a skill, this skill plus the project's own `CONTRIBUTING.md`/`AGENTS.md` is the
 baseline; once a second interaction with it is likely, write one with `contribution-skill-authoring`.
 

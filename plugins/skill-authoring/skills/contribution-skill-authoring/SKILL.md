@@ -20,6 +20,15 @@ is specific to its project, or where the project deviates (say so explicitly: ll
 policy overrides the shared "agent drafts texts"). Don't copy shared rules into a project skill; a
 lesson that holds for every project goes into `upstream-contributing` instead.
 
+**Organization layer.** When the project belongs to an organization with its own rules for all
+its repos (an org `.github` repo with `CONTRIBUTING.md`/`SECURITY.md`, org-wide checks such as a
+DCO app), those go into an organization skill between the two (`block-contributing` for `block/*`).
+Check before writing: `gh api repos/<org>/.github` and the check runs on a recent PR of a small
+repo in the org (`gh api repos/<org>/<repo>/commits/<sha>/check-runs --jq '.check_runs[].name'`)
+show what is org-wide. The app skill then points to both layers and gets a row in the organization
+skill's app table. A new org with more than one repo we contribute to gets its own organization
+skill; a single repo doesn't need one.
+
 Principles:
 - **Facts, dated.** Every rule comes from a file in the repo or from observed PRs; say "as of
   <date>" once near the top and cite PR or issue numbers as examples. Never write a rule you
@@ -111,7 +120,8 @@ loads it at the right moment.
 Section order (keep the numbering; drop a section only when the project has nothing for it):
 - Intro: sources of truth, "as of <date>", the project's shape (org, speed, channels), and the
   line "Load `upstream-contributing` too ... this skill adds only what is specific to <project> and
-  wins where the two differ" (copy it from an existing skill).
+  wins where the two differ" (copy it from an existing skill; for an org with an organization
+  skill, name both, as `buzz-contributing` does).
 - **0. Hard rules that decide the agent's role** (policy, issues-first, bans). First, because they
   change everything after.
 - **1. Before starting**: searches, issue rules, scope checks, what gets closed unread.
@@ -141,6 +151,7 @@ plugins/<plugin>/skills/<project>-contributing/SKILL.md
 .claude-plugin/marketplace.json                  # add the plugin entry
 README.md                                        # add the table row
 plugins/upstream/skills/upstream-contributing/SKILL.md   # add the project's row to the switches table
+plugins/<org>/skills/<org>-contributing/SKILL.md         # org projects: add the app's row to its app table
 ```
 
 The switches row answers facts 1, 2 and 6 in one line each: PRs from us, issue first, who writes

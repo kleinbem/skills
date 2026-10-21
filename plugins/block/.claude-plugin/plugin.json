@@ -1,0 +1,7 @@
+{
+  "name": "block",
+  "description": "Contributing to Block's open source (block/*): org-wide rules from block/.github, DCO and the org checks on every PR, private security reports, governance, outside-contribution odds per repo, and the app skills to load next",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

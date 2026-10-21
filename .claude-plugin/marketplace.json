@@ -11,6 +11,11 @@
       "description": "The shared upstream contribution workflow and per-project switches table; load with every <project>-contributing skill"
     },
     {
+      "name": "block",
+      "source": "./plugins/block",
+      "description": "Contributing to Block's open source (block/*): org-wide rules, DCO and org checks, security reports, governance, app skills to load next"
+    },
+    {
       "name": "nixpkgs",
       "source": "./plugins/nixpkgs",
       "description": "Nixpkgs contribution and maintenance: base branch, commit and meta conventions, pre-push checks, update PRs, merge bot, teams"
