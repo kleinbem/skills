@@ -1,6 +1,6 @@
 {
   "name": "mesh-llm",
-  "description": "Mesh-LLM/mesh-llm contribution workflow: just builds, validation by change type, Conventional Commits, no agent trailers, PR template",
+  "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing",
   "author": {
     "name": "Martin Kleinberger"
   }

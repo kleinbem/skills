@@ -4,23 +4,34 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 
 | Plugin | Skill | What it covers |
 | --- | --- | --- |
-| `upstream` | `upstream-contributing` | The workflow every upstream contribution shares and the per-project switches table (PRs, issue first, texts, attribution, sign-off, title); every `<project>-contributing` skill builds on it |
-| `block` | `block-contributing` | Org-wide rules for block/* repos (block/.github): DCO and the org checks, security reports, governance, which app skill to load (buzz, berd) |
-| `nixpkgs` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks |
-| `buzz` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
+| `upstream` | `upstream-contributing` | **Always loaded.** Router to the organization and repository skills, first-contact procedure, the workflow every upstream contribution shares, the switches table |
+| `upstream` | `contribution-skill-authoring` | Writing and refreshing organization and repository skills (before the first contribution and before every PR) |
+| `nixos` | `nixos-org` | NixOS organization: the nixpkgs and nix AI policies, security, RFCs, repo table |
+| `nixos` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks, review patterns |
+| `nixos` | `nixpkgs-maintaining` | Nixpkgs maintainer work: update PRs, merge bot, teams |
+| `block` | `block-org` | Block organization (block/*): DCO and org checks, security, governance, repo table |
+| `block` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
+| `block` | `berd-contributing` | Issues for block/berd (no outside PRs): the forms, building on NixOS, what the history shows |
+| `ggml-org` | `ggml-org` | ggml-org organization: AI usage policies (Martin writes every text), where ggml changes go, repo table |
+| `ggml-org` | `llama-cpp-contributing` | ggml-org/llama.cpp: issues before features, regression tests, module-prefixed titles, NixOS builds |
+| `aaif-goose` | `aaif-goose-org` | aaif-goose organization (Agentic AI Foundation): governance, security, the move from Block |
+| `aaif-goose` | `goose-contributing` | aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
+| `mesh-llm` | `mesh-llm-org` | Mesh-LLM organization: attribution, security, how the repos relate |
+| `mesh-llm` | `mesh-llm-contributing` | Mesh-LLM/mesh-llm: builds, validation, commit and PR rules, pre-flight CI |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
-| `mesh-llm` | `mesh-llm-contributing` | Pull requests to Mesh-LLM/mesh-llm: builds, validation, commit and PR rules |
-| `goose` | `goose-contributing` | Issues and pull requests to aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
-| `berd` | `berd-contributing` | Issues for block/berd (no outside PRs): the forms, building on NixOS, what the history shows |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
-| `llama-cpp` | `llama-cpp-contributing` | Issues, patches and pull requests to ggml-org/llama.cpp: the AI usage policy, issues before features, regression tests, module-prefixed titles, NixOS builds |
-| `skill-authoring` | `contribution-skill-authoring` | How to write and refresh a contribution skill: sources, facts to measure, section layout, plugin plumbing |
+
+Contribution skills have three layers: `upstream-contributing` (always loaded) routes to the
+organization skill (`<org>-org`) and the repository skill (`<repo>-contributing`). Those two are
+manual skills (`disable-model-invocation: true`): out of every session's context, run with
+`/<name>` or read by the agent as files. One plugin per GitHub organization.
 
 ## Install in Claude Code
 
 ```
 /plugin marketplace add kleinbem/skills
-/plugin install nixpkgs@kleinbem
+/plugin install upstream@kleinbem
+/plugin install nixos@kleinbem
 ```
 
 Plugins carry no `version`, so an update picks up the latest commit.

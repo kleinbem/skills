@@ -1,7 +1,0 @@
-{
-  "name": "buzz",
-  "description": "block/buzz contribution workflow: title, DCO, PR template, tests and checks",
-  "author": {
-    "name": "Martin Kleinberger"
-  }
-}

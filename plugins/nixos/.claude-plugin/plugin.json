@@ -1,0 +1,7 @@
+{
+  "name": "nixos",
+  "description": "NixOS organization: nixos-org (two AI policies, security, RFCs, repo table), nixpkgs-contributing, nixpkgs-maintaining",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}
