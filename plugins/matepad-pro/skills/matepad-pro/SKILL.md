@@ -1,9 +1,9 @@
 ---
 name: matepad-pro
 description: >-
-  Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09)
-  fleet tablet. Covers headless APK installation, GBox sandboxing, Shizuku privilege escalation,
-  ADB reverse tunnels (Weylus, RDP, DroidCam), battery preservation, and diagnostic telemetry.
+  Manual-only operational guide for the Huawei MatePad Pro (MRX-W09) fleet tablet.
+  Activate ONLY when the user explicitly requests to interact with, inspect, or manage
+  the MatePad Pro tablet. Do not load automatically for general Android, ADB, or fleet tasks.
 ---
 # Huawei MatePad Pro (MRX-W09) Fleet Guide
 
@@ -32,10 +32,10 @@ The tablet serves four primary roles in the `kleinbem` workstation setup:
    - Reverse tunnel on port `3389` via GNOME Remote Desktop.
    - Launch declaratively via `just android::tablet-rdp` in `nix-config`.
 3. **Webcam & Microphone (DroidCam)**:
-   - Reverse tunnel on port `4747` feeding `/dev/video10` (v4l2loopback).
+   - Forward tunnel on port `4747` feeding `/dev/video10` (v4l2loopback).
    - Launch declaratively via `just android::tablet-cam` in `nix-config`.
 4. **All-in-One Desk Companion Mode**:
-   - `just android::tablet-desk` (establishes all tunnels, caps battery charge at 80% to protect Li-poly cell, disables idle sleep, and starts Shizuku).
+   - `just android::tablet-desk` (establishes all tunnels, caps battery charge at 80% to protect Li-poly cell, disables idle sleep, and starts Shizuku while preserving EMUI gesture navigation).
 
 ---
 
@@ -55,8 +55,8 @@ The tablet serves four primary roles in the `kleinbem` workstation setup:
 |  - Shizuku elevated server for rootless system management    |
 |  - Lawnchair 14, DevCheck, Weylus, DroidCam, Aurora Store    |
 +--------------------------------------------------------------+
-                               |
-                               v
+                              |
+                              v
 +--------------------------------------------------------------+
 |             GBox Virtual Container (com.vlite.sdk)           |
 |  - Full sandboxed Google Play Services & Google Play Store   |
@@ -112,15 +112,17 @@ adb -s QBK6R20825000010 shell cmd appops set <package> <op_name> allow
 
 ---
 
-## 5. Shizuku Privilege Server
+## 5. Shizuku Privilege Server & USB Auto-Start
 
 Shizuku provides elevated Android API access via `adb` permission delegation.
 
+- **Automatic Start on USB Plug**:
+  Configured in `nix-config/modules/nixos/android.nix` via udev rule and `shizuku-matepad.service`. Whenever the tablet is connected or reboots over USB, Shizuku is automatically booted in the background.
 - **Check if running**:
   ```bash
   adb shell ps -ef | grep shizuku_server
   ```
-- **Start after tablet reboot**:
+- **Manual Start over ADB**:
   ```bash
   just android::start-shizuku
   # OR:
@@ -131,11 +133,11 @@ Shizuku provides elevated Android API access via `adb` permission delegation.
 
 ## 6. The `matepad` Helper CLI
 
-Declared in `nix-config/modules/nixos/android.nix`:
+Declared in `nix-config/modules/home-manager/android.nix`:
 
 ```bash
 matepad status     # Live battery, thermals, tunnels, Shizuku, and spinloop guardrail
-matepad tunnels    # Restore all reverse tunnels (1701, 3389, 4747)
+matepad tunnels    # Restore all companion tunnels (1701 Weylus, 3389 RDP, 4747 DroidCam)
 matepad shizuku    # Verify or boot Shizuku privileged server
 matepad install    # Install APK directly or fetch from repo via apkeep
 matepad devcheck   # Grant elevated diagnostic permissions and open DevCheck
