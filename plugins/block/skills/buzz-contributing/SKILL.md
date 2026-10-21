@@ -10,7 +10,7 @@ Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.
 This skill holds only what is specific to block/buzz and wins where they differ.
 
 Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
-repo. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
+repo, summarised here as of 2026-10-21. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
 contract, the ready-for-review checklist and upstream's own "Review-Proven Rules".
 
 ## 0. Before writing code
@@ -21,6 +21,9 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 - Non-trivial changes: read `VISION.md`, the `VISION_*.md` docs for the affected surface and
   `TESTING.md` (plus any package-local one) first; the design must not work against them
   (`AGENTS.md`, "Product Contract").
+- Changes to `migrations/`, `schema/` or schema-dependent `buzz-db` queries: read
+  `docs/database.md` first. No new triggers, functions or foreign keys, no data backfills in
+  migrations, update every schema location, and stay compatible with the deployed relay (#8273).
 - Apply `AGENTS.md`'s **Review-Proven Rules** before writing code; upstream mined them from its
   own review threads, and authors fix 70–100% of these findings once flagged:
   1. every caught failure leaves a durable retry record or propagates (no catch-log-succeed);
