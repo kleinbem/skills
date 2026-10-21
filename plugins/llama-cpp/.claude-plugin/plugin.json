@@ -1,0 +1,7 @@
+{
+  "name": "llama-cpp",
+  "description": "ggml-org/llama.cpp contribution workflow: the AI usage policy and what the agent may not do, issues before features, regression tests, module-prefixed titles, building on NixOS",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

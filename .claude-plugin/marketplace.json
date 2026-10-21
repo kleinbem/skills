@@ -39,6 +39,16 @@
       "name": "goose",
       "source": "./plugins/goose",
       "description": "aaif-goose/goose contribution workflow: issues first, Ready before a PR, Conventional Commits titles, NixOS build without Hermit"
+    },
+    {
+      "name": "llama-cpp",
+      "source": "./plugins/llama-cpp",
+      "description": "ggml-org/llama.cpp contribution workflow: the AI usage policy and what the agent may not do, issues before features, regression tests, module-prefixed titles, building on NixOS"
+    },
+    {
+      "name": "skill-authoring",
+      "source": "./plugins/skill-authoring",
+      "description": "How to write and maintain a contribution skill for an upstream project: sources to read, facts to establish and measure, section layout, plugin plumbing, update loop"
     }
   ]
 }
