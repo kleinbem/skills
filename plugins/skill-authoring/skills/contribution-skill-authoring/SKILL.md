@@ -1,6 +1,6 @@
 ---
 name: contribution-skill-authoring
-description: Use when writing a new contribution skill for an upstream project (an issue and pull request workflow the agent follows for that repo) or when refreshing an existing one in kleinbem/skills; it lists the sources to read, the facts to establish and measure, the section layout, the plugin plumbing and the update loop.
+description: Use when writing a new contribution skill for an upstream project (an issue and pull request workflow the agent follows for that repo) or when refreshing an existing one in kleinbem/skills; it lists the sources to read, the facts to establish and measure, the section layout, the plugin plumbing and the update loop. Project skills build on the shared upstream-contributing skill and hold only what is specific to their project.
 ---
 
 # Writing a contribution skill
@@ -11,6 +11,14 @@ what the project allows an agent to do. Existing examples in `plugins/`: `nixpkg
 `mesh-llm-contributing`, `goose-contributing`, `buzz-contributing`, `berd-contributing`,
 `llama-cpp-contributing`. Write a new one before the first PR to a project, or as soon as a
 second interaction with it is likely.
+
+**Build on `upstream-contributing`.** The workflow every contribution shares (search first,
+rebase before every push, draft until Martin says ready, voice and short texts, bot comments,
+comparing against unmodified `main` on NixOS, carrying fixes downstream) lives there, together with
+the per-project switches table. A project skill opens with a pointer to it and contains only what
+is specific to its project, or where the project deviates (say so explicitly: llama.cpp's AI
+policy overrides the shared "agent drafts texts"). Don't copy shared rules into a project skill; a
+lesson that holds for every project goes into `upstream-contributing` instead.
 
 Principles:
 - **Facts, dated.** Every rule comes from a file in the repo or from observed PRs; say "as of
@@ -101,7 +109,9 @@ the repo, the kinds of work (issue, PR, review, packaging) and the rules it enfo
 loads it at the right moment.
 
 Section order (keep the numbering; drop a section only when the project has nothing for it):
-- Intro: sources of truth, "as of <date>", the project's shape (org, speed, channels).
+- Intro: sources of truth, "as of <date>", the project's shape (org, speed, channels), and the
+  line "Load `upstream-contributing` too ... this skill adds only what is specific to <project> and
+  wins where the two differ" (copy it from an existing skill).
 - **0. Hard rules that decide the agent's role** (policy, issues-first, bans). First, because they
   change everything after.
 - **1. Before starting**: searches, issue rules, scope checks, what gets closed unread.
@@ -118,7 +128,8 @@ Style rules for the text:
 - Quote a policy line verbatim when breaking it has a penalty; paraphrase the rest.
 - Say what to do, then why in half a sentence; reviewers' reasons beat our opinions.
 - Keep it under about 250 lines. A rule that needs a page belongs in the repo's own docs; link it.
-- Everything posted in Martin's name says "I", never "we" (`feedback-short-natural-comments`).
+- Leave out what `upstream-contributing` already says (voice, rebase, search, checkboxes, bot
+  comments, built-binary claims); repeat a shared rule only to state the project's exception.
 - ASCII only if the target project demands it in its own files; the skill itself may use normal
   punctuation.
 
@@ -129,7 +140,11 @@ plugins/<plugin>/.claude-plugin/plugin.json      # name, one-line description, a
 plugins/<plugin>/skills/<project>-contributing/SKILL.md
 .claude-plugin/marketplace.json                  # add the plugin entry
 README.md                                        # add the table row
+plugins/upstream/skills/upstream-contributing/SKILL.md   # add the project's row to the switches table
 ```
+
+The switches row answers facts 1, 2 and 6 in one line each: PRs from us, issue first, who writes
+texts, AI attribution, sign-off, title format.
 
 - Plugin name = the project's short name (`goose`, `mesh-llm`, `llama-cpp`); one plugin may hold
   several skills (`nixpkgs` has contributing and maintaining).
@@ -150,6 +165,7 @@ README.md                                        # add the table row
 - Refresh dated facts (merge times, bots, templates, toolchain pins) when they are older than a
   quarter or when a PR behaves differently from what the skill predicted.
 - Keep the measurement commands in the skill so a refresh is a rerun, not a redesign.
-- Save cross-project lessons as memories (`feedback-upstream-contribution-lessons`,
-  `feedback-moving-upstream-prs`) and project state in Obsidian, not in the skill: the skill holds
-  what is true for everyone contributing to that project.
+- Cross-project lessons go into `upstream-contributing` (every agent sees the skills, not only
+  Claude's memory); when a project's switch changes, update its row in the table too. Martin's
+  project state goes to Obsidian, not into a skill: a skill holds what is true for everyone
+  contributing to that project.

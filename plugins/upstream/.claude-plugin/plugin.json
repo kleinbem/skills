@@ -1,0 +1,7 @@
+{
+  "name": "upstream",
+  "description": "The workflow every upstream contribution shares (search first, verify, rebase, draft until ready, short texts in the submitter's voice, bot reviews, carrying fixes downstream) and the per-project switches table; the base for every <project>-contributing skill",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

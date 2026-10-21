@@ -5,6 +5,10 @@ description: Use when preparing, updating, or reviewing a pull request to block/
 
 # block/buzz Contribution & PR Workflow
 
+Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
+rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
+specific to block/buzz and wins where the two differ.
+
 Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
 repo. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
 contract, the ready-for-review checklist and upstream's own "Review-Proven Rules".
@@ -51,8 +55,6 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 - **Description** follows the template: `## Summary`, `### Related issue` (link or "none found"),
   `### Testing` (exactly what was run). Also the key decisions/trade-offs and any deferred
   follow-up.
-- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
-  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 
 ## 3. Code style
 - `cargo fmt --all` (default rustfmt). `cargo clippy --all-targets --all-features -- -D warnings`.
@@ -75,7 +77,6 @@ Environment notes (NixOS):
   plus `pkg-config openssl` for crates that need them).
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
   environment of a Nix build (`nix-shell -A buzz-desktop`, unpack/patch/configure, `pnpm build`).
-- Use one jj workspace per PR branch so the main checkout isn't disturbed.
 
 ## 5. Ready for review
 `AGENTS.md`: open work as a **draft** and mark it ready only when, scaled to the change:

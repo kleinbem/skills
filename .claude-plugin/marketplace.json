@@ -6,6 +6,11 @@
   },
   "plugins": [
     {
+      "name": "upstream",
+      "source": "./plugins/upstream",
+      "description": "The shared upstream contribution workflow and per-project switches table; load with every <project>-contributing skill"
+    },
+    {
       "name": "nixpkgs",
       "source": "./plugins/nixpkgs",
       "description": "Nixpkgs contribution and maintenance: base branch, commit and meta conventions, pre-push checks, update PRs, merge bot, teams"
