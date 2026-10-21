@@ -5,6 +5,13 @@ description: Use when preparing, reviewing or discussing an issue, patch or pull
 
 # ggml-org/llama.cpp Contribution Workflow
 
+Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
+rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
+specific to llama.cpp and wins where the two differ.
+
+Its AI usage policy (section 0) is stricter than the shared workflow: where `upstream-contributing`
+says the agent drafts texts or pushes, here Martin does it himself.
+
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (`CLAUDE.md` only points at it),
 `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/` (six forms), the repo-local skills in
 `skills/` (`code-review`, `add-new-model`, `slice-model`, `update-fusion-table`), `docs/build.md`,
@@ -129,7 +136,6 @@ cite most:
 - Our hardware: x86_64 with an Intel iGPU (Vulkan) on nixos-nvme; aarch64 with CUDA 12.6 and the
   JetPack 6 GCC 13.5 toolchain on orin-nano (the SME-variant case); no AMD. Compare a failure
   against unmodified `master` on the same host before blaming the change.
-- Claims about runtime behaviour need a built binary and a run, not a reading of the code.
 
 ## 4. Commits and the PR title
 
@@ -201,4 +207,3 @@ cite most:
 - Open thread: `GGML_CPU_ALL_VARIANTS` on aarch64 adds `+sme` variants that GCC 13 rejects
   (upstream issue #17403); the patch lives in nixpkgs' `skippy-native-runtime` and in the Obsidian
   note "llama.cpp SME variants draft". The PR is Martin's to open (section 0).
-- Voice: everything posted in Martin's name says "I", never "we"; short, result first.

@@ -5,6 +5,10 @@ description: Use when preparing, committing, or reviewing a Nixpkgs contribution
 
 # Nixpkgs Contribution & PR Workflow
 
+Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
+rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
+specific to Nixpkgs and wins where the two differ.
+
 Sources of truth, in the Nixpkgs checkout: `CONTRIBUTING.md`, `pkgs/README.md`,
 `pkgs/by-name/README.md`, `maintainers/README.md`. Read the relevant section
 before acting on a rule from memory.
@@ -152,11 +156,8 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   reads itself, so `cfg.settings.x or default` isn't needed (#519655, #552984).
 - **Process:** read the whole review before pushing, apply every suggestion or answer it, and
   don't make reviewers repeat themselves.
-- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
-  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 
 Practical notes:
-- Run heavy builds one at a time; parallel Rust/CUDA/VM builds fail on memory.
 - Check `substituteInPlace`/`--replace-fail` patterns against the source *after* `patches`
   (`nix-shell -A <attr>`, then `unpackPhase` and `patchPhase`), not the raw `src`: a patch may
   already have changed the line.

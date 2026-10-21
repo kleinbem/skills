@@ -5,6 +5,10 @@ description: Use when preparing, updating, or reviewing a pull request to Mesh-L
 
 # Mesh-LLM/mesh-llm Contribution & PR Workflow
 
+Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
+rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
+specific to Mesh-LLM and wins where the two differ.
+
 Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGENTS.md`,
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
@@ -194,8 +198,6 @@ merged PRs; numbers are examples):
 - Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
   show an example command and representative output. The template's **Original problem** comes
   first, so say what the user can now do in its first sentences or in **Fix**.
-- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
-  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 - Body follows `.github/PULL_REQUEST_TEMPLATE.md`:
   - **Title** and **Original problem**;
   - **Diagnostics:** commands, logs, hardware. Reproduce through the code path that actually runs
@@ -244,9 +246,8 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   only complete changes.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
   ask for a cherry-pick because it was off.
-- Right before pushing or opening, always rebase onto current `main` (it moves several times a
-  day), even when the new commits look unrelated, and rerun the checks; don't replace the rebase
-  with a note in the PR.
+- `main` moves several times a day, so the rebase before every push (`upstream-contributing`)
+  matters here more than anywhere.
 - The planner (`.github/actions/plan-ci`) requires a PR head's `ci/slices.yml` and
   `ci/ownership.yml` to be byte-identical to main's. Every catalog change on main (e.g. #2449,
   #2474) makes Plan fail on all older PRs ("source slice catalog differs from the protected planner

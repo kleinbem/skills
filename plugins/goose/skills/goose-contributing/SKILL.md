@@ -5,6 +5,10 @@ description: Use when preparing, updating, or reviewing an issue or pull request
 
 # aaif-goose/goose Contribution Workflow
 
+Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
+rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
+specific to goose and wins where the two differ.
+
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (also `CLAUDE.md`), `.github/pull_request_template.md`,
 `.github/ISSUE_TEMPLATE/` (bug report, feature request) and `.github/workflows/ci.yml`. Read them before acting; this
 skill summarises them as of 2026-10-18 and adds what applies to our setup.
@@ -31,7 +35,6 @@ Local setup (kleinbem): clone `~/Develop/github.com/aaif-goose/goose` (jj, coloc
 - Feature requests describe a broadly useful problem; features that add complexity for little general benefit get
   declined.
 - In October only, commenting `.take` on an issue assigns it to you (`take.yml`).
-- Before searching for a fix, search issues and PRs: `gh search issues --repo aaif-goose/goose <terms>`.
 
 ## 1. Designing the change
 
@@ -69,7 +72,6 @@ Use Nix instead:
   ACP binary size budget, the GDK crates on `wasm32`, and the ACP npm packages. Run per changed crate:
   `cargo fmt`, `cargo clippy -p <crate> --all-targets -- -D warnings`, `GOOSE_DISABLE_KEYRING=1 cargo test -p <crate>`.
 - UI: `cd ui/desktop && pnpm run typecheck && pnpm test` (nixpkgs' `nodejs` and `pnpm`).
-- Claims about behaviour need a built binary (`cargo run -p goose-cli -- …`), not only reading the code.
 
 ## 3. Commits and PR title
 
@@ -83,12 +85,9 @@ Use Nix instead:
 - Template: `Fixes: #<Ready issue>`, `## Summary`, `### Testing` (how the issue's **verification plan** was carried
   out), `### Related Issues`, screenshots for UX changes.
 - Write for humans: lead with the conclusion, short, no work log, one summary instead of many incremental comments.
-- **Voice:** the submitter contributes alone. Issues, PR bodies and comments posted in their
-  name say "I", never "we", "us" or "our"; check drafts for these words before showing them.
 - Don't open many PRs at once: submit in order of preference and wait for them to land.
 - An AI reviewer (Codex) comments on PRs. **Answer every comment**: fix it, or reply in one line why it isn't an
   issue. Unanswered AI review comments can get the PR closed.
-- Rebase onto current `main` before opening and before every push; keep "Allow edits by maintainers" on.
 - Merge times for fork PRs vary from hours to about a week.
 
 ## 5. For nixpkgs
