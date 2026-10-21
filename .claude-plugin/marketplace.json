@@ -8,17 +8,32 @@
     {
       "name": "upstream",
       "source": "./plugins/upstream",
-      "description": "The shared upstream contribution workflow and per-project switches table; load with every <project>-contributing skill"
+      "description": "Upstream contribution router and shared workflow (always loaded), plus the procedure for writing and refreshing organization and repository skills"
+    },
+    {
+      "name": "nixos",
+      "source": "./plugins/nixos",
+      "description": "NixOS organization: nixos-org (two AI policies, security, RFCs, repo table), nixpkgs-contributing, nixpkgs-maintaining"
     },
     {
       "name": "block",
       "source": "./plugins/block",
-      "description": "Contributing to Block's open source (block/*): org-wide rules, DCO and org checks, security reports, governance, app skills to load next"
+      "description": "Block organization (block/*): block-org (DCO and org checks, security, governance, repo table), buzz-contributing, berd-contributing"
     },
     {
-      "name": "nixpkgs",
-      "source": "./plugins/nixpkgs",
-      "description": "Nixpkgs contribution and maintenance: base branch, commit and meta conventions, pre-push checks, update PRs, merge bot, teams"
+      "name": "ggml-org",
+      "source": "./plugins/ggml-org",
+      "description": "ggml-org organization: ggml-org (AI usage policies, where ggml changes go, repo table), llama-cpp-contributing"
+    },
+    {
+      "name": "aaif-goose",
+      "source": "./plugins/aaif-goose",
+      "description": "aaif-goose organization (Agentic AI Foundation): aaif-goose-org (governance, security, the move from Block), goose-contributing"
+    },
+    {
+      "name": "mesh-llm",
+      "source": "./plugins/mesh-llm",
+      "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing"
     },
     {
       "name": "kleinbem-fleet",
@@ -26,39 +41,9 @@
       "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace"
     },
     {
-      "name": "buzz",
-      "source": "./plugins/buzz",
-      "description": "block/buzz contribution workflow: title, DCO, PR template, tests and checks"
-    },
-    {
-      "name": "mesh-llm",
-      "source": "./plugins/mesh-llm",
-      "description": "Mesh-LLM/mesh-llm contribution workflow: just builds, validation by change type, Conventional Commits, no agent trailers, PR template"
-    },
-    {
-      "name": "berd",
-      "source": "./plugins/berd",
-      "description": "block/berd contribution workflow: issues only (outside PRs are closed automatically), the bug and feature forms, building Berd on NixOS, what the history shows"
-    },
-    {
       "name": "matepad-pro",
       "source": "./plugins/matepad-pro",
       "description": "Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09) fleet tablet: headless APK installation, GBox sandboxing, Shizuku privilege escalation, ADB reverse tunnels, battery preservation, and diagnostic telemetry"
-    },
-    {
-      "name": "goose",
-      "source": "./plugins/goose",
-      "description": "aaif-goose/goose contribution workflow: issues first, Ready before a PR, Conventional Commits titles, NixOS build without Hermit"
-    },
-    {
-      "name": "llama-cpp",
-      "source": "./plugins/llama-cpp",
-      "description": "ggml-org/llama.cpp contribution workflow: the AI usage policy and what the agent may not do, issues before features, regression tests, module-prefixed titles, building on NixOS"
-    },
-    {
-      "name": "skill-authoring",
-      "source": "./plugins/skill-authoring",
-      "description": "How to write and maintain a contribution skill for an upstream project: sources to read, facts to establish and measure, section layout, plugin plumbing, update loop"
     }
   ]
 }

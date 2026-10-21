@@ -1,7 +1,0 @@
-{
-  "name": "skill-authoring",
-  "description": "How to write and maintain a contribution skill for an upstream project: which sources to read, which facts to establish and measure, the section layout, the plugin plumbing and the update loop",
-  "author": {
-    "name": "Martin Kleinberger"
-  }
-}

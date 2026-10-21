@@ -1,22 +1,51 @@
 ---
 name: upstream-contributing
-description: Use for any issue, pull request, review reply or patch going to a repository outside kleinbem/* (nixpkgs, block/buzz, aaif-goose/goose, Mesh-LLM, llama.cpp, block/berd or a project without its own skill); covers the workflow every contribution shares (search first, verify, rebase, draft until Martin says ready, short texts in his voice, bot reviews, carrying the fix downstream) and the per-project switches table. Load the organization skill (block-contributing for block/*) and the project's own <project>-contributing skill too; the more specific one wins on conflict.
+description: Load before any issue, pull request, review reply, comment or patch for a repository outside kleinbem/* (nixpkgs and other NixOS repos, block/*, aaif-goose/goose, Mesh-LLM, ggml-org/llama.cpp or any other project). It routes to the organization and repository skills (read them as files), runs the first-contact procedure for a new repo, and holds the shared workflow (search first, verify, rebase, draft until Martin says ready, his voice, bot reviews, refresh the repo skill before opening a PR, carry fixes downstream).
 ---
 
-# Contributing upstream: the shared workflow
+# Contributing upstream: the router and the shared workflow
 
-Every `<project>-contributing` skill builds on this one. This skill holds what is true for all of
-them; the project skill holds only that project's rules and **wins where the two differ**.
-Where an organization has its own rules for all its repos, an organization skill sits in between
-(`block-contributing` for `block/*`: DCO, org checks, security reports); the order is this skill,
-then the organization skill, then the project skill, the more specific one winning. For a
-project without a skill, this skill plus the project's own `CONTRIBUTING.md`/`AGENTS.md` is the
-baseline; once a second interaction with it is likely, write one with `contribution-skill-authoring`.
+Three layers; the more specific one wins where they differ:
+1. **This skill:** what every upstream contribution shares. The only one always loaded.
+2. **The organization skill** `<org>-org`: what holds for every repo of that GitHub organization
+   (org policies, org-wide checks, security reporting, governance, channels, its repo table).
+3. **The repository skill** `<repo>-contributing`: that repo's rules, reviewers and history.
+
+Organization and repository skills are **manual skills** (`disable-model-invocation: true`): they
+are not in the context until needed. Martin can run them as `/<name>`; an agent **reads them as
+files** with its file-read tool: `~/.agents/skills/<name>/SKILL.md` (every agent; Claude Code also
+has `~/.claude/skills/<name>/SKILL.md`). Don't call the Skill tool for them: Claude Code blocks
+model invocation of manual skills.
+
+## Route: which files to read
+
+| Organization | Org skill | Repository skills |
+|---|---|---|
+| NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work) |
+| block | `block-org` | `buzz-contributing`, `berd-contributing` |
+| ggml-org | `ggml-org` | `llama-cpp-contributing` |
+| aaif-goose | `aaif-goose-org` | `goose-contributing` |
+| Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing` |
+
+Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
+repo table says which repos have a skill.
+
+## First contact: a repo or organization without a skill
+
+**No issue, PR or comment goes to a repo before it has a repository skill.** Follow
+`contribution-skill-authoring` (read `~/.agents/skills/contribution-skill-authoring/SKILL.md`):
+1. **Organization:** read or write the org skill (the org's `.github` repo, org-wide checks on a
+   recent PR, security and governance). An organization always gets an org skill, even when we
+   touch only one of its repos.
+2. **Repository:** its own `CONTRIBUTING.md`, `AGENTS.md`, templates and workflows.
+3. **History:** scan its merged and closed PRs and review comments for the lessons.
+4. **Write the repository skill**, add its rows (org repo table, the route table above, the
+   switches table below), merge it into kleinbem/skills. Then start the contribution.
 
 ## 0. The switches: settle them before anything else
 
 These differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
-reviewed PR. Never carry an answer over from another project. As of 2026-10-21 (the project skill
+reviewed PR. Never carry an answer over from another project. As of 2026-10-21 (the repository skill
 is authoritative; update this table when one changes):
 
 | | PRs from us | Issue first | Who writes texts | AI attribution | Sign-off | Title |
@@ -28,8 +57,8 @@ is authoritative; update this table when one changes):
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
 
-For a project not in the table, answer the same columns from its `CONTRIBUTING.md`, `AGENTS.md`
-and PR template before writing code, and say which ones it has no rule for.
+A repo not in the table has no repository skill yet: run the first-contact procedure above, which
+adds its row.
 
 Attribution is per change, not per PR set: a commit Martin wrote himself, or one with only trivial
 automated content, gets no trailer. Ask when unsure; every correction is another force-push.
@@ -44,7 +73,7 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   the same files (`gh pr view <N> --json files`). Build on or credit existing work instead of
   duplicating it, and never open a competing PR. Quote related decisions you find in the PR text.
 - One logical change per PR. Anything beyond a small fix needs an issue and an acknowledged
-  approach first, unless the project skill says otherwise.
+  approach first, unless the repository skill says otherwise.
 - Verify the downstream premise on the built artifact (manifest, `patchelf --print-needed`, bundle
   layout) before designing an upstream change from a package expression.
 
@@ -92,6 +121,11 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   some repos dismiss approvals on push. Once a review has started, follow the project's rule on
   force-pushing.
 - Take commit SHAs from git or the API, never type or complete them.
+- **Refresh the repository skill before opening a PR** (and before marking one ready, if the
+  skill is older than a week): rerun its measurement commands and reread the repo's
+  `CONTRIBUTING.md`, `AGENTS.md`, PR template and workflows for changes since the skill's date;
+  fold new reviewer patterns and rule changes into the skill and merge that first
+  (`contribution-skill-authoring`, section 6). A monthly routine refreshes all skills as well.
 
 ## 6. Public steps need Martin's explicit OK
 
@@ -110,5 +144,6 @@ skill may forbid even more (llama.cpp: the agent never commits, pushes or posts)
 - **Upstream first, in parallel:** our packages never wait for upstream. Carry the fix downstream
   (patch, `checkFlags` skip, `substituteInPlace`) with a comment linking the upstream PR or issue,
   and drop it in the update that ships the fix.
-- Feed what reviewers taught back into the project skill (one bullet with the PR number), and
-  cross-project lessons into this one.
+- Feed what reviewers taught back into the repository skill (one bullet with the PR number),
+  what holds for the whole organization into the org skill, and cross-project lessons into this
+  one: each fact at the highest layer where it is true.

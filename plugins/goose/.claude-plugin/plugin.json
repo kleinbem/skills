@@ -1,7 +1,0 @@
-{
-  "name": "goose",
-  "description": "aaif-goose/goose contribution workflow: issues first, Ready before a PR, Conventional Commits titles, NixOS build without Hermit",
-  "author": {
-    "name": "Martin Kleinberger"
-  }
-}

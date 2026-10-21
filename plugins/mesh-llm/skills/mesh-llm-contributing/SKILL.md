@@ -1,21 +1,18 @@
 ---
 name: mesh-llm-contributing
 description: Use when preparing, updating, or reviewing a pull request to Mesh-LLM/mesh-llm (MeshLLM host, Skippy, native runtimes, packaging scripts) to follow its build, validation, commit, attribution and PR-template rules.
+disable-model-invocation: true
 ---
 
 # Mesh-LLM/mesh-llm Contribution & PR Workflow
 
-Load `upstream-contributing` too: it holds the workflow every upstream contribution shares (search,
-rebase, draft until ready, voice, bot reviews, downstream patches). This skill adds only what is
-specific to Mesh-LLM and wins where the two differ.
+Layer 3 of 3: read `upstream-contributing` and `mesh-llm-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
+This skill holds only what is specific to Mesh-LLM/mesh-llm and wins where they differ.
 
 Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGENTS.md`,
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
 for the touched area before acting; the project moves fast (several merges a day).
-Mesh-LLM is its own organisation (not block/buzz); discussion happens on the Goose Discord
-`#mesh-llm` channel (https://discord.gg/n8R5VaWDAn; the `goose-oss` invite in the
-mesh-llm repo is dead).
 
 ## 0. Before the first edit (do these, in order)
 1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
