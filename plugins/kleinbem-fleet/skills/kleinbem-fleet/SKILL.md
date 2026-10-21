@@ -89,3 +89,12 @@ Each repo's `.envrc` loads a Nix devshell via direnv, ultimately
 `nix-devshells#workspace` (or `#openwrt`), providing `just`, `jj`, `gh`,
 `gum`, `sops`, `age`. If a tool seems missing from PATH, the devshell
 probably isn't loaded — check `direnv status` / `direnv allow`.
+
+## Device skills
+
+Device guides are manual skills, out of the context until needed. When a task is about one of
+these devices, read its file (`~/.agents/skills/<name>/SKILL.md`); Martin can also run `/<name>`.
+
+| Device | Skill |
+|---|---|
+| Huawei MatePad Pro (MRX-W09) tablet | `matepad-pro` |
