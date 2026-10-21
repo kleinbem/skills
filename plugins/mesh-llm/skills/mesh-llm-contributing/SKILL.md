@@ -152,6 +152,15 @@ merged PRs; numbers are examples):
   (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
   the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log).
   What stays local: behaviour of a built binary and distribution-specific tests.
+  Not covered by the pre-flight: upstream's Quality step "Test CI, packaging, and SDK contracts"
+  (`just ci-automation-contracts`, `just/ci.just`), which runs the `xtask` test binaries with
+  `--features automation-contracts`, among them `--test migration_lifecycle` (the tests of
+  `skippy/scripts/package-native-runtime.sh`). The planner's Linux batches don't include `xtask`.
+  When a change touches `tools/xtask` or `skippy/scripts`, run the affected test yourself:
+  `cargo test --locked -p xtask --features automation-contracts --test migration_lifecycle <filter> -- --test-threads=1`.
+  Its fixture hardcodes `/bin/bash` and `/usr/bin/true`; on NixOS run it under
+  `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`
+  (envfs doesn't satisfy it).
 - Platforms: code under `cfg(unix)` also runs on macOS, and `cfg(not(unix))` on Windows. If a
   platform keeps the old path, say so in the PR with the reason and the equivalent (on #2444 a
   maintainer added the Windows variant himself).

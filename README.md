@@ -11,6 +11,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `goose` | `goose-contributing` | Issues and pull requests to aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
 | `berd` | `berd-contributing` | Issues for block/berd (no outside PRs): the forms, building on NixOS, what the history shows |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
+| `llama-cpp` | `llama-cpp-contributing` | Issues, patches and pull requests to ggml-org/llama.cpp: the AI usage policy, issues before features, regression tests, module-prefixed titles, NixOS builds |
+| `skill-authoring` | `contribution-skill-authoring` | How to write and refresh a contribution skill: sources, facts to measure, section layout, plugin plumbing |
 
 ## Install in Claude Code
 
