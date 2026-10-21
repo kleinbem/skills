@@ -10,8 +10,8 @@ Layer 3 of 3: read `upstream-contributing` and `nixos-org` first (as files, `~/.
 This skill holds only what is specific to Nixpkgs and wins where they differ.
 
 Sources of truth, in the Nixpkgs checkout: `CONTRIBUTING.md`, `pkgs/README.md`,
-`pkgs/by-name/README.md`, `maintainers/README.md`. Read the relevant section
-before acting on a rule from memory.
+`pkgs/by-name/README.md`, `maintainers/README.md` (summarised here as of 2026-10-21). Read the
+relevant section before acting on a rule from memory.
 
 ## 0. Before starting
 - Search open and closed PRs (and issues) for the package first:
@@ -97,7 +97,9 @@ before acting on a rule from memory.
    `scripts/review-result <run-id>` (per-system built/failed from the report, non-zero exit on
    any failure, `--wait` to block until done), never by the run status.
 7. A new NixOS module gets an entry under "New Modules" in
-   `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`.
+   `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`. A major or breaking package change
+   gets a Nixpkgs release note in `doc/release-notes`; a package removal gets a throwing alias
+   instead of a note (`CONTRIBUTING.md`, "Release notes").
 8. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
    Tick a box only once it is true for the exact commits being pushed.
 
