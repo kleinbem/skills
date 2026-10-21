@@ -4,6 +4,7 @@ description: >-
   Manual-only operational guide for the Huawei MatePad Pro (MRX-W09) fleet tablet.
   Activate ONLY when the user explicitly requests to interact with, inspect, or manage
   the MatePad Pro tablet. Do not load automatically for general Android, ADB, or fleet tasks.
+disable-model-invocation: true
 ---
 # Huawei MatePad Pro (MRX-W09) Fleet Guide
 
