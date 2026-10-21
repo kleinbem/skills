@@ -71,6 +71,13 @@ What this means for our work, concretely:
   discussion (an issue or RFC); the automated PR checker flags them.
 - **Bug-fix PRs need a reproducible issue and a regression test** that fails before the change and
   passes after. "Fixes without a test may be closed without review."
+- Build fixes are the exception in practice: a missing `#include` with a compiler log merged
+  the same day without an issue or test (#23857 clang-tidy `<algorithm>`, #29597 `<functional>`
+  on Gentoo/libc++, both first-time contributors); #25220 and #22810 linked an issue and took
+  3–5 days. Put the reproducer (compiler, flags, error line) in the PR. Upstream builds `llama`
+  as a unity build (`UNITY_BUILD ON`, batch 16, a target property since #28091, so
+  `-DCMAKE_UNITY_BUILD=OFF` doesn't change it); reproduce per-file with
+  `set_target_properties(llama PROPERTIES UNITY_BUILD OFF)` or one `g++ -c` call.
 - New CLI flags or public API (`include/llama.h`) carry a higher bar: say why no existing mechanism
   does the job. Model-specific CLI arguments are not allowed; model behaviour comes from GGUF
   metadata.
@@ -204,6 +211,10 @@ cite most:
   llama.cpp tag in `skippy/llama_cpp/upstream.txt` and applies its own patch queue on top; a fix
   merged upstream reaches MeshLLM with the next pin bump (Mesh-LLM/mesh-llm#2472 style). Until then
   the nixpkgs `skippy-native-runtime` package carries a patch with a comment naming the upstream PR.
-- Open thread: `GGML_CPU_ALL_VARIANTS` on aarch64 adds `+sme` variants that GCC 13 rejects
-  (upstream issue #17403); the patch lives in nixpkgs' `skippy-native-runtime` and in the Obsidian
-  note "llama.cpp SME variants draft". The PR is Martin's to open (section 0).
+- SME variants (`GGML_CPU_ALL_VARIANTS` on aarch64 with GCC 13, issue #17403): solved upstream by
+  #26103 (probes every ARM variant's march flags); nixpkgs' `skippy-native-runtime` fetches its two
+  commits via `fetchpatch2` until MeshLLM's pin includes it. Our own draft is superseded.
+- Open thread: `src/models/clef.cpp` misses `#include <algorithm>` (hidden by the unity build;
+  MeshLLM builds model files per file, llama.rn carries its own patch). Change prepared in the jj
+  workspace `llama.cpp.ws/clef-include`; facts and steps in the Obsidian note
+  "llama.cpp clef include facts". The PR is Martin's to open (section 0).
