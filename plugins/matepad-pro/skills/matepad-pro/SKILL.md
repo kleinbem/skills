@@ -63,9 +63,21 @@ The tablet serves four primary roles in the `kleinbem` workstation setup:
 |  - Full sandboxed Google Play Services & Google Play Store   |
 |  - Google Health Connect (`com.google.android.apps.healthdata`|
 |  - Google Fit (`com.google.android.apps.fitness`)            |
-|  - Shortcuts exposed directly on Lawnchair home screen       |
+|  - Native Companion Bridge APKs (`org.kleinbem.gbox.*`)      |
 +--------------------------------------------------------------+
 ```
+
+### GBox Companion Bridge APKs (App Drawer & Search Integration)
+
+Standard Android launchers (such as Lawnchair 14) populate the **App Drawer** and **Global Search Bar** strictly via Android's `LauncherApps` / `PackageManager.queryIntentActivities()` APIs. Pinned shortcuts created directly by GBox are deep shortcuts (`ShortcutInfo`, type 6) placed strictly onto workspace cells and will **never** appear in the All Apps drawer or search bar.
+
+To make any GBox app searchable, filterable, and cataloged natively:
+- A featherweight companion APK (`org.kleinbem.gbox.<name>`) is compiled and installed into the Android OS layer.
+- **Activity**: Transparent activity that fires `com.gbox.android.action.LAUNCH_APP` with `setPackage("com.gbox.android")` and extra `packageName = <target_gbox_package>`, then immediately finishes (`finish()`).
+- **Overhead**: Zero runtime memory or background battery consumption.
+- **Icons**: Official 512x512 adaptive/mipmap icons across all densities (`mdpi` through `xxxhdpi`).
+- **Inventory**: YouTube (`org.kleinbem.youtube`), Gmail, Google Calendar, Google Drive, Google Keep, Google Meet, Google Chat, Google Fit, Health Connect, Instagram, Family Link, Google Play Store (`org.kleinbem.gbox.*`).
+- Generator script: `/tmp/build_gbox_bridges.py`.
 
 ### 1-Command Native App Installation (`matepad install` or `apkeep`)
 Download and install directly from CLI:
@@ -118,7 +130,7 @@ adb -s QBK6R20825000010 shell cmd appops set <package> <op_name> allow
 Shizuku provides elevated Android API access via `adb` permission delegation.
 
 - **Automatic Start on USB Plug**:
-  Configured in `nix-config/modules/nixos/android.nix` via udev rule and `shizuku-matepad.service`. Whenever the tablet is connected or reboots over USB, Shizuku is automatically booted in the background.
+  Configured in `nix-config/modules/nixos/android.nix` via udev rule and `shizuku-auto.service`. Whenever the tablet or phone is connected or reboots over USB, Shizuku is automatically booted in the background.
 - **Check if running**:
   ```bash
   adb shell ps -ef | grep shizuku_server
