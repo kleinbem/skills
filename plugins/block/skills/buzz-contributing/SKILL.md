@@ -127,6 +127,9 @@ Downstream (nixpkgs) can carry their commits with `fetchpatch2` meanwhile.
   platform (#3700, #5600).
 - Don't ping individuals or teams. If nothing moves for a couple of weeks, open one issue
   that lists the related PRs and asks for triage.
+- Official channel: the **Buzz feedback community** (a Buzz community, not Discord; invite link
+  in `README.md`, section "Community"), for questions and feedback. Block's Discord invite is
+  dead (2026-10-22). One short message there, sent by Martin, after the triage issue.
 - Keep the PR mergeable: rebase when it conflicts with `main` (triagers resolve conflicts
   otherwise, #2255). Before any review, force-pushing is fine; **once a review started, push new
   commits instead** (`CONTRIBUTING.md`: "don't force-push during review").

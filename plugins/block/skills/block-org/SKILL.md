@@ -55,8 +55,11 @@ only these org checks show. That is normal, not a failure (buzz: maintainers clo
 ## 2. Before starting
 
 - Search issues and PRs first (`upstream-contributing`). The org guide adds: discuss substantial
-  changes in an issue or on Block's open source Discord (`discord.gg/block-opensource`) and wait
+  changes in an issue or on Block's open source Discord and wait
   for alignment before writing code; break large changes into small PRs.
+  The Discord invite all Block docs give (`discord.gg/block-opensource`) is dead (Discord:
+  "Unknown Invite", checked 2026-10-22); use the repo's own channel instead (buzz: see
+  `buzz-contributing`).
 - **Check the repo actually takes outside PRs.** berd closes them automatically
   (`close-external-prs.yml`); its contribution is an issue. Look for a `close-external-prs` or
   similar workflow and the repo's `CONTRIBUTING.md` before preparing a patch.
