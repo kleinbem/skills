@@ -26,6 +26,7 @@ model invocation of manual skills.
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
 | Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing` |
+| Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -45,7 +46,7 @@ repo table says which repos have a skill.
 ## 0. The switches: settle them before anything else
 
 These differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
-reviewed PR. Never carry an answer over from another project. As of 2026-10-21 (the repository skill
+reviewed PR. Never carry an answer over from another project. As of 2026-10-22 (the repository skill
 is authoritative; update this table when one changes):
 
 | | PRs from us | Issue first | Who writes texts | AI attribution | Sign-off | Title |
@@ -56,6 +57,7 @@ is authoritative; update this table when one changes):
 | Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits |
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
+| AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
 adds its row.

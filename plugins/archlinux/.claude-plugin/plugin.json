@@ -1,0 +1,7 @@
+{
+  "name": "archlinux",
+  "description": "Arch Linux: archlinux-org (no AI policy and our rule, governance, channels, 0BSD package sources, repo table), aur-contributing",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

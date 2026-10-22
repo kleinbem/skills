@@ -36,6 +36,11 @@
       "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing"
     },
     {
+      "name": "archlinux",
+      "source": "./plugins/archlinux",
+      "description": "Arch Linux: archlinux-org (no AI policy and our rule, governance, channels, 0BSD package sources, repo table), aur-contributing"
+    },
+    {
       "name": "kleinbem-fleet",
       "source": "./plugins/kleinbem-fleet",
       "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace"
