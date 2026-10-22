@@ -18,6 +18,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `aaif-goose` | `goose-contributing` | aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
 | `mesh-llm` | `mesh-llm-org` | Mesh-LLM organization: attribution, security, how the repos relate |
 | `mesh-llm` | `mesh-llm-contributing` | Mesh-LLM/mesh-llm: builds, validation, commit and PR rules, pre-flight CI |
+| `archlinux` | `archlinux-org` | Arch Linux: no AI policy (our rule instead), governance, channels, 0BSD package sources, repo table |
+| `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
 
