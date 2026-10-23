@@ -75,6 +75,10 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   and PRs (`gh search issues --include-prs --repo <owner>/<repo> <terms>`), plus open PRs touching
   the same files (`gh pr view <N> --json files`). Build on or credit existing work instead of
   duplicating it, and never open a competing PR. Quote related decisions you find in the PR text.
+  Search for the component noun in titles (`sidecars in:title`) and for the fix's words, not only
+  the symptom's: block/buzz#8540 was filed although #3069 ("prefer bundled sidecars in releases")
+  already fixed it, because the searches used the symptom's terms ("sidecar placeholder",
+  `CARGO_MANIFEST_DIR`).
 - One logical change per PR. Anything beyond a small fix needs an issue and an acknowledged
   approach first, unless the repository skill says otherwise.
 - Verify the downstream premise on the built artifact (manifest, `patchelf --print-needed`, bundle
