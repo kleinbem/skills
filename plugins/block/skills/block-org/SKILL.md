@@ -24,7 +24,7 @@ proto-at-block, ...) are listed in `block/.github/profile/README.md`; this skill
 - **DCO sign-off on every commit.** The org guide requires it for Apache-licensed projects, and
   every block/* repo we touch is Apache-2.0. The `DCO Check` (Block's own `block-dco-check` app)
   runs on every PR in the org, including repos whose docs don't mention it (aittributor, ai-rules,
-  lhm, catch, buzz-app). Use `Signed-off-by: Martin Kleinberger <email>` in the jj description, or
+  lhm, catch); buzz-app's `AGENTS.md` requires it too. Use `Signed-off-by: Martin Kleinberger <email>` in the jj description, or
   `--signoff` on `git commit`/`rebase`/`cherry-pick`. The sign-off certifies Martin wrote or may
   submit the change: add it only after he has reviewed it.
 - **CLA:** the org guide says a one-time CLA "may" be needed and asks first-time contributors to
@@ -78,7 +78,7 @@ only these org checks show. That is normal, not a failure (buzz: maintainers clo
 - **Most Block staff keep their org membership private**, so GitHub labels them `CONTRIBUTOR`.
   When measuring "outside" PRs, check profiles and PR counts, not only `author_association`.
 - Outside merges are rare (newest ≤300 merged PRs per repo, 2026-10-19, upper bounds): aittributor
-  54% (13 of 24, two people), buzz-app 17%, buzz 6% (about four real outsiders), ai-rules 3%, berd
+  54% (13 of 24, two people), buzz-app about 0.3% (at most 3 of 1,154 merged PRs since 2026-09-10 from non-staff forks, 2026-10-23), buzz 6% (about four real outsiders), ai-rules 3%, berd
   none (every merged author has write access; it now closes outside PRs). Internal PRs often merge within hours; outside ones in weeks
   (buzz median about 8 weeks). Prefer a precise issue when a PR is unlikely to land.
 - Recurring cross-repo issues worth one issue each (seen while packaging, 2026-10-20): Rust CLIs
@@ -92,7 +92,8 @@ only these org checks show. That is normal, not a failure (buzz: maintainers clo
 |---|---|---|
 | block/buzz | `buzz-contributing` | PRs accepted; DCO, agent reviewers, `buzz-review-completed` |
 | block/berd | `berd-contributing` | **issues only**, outside PRs auto-closed |
-| block/buzz-app, aittributor, ai-rules, lhm, agent-task-queue, braindump, codecrucible, review, trailblaze, catch | none yet | write the repository skill before our first contribution (`upstream-contributing`, "First contact") |
+| block/buzz-app | `buzz-app-contributing` | Buzz 1.0 beta; PRs accepted but outside merges rare; DCO, `Co-authored-by` for agents, code-owner approval, `buzz-review-completed` |
+| block/aittributor, ai-rules, lhm, agent-task-queue, braindump, codecrucible, review, trailblaze, catch | none yet | write the repository skill before our first contribution (`upstream-contributing`, "First contact") |
 
 When a repository skill is added, update its row here and add its rows in `upstream-contributing`
 (route and switches tables).

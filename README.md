@@ -11,6 +11,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `nixos` | `nixpkgs-maintaining` | Nixpkgs maintainer work: update PRs, merge bot, teams |
 | `block` | `block-org` | Block organization (block/*): DCO and org checks, security, governance, repo table |
 | `block` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
+| `block` | `buzz-app-contributing` | Pull requests to block/buzz-app (Buzz 1.0): DCO, Co-authored-by, scope checkpoint, ready checklist, reviewers |
 | `block` | `berd-contributing` | Issues for block/berd (no outside PRs): the forms, building on NixOS, what the history shows |
 | `ggml-org` | `ggml-org` | ggml-org organization: AI usage policies (Martin writes every text), where ggml changes go, repo table |
 | `ggml-org` | `llama-cpp-contributing` | ggml-org/llama.cpp: issues before features, regression tests, module-prefixed titles, NixOS builds |
