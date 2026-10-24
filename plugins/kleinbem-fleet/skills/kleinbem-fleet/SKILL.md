@@ -35,12 +35,35 @@ Other repos: `github-config` (Terraform-managed GitHub org settings),
 `nix-secrets`/`openwrt-secrets`), `kleinbem-site` (kleinbem.dev),
 `kleinbem-auth` (visitor login service).
 
+## Work in your own jj workspace, always
+
+Every agent session that edits a repo claims its own jj workspace first;
+the primary checkout (`<repo>/`) is Martin's. Sessions sharing one working
+copy destroy each other's edits (jj snapshots `@` on every command), and
+sessions that finish in the primary checkout leave commits, bookmarks and
+half-edits behind — a clean-up on 2026-10-24 found 71 of those.
+
+```
+just jj::ws-new <repo> [name]              # <repo>.ws/<name>/ on main — cd there, then work
+just jj::ws-new <repo> <name> -r <change>  # start on an existing change (move work out of the primary)
+just jj::ws-list [filter]                  # open workspaces and their @ state
+just jj::ws-gc [filter]                    # reap empty/undescribed ones older than 4h
+```
+
+Inside a workspace use `jj`, never raw `git` (no `.git` there); `jj git
+push` and `gh pr create` work from it. Finish from the workspace: describe,
+push, open the PR. After the merge, `ws-gc` reaps the workspace and
+`just pull-all` / `just abandon-merged` drops the local copy of the merged
+change. If "working copy is stale" appears, `jj workspace update-stale`.
+
 ## Fleet-wide commands
 
 Run from anywhere in the workspace; `filter` substring-matches repo names:
 
 ```
 just status-all [filter]        # repo state + ahead-of-origin counts
+just clean [filter]             # all-clean check: dirty / not in main / conflicts / workspaces / PRs / branches
+just abandon-merged [--dry-run] # drop local copies of changes already on main (proven only)
 just diff-all [filter]          # uncommitted changes fleet-wide
 just remote-status [filter]     # CI / PRs / issues (hits gh API)
 just ship-all "msg" [filter]    # save-all + sign-unsigned + push-all
