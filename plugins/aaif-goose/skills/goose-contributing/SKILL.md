@@ -117,3 +117,15 @@ From the last 80 closed or merged pull requests from forks (2026-10, 37 merged, 
   keep "Allow edits by maintainers" on and fetch the fork before every push.
 - **Known pre-existing CI failures** (for example MCP conformance) don't block a merge when the maintainer confirms
   them (#12580); say so in the PR instead of "fixing" unrelated tests.
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6):
+- The PR answers a **Ready** issue and stays in its agreed scope (section 0).
+- `AGENTS.md` rules (section 1): `anyhow::Result`, no restating comments, nothing optional that
+  needn't be, no overly defensive code; and CONTRIBUTING's agent failure modes (trivial tests,
+  widened types, swallowed errors, bloat, redundant logging).
+- Tests in `tests/` folders; new features update `goose-self-test.yaml`.
+- CI's checks ran per changed crate (section 2): fmt, clippy `-D warnings`, tests with
+  `GOOSE_DISABLE_KEYRING=1`; UI typecheck and tests if touched.
+- Body: `Fixes: #<Ready issue>`, Summary, Testing that follows the issue's verification plan,
+  screenshots for UX.

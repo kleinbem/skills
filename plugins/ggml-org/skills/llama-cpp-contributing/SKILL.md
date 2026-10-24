@@ -218,3 +218,17 @@ cite most:
   MeshLLM builds model files per file, llama.rn carries its own patch). Change prepared in the jj
   workspace `llama.cpp.ws/clef-include`; facts and steps in the Obsidian note
   "llama.cpp clef include facts". The PR is Martin's to open (section 0).
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6). The review covers the code and
+Martin's notes, never drafts of his texts (section 0); its output stays private.
+- `skills/code-review/SKILL.md` in self-review mode for the touched area, including its
+  mandatory security pass (section 2).
+- Simplicity and reuse: no new subsystem, dependency, header or file without discussion.
+- Style and naming (section 2), `clang-format` when in doubt; comments only for the non-obvious;
+  ASCII only.
+- Tests in existing files; operator changes have `test-backend-ops` cases on two backends,
+  `docs/ops.md` and the CSVs updated, throughput numbers for kernels.
+- Size: Martin can review it line by line in the time the policy expects (an hour per 200-400
+  LOC).
+- Martin's PR text keeps `## Requirements` with an honest `AI usage disclosure` line (section 5).

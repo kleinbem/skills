@@ -1,6 +1,6 @@
 ---
 name: upstream-contributing
-description: Load before any issue, pull request, review reply, comment or patch for a repository outside kleinbem/* (nixpkgs and other NixOS repos, block/*, aaif-goose/goose, Mesh-LLM, ggml-org/llama.cpp or any other project). It routes to the organization and repository skills (read them as files), runs the first-contact procedure for a new repo, and holds the shared workflow (search first, verify, rebase, draft until Martin says ready, his voice, bot reviews, refresh the repo skill before opening a PR, carry fixes downstream).
+description: Load before any issue, pull request, review reply, comment or patch for a repository outside kleinbem/* (nixpkgs and other NixOS repos, block/*, aaif-goose/goose, Mesh-LLM, ggml-org/llama.cpp or any other project). It routes to the organization and repository skills (read them as files), runs the first-contact procedure for a new repo, and holds the shared workflow (search first, verify, rebase, draft until Martin says ready, an independent review before ready, his voice, bot reviews, refresh the repo skill before opening a PR, carry fixes downstream).
 ---
 
 # Contributing upstream: the router and the shared workflow
@@ -134,14 +134,32 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   fold new reviewer patterns and rule changes into the skill and merge that first
   (`contribution-skill-authoring`, section 6). A monthly routine refreshes all skills as well.
 
-## 6. Public steps need Martin's explicit OK
+## 6. Independent review before ready
+
+Before a PR goes ready (or, if it already is, before its first human review), a fresh session
+reviews it, ideally on another model than the one that wrote it: the author session is blind to
+its own choices. For buzz and buzz-app this is also upstream's rule (`AGENTS.md`: an agent review
+ran and its blockers were fixed or declined).
+- The author session writes a handoff from the template `review-handoff.md` next to this skill
+  (`~/.agents/skills/upstream-contributing/review-handoff.md`) to
+  `~/.cache/<repo>-<N>-review-handoff.md`, and gives Martin the prompt at its end. Martin starts
+  the review session.
+- The reviewer only reads: no edit, commit, push or comment. It checks against the sources of
+  truth in the checkout, the repository skill's "Review checklist", the PR body, and every fix
+  from earlier rounds.
+- Findings come back to the author session; Martin decides which to take. Rerun the review after
+  substantial changes.
+- Not for issues-only repos (berd) or text Martin writes himself (llama.cpp's texts); there the
+  review covers the code or the draft notes.
+
+## 7. Public steps need Martin's explicit OK
 
 Opening a PR or issue, marking ready, commenting, force-pushing a reviewed PR, closing, posting
 review results: each is a separate confirmation, even inside a "continue" plan, and especially when
 new open points came up after the go-ahead. **PRs stay draft until Martin says ready.** The project
 skill may forbid even more (llama.cpp: the agent never commits, pushes or posts).
 
-## 7. After opening
+## 8. After opening
 
 - Answer every bot or AI review comment (Codex, CodeRabbit, maintainers' 🤖 agents): fix it, or
   reply in one line why not. Unanswered ones can get a PR closed.

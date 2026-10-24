@@ -205,3 +205,15 @@ gh pr list -R block/buzz-app --state merged --limit 150 --json reviews --jq '[.[
 - Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits draft #941 (it uses
   `client::start`/`serve::start` and `disable_iroh_relays` on 0.78.1); the relay switch is
   restored in Mesh-LLM/mesh-llm#2564 (draft). block/buzz#8557 is the 0.X side.
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6; `AGENTS.md` "Reviewing"
+requires it, and its findings are step 1 of section 5):
+- Run the review as `AGENTS.md` "Reviewing" describes, on the merged tree against fetched `main`.
+- Tests at the cheapest layer that observes the failure, deterministic (no sleeps,
+  `waitForTimeout`, retries), fail-then-pass evidence (section 3).
+- The pre-push gate ran by hand, since jj skips Lefthook (section 4), with host and mode stated.
+- UI: both themes, narrow and wide, enlarged text, keyboard and pointer, screenshots.
+- Commits: DCO sign-off only after Martin's review, `Co-authored-by:` for the agent (section 0).
+- Body: problem with a reproduction on `main`, scope checkpoint and non-goals, exact validation;
+  `buzz-review-completed` only after Martin tested it himself.

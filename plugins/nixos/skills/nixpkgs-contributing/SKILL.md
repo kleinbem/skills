@@ -165,3 +165,22 @@ Practical notes:
   already have changed the line.
 - A test suite that fails fast hides the next failure. Find them all in one pass with a
   `nix-shell -A <attr>` replay of the build and `cargo test --no-fail-fast` (or the equivalent).
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6):
+- Commits: `<attr>: init at …` / `<old> -> <new>` / `nixos/<module>: …`, one per logical unit,
+  `maintainers: add` first, `Assisted-by: <tool> (<model + version>)` on each commit the agent
+  touched (section 1); PR title matches.
+- Base branch fits the rebuild count (section 0).
+- Derivation shape (section 2 and the 2026-10-19 scan in section 4): `finalAttrs`, `tag =`,
+  `strictDeps`/`__structuredAttrs`, attribute order, `meta` complete (description style, license,
+  maintainers, `mainProgram`, platforms), updateScript, version check.
+- Every patch, `substituteInPlace`, skipped test and `doCheck = false` has a comment with the
+  upstream link or the reason; patches available remotely are fetched.
+- Variants and pinned packages carry `# nixpkgs-update: no auto update`.
+- Modules: `nixos/README.md`'s checklist (type, default, example, description per option;
+  `meta.maintainers`, `meta.doc`), RFC 42 `settings`, secrets only from files, hardening,
+  `passthru.tests` linking the NixOS test, release note, `redirects.json` entries.
+- NixOS tests: new style, falsifiable, no `! cmd` no-ops under errexit.
+- PR body: template kept, boxes true for the exact head (nixpkgs-review-gha judged by its report,
+  not the run status), AI disclosure, short, "I".
