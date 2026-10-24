@@ -143,6 +143,10 @@ Section order (keep the numbering; drop a section only when the project has noth
 - **6. CI and bots**.
 - **7. What the history shows** (dated numbers, PR examples).
 - **8. Our setup and current threads** (fork, paths, downstream packaging, open items).
+- **Review checklist** (last, unnumbered): five to ten bullets the independent review before
+  ready checks (`upstream-contributing`, section 6), each pointing at the rule above or the
+  repo's own file it comes from; it fills the handoff's "Worth checking". Only what is specific
+  to the repo: the shared checks (voice, ticked boxes, claims, rebase) are in the template.
 
 Style rules for the text:
 - Short sentences, bullets of one or two sentences, commands in code spans, no filler.
@@ -188,6 +192,8 @@ monthly routine for all skills:
 2. Rerun the measurement commands (section 3) for the PRs since the skill's date.
 3. Fold new rules, reviewer patterns and changed numbers into the skill, update its date, and
    merge that before opening the PR.
+4. Check the Review checklist against what changed: a new reviewer pattern usually belongs there
+   too.
 
 Also:
 - After every review round or merge, add what the reviewers taught (one bullet with the PR

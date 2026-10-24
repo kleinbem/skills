@@ -253,3 +253,17 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   A push dismisses approvals, so rebase all affected PRs in one go, pre-flight first.
 - Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
   build on its head; pushing a stale local bookmark would overwrite their work.
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6):
+- **No agent attribution anywhere**: no trailers in commits, no agent footer in the PR body
+  (section 3).
+- Title and every commit pass `cargo xtool repository conventional-commits`.
+- The repository's patterns (section 1): settings vs env overrides and their tripwires, file size
+  rule, atomic persisted state, additive protocol changes, Skippy patch ownership and ABI,
+  gate tests that prove the gated work doesn't happen, docs following code.
+- Claims: test counts and behaviour in the body reproduce at the head commit.
+- Template sections filled (Original problem, Diagnostics naming the introducing PR, Fix,
+  Validation with only run boxes ticked); no `TODO` left.
+- The "right before opening" list in section 4, and the pre-flight on the exact head.
+- `ci/slices.yml` and `ci/ownership.yml` identical to main's (section 5).

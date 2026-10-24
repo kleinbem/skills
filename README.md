@@ -4,7 +4,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 
 | Plugin | Skill | What it covers |
 | --- | --- | --- |
-| `upstream` | `upstream-contributing` | **Always loaded.** Router to the organization and repository skills, first-contact procedure, the workflow every upstream contribution shares, the switches table |
+| `upstream` | `upstream-contributing` | **Always loaded.** Router to the organization and repository skills, first-contact procedure, the workflow every upstream contribution shares, the switches table, the review-before-ready handoff template |
 | `upstream` | `contribution-skill-authoring` | Writing and refreshing organization and repository skills (before the first contribution and before every PR) |
 | `nixos` | `nixos-org` | NixOS organization: the nixpkgs and nix AI policies, security, RFCs, repo table |
 | `nixos` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks, review patterns |

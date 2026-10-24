@@ -125,3 +125,14 @@ directly, and "packages that violate the rules may be deleted without warning".
   to `/usr/lib/mesh-llm/native-runtimes/`. Build it on the 0.79 release; lessons from the nixpkgs
   packaging apply (`skippy-native-runtime`). Survey and the draft message to George: Obsidian
   `Projects/Buzz nixpkgs/Drafts/mesh-llm-arch-aur-plan.md`.
+
+## Review checklist
+The AUR has no PRs: this review runs before Martin pushes (`upstream-contributing`, section 6).
+- Package naming and the official-repos/duplicate checks (section 1).
+- PKGBUILD (section 2): header and contributors, 0BSD `LICENSE`, SPDX `license=()`, transparent
+  sources with checksums, offline `build()`/`check()`/`package()`, `depends` vs `makedepends`
+  vs `checkdepends`, split-package `provides`/`conflicts`.
+- `namcap` clean or each warning explained; fresh-container build passed (section 3).
+- The installed package was run in an Arch distrobox, not only built.
+- `.SRCINFO` regenerated, `pkgver`/`pkgrel` bumped correctly, per-repo git identity set, no
+  agent trailers (section 4).

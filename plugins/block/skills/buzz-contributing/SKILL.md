@@ -133,3 +133,17 @@ Downstream (nixpkgs) can carry their commits with `fetchpatch2` meanwhile.
 - Keep the PR mergeable: rebase when it conflicts with `main` (triagers resolve conflicts
   otherwise, #2255). Before any review, force-pushing is fine; **once a review started, push new
   commits instead** (`CONTRIBUTING.md`: "don't force-push during review").
+
+## Review checklist
+For the review before ready (`upstream-contributing`, section 6; `AGENTS.md` requires it):
+- `AGENTS.md`'s Review-Proven Rules (section 0), one by one against the diff.
+- Regression test fails on `main` and passes on the branch, through the production seam
+  (section 2); `TESTING.md` followed.
+- Docs: new config variables in `README.md` or `.env.example`; event kinds, MCP tools, APIs per
+  the CONTRIBUTING how-tos.
+- Migrations and schema: `docs/database.md` rules, every schema location updated.
+- Style (section 3): no `unwrap()`/`expect()` outside tests, `#![deny(unsafe_code)]`, `thiserror`
+  vs `anyhow`, `tracing` fields; fmt and clippy per touched crate.
+- Commits: Conventional Commits, DCO sign-off only after Martin's review.
+- Body: Summary, Related issue ("none found" if so), Testing with copy-paste steps and expected
+  before/after output; `buzz-review-completed` only after Martin tested it himself (section 5).

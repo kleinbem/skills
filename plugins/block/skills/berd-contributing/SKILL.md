@@ -142,3 +142,12 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
 - **Lesson for us:** report one packaging blocker per issue, reproduced on the release tag, with the Nix build as the
   repro, logs scrubbed, and our workaround stated. Expect a fix within days when it is a clear bug, nothing when it
   is a direction.
+
+## Review checklist
+Berd takes no PRs; the review before Martin files an issue (`upstream-contributing`, section 6)
+checks the draft notes against section 1:
+- Searched open and closed issues; the closest one linked or "none found".
+- Reproduced on the current release, version stated (a `main` build named by commit).
+- One issue per issue; every form field in order; expected and actual as separate statements.
+- Logs scrubbed; "unknown" instead of guessed details.
+- Feature requests: the problem first, non-goals present.
