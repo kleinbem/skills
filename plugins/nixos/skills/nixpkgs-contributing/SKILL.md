@@ -85,6 +85,10 @@ relevant section before acting on a rule from memory.
 ## 3. Pre-push gate
 1. `nix fmt` (or `nix-shell --run treefmt`)
 2. `./ci/nixpkgs-vet.sh master`
+   and `nix-check-nixpkgs-pr --drvs-against <last pushed head>` (kleinbem/nix-toolbox, on `PATH`
+   in the workspace shell) in the PR worktree, before every push: deadnix on new files (nixpkgs
+   CI doesn't run it), variant `meta.position`, workaround links, and whether a derivation
+   changed, so you know which tests must rerun. Not a git hook: worktrees come and go per PR.
 3. `nix-build -A <attr>` (sandbox enabled)
 4. `nix-build -A <attr>.passthru.tests` and any relevant `nixosTests.<name>`
 5. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`)
