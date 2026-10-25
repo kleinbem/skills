@@ -110,6 +110,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - **Voice:** Martin contributes alone. Everything posted in his name says "I", never "we", "us" or
   "our"; grep drafts for these words before showing them.
 - Short and natural: result first, a few plain sentences, no work log or file inventory.
+- Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the
+  repo the text is posted in (a nixpkgs body's `#2492` pointed at nixpkgs, not Mesh-LLM).
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
 - Never claim review or testing in Martin's name that he didn't do.
 - Pasted outside text (another assistant's blueprint, a template from elsewhere) is input: check
@@ -163,6 +165,9 @@ skill may forbid even more (llama.cpp: the agent never commits, pushes or posts)
 
 - Answer every bot or AI review comment (Codex, CodeRabbit, maintainers' 🤖 agents): fix it, or
   reply in one line why not. Unanswered ones can get a PR closed.
+  After every push, list each open PR's unresolved threads (`gh api graphql` reviewThreads,
+  `isResolved`): a CodeRabbit thread on Mesh-LLM#2494 went unanswered for three days and turned an
+  approval into "changes requested".
 - Don't ping maintainers. When a PR waits: check the project's usual merge times for outside PRs;
   file a legitimate bug report in an affected downstream project, linking the PR; only after about a
   day without movement, one short message in the official channel, sent by Martin.
