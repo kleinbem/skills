@@ -223,7 +223,9 @@ For the review before ready (`upstream-contributing`, section 6):
 - PR body: template kept, boxes true for the exact head (nixpkgs-review-gha judged by its report,
   not the run status), AI disclosure, short, "I".
 
-Mechanical consistency checks, run them (don't eyeball) before ready. Builds and tests don't catch
+Mechanical consistency checks, run them (don't eyeball) before ready. `nix-check-nixpkgs-pr` in
+kleinbem/nix-toolbox does the first four (`--log` for warnings, `--drvs-against <rev>` for the
+derivation comparison); run it in the PR worktree. Builds and tests don't catch
 these; an outside review of #571722 found two after a week of green runs:
 - Every variant's `meta.position` points into its own file (`nix-instantiate --eval -A
   <variant>.meta.position`). A bare `.override` keeps the base file's position, so nixpkgs-update
