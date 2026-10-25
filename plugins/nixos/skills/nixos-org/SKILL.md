@@ -1,6 +1,7 @@
 ---
 name: nixos-org
-description: Organization skill for the NixOS GitHub organization (NixOS/nixpkgs, NixOS/nix, NixOS/nixos-hardware, NixOS/nixfmt, NixOS/nixpkgs-vet, ...): the two AI policies and which repos follow which, security reports, RFCs, the code of conduct, channels, and the repo table. Read after upstream-contributing, before the repository skill.
+description: >-
+  Organization skill for the NixOS GitHub organization (NixOS/nixpkgs, NixOS/nix, NixOS/nixos-hardware, NixOS/nixfmt, NixOS/nixpkgs-vet, ...): the two AI policies and which repos follow which, security reports, RFCs, the code of conduct, channels, and the repo table. Read after upstream-contributing, before the repository skill.
 disable-model-invocation: true
 ---
 

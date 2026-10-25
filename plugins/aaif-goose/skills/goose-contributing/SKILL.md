@@ -1,6 +1,7 @@
 ---
 name: goose-contributing
-description: Use when preparing, updating, or reviewing an issue or pull request to aaif-goose/goose (the goose AI agent: Rust crates, CLI, ACP server, Electron desktop) to follow its issues-first workflow, PR template, Conventional Commits titles and AI-review rules, and to build and test it on NixOS without Hermit.
+description: >-
+  Use when preparing, updating, or reviewing an issue or pull request to aaif-goose/goose (the goose AI agent: Rust crates, CLI, ACP server, Electron desktop) to follow its issues-first workflow, PR template, Conventional Commits titles and AI-review rules, and to build and test it on NixOS without Hermit.
 disable-model-invocation: true
 ---
 

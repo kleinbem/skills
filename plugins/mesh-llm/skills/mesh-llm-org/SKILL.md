@@ -1,6 +1,7 @@
 ---
 name: mesh-llm-org
-description: Organization skill for the Mesh-LLM GitHub organization (Mesh-LLM/mesh-llm, mesh-packaging, homebrew-tap, mesh-app, the llama.cpp fork, ...): security reports, channels, attribution rules, how the repos relate, and the repo table. Read after upstream-contributing, before the repository skill.
+description: >-
+  Organization skill for the Mesh-LLM GitHub organization (Mesh-LLM/mesh-llm, mesh-packaging, homebrew-tap, mesh-app, the llama.cpp fork, ...): security reports, channels, attribution rules, how the repos relate, and the repo table. Read after upstream-contributing, before the repository skill.
 disable-model-invocation: true
 ---
 

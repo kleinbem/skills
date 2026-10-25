@@ -1,6 +1,7 @@
 ---
 name: block-org
-description: Organization skill for the block GitHub organization (block/buzz, block/berd, block/buzz-app, block/aittributor, block/ai-rules, block/lhm, block/catch and other block/* repos): Block's org-wide rules (block/.github), the checks every block/* PR gets (DCO, Semgrep, zizmor), security reporting, governance, how outside contributions fare per repo, and the repo table. Read after upstream-contributing, before the repository skill.
+description: >-
+  Organization skill for the block GitHub organization (block/buzz, block/berd, block/buzz-app, block/aittributor, block/ai-rules, block/lhm, block/catch and other block/* repos): Block's org-wide rules (block/.github), the checks every block/* PR gets (DCO, Semgrep, zizmor), security reporting, governance, how outside contributions fare per repo, and the repo table. Read after upstream-contributing, before the repository skill.
 disable-model-invocation: true
 ---
 

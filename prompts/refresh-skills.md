@@ -21,15 +21,16 @@ issues, PRs, comments, reviews). Upstream repos are read-only sources.
    `disable-model-invocation: true` in org and repo skills. If a fact moved to a different
    layer, put it in the highest layer where it is true. Update the switches table in
    upstream-contributing if a repo's policy changed.
-4. Run `claude plugin validate .` if the claude CLI exists; otherwise check every SKILL.md still
-   has valid frontmatter (name, description, disable-model-invocation where it was).
+4. Run `python3 scripts/check-skills.py` (needs PyYAML) and `claude plugin validate .` if the
+   claude CLI exists; both must pass before you push. CI runs the same checks.
 5. If nothing changed, make no PR and end with 'no changes'. Otherwise: branch
    `chore/skills-refresh-<YYYY-MM>`, one commit `docs(skills): monthly refresh <YYYY-MM>`, push
    it and open a PR against main with a short body: one line per changed skill saying what
    changed and the upstream source or PR numbers that prove it, ending with the attribution line
    of the agent that did the work. Then enable squash auto-merge (`gh pr merge --auto
-   --squash`); if that fails because the PR is already mergeable, merge it with `gh pr merge
-   --squash`. If merging is blocked (e.g. required signatures), leave the PR open and say so.
+   --squash`): the PR merges by itself once the `check` CI job is green. Never merge around
+   the check. If it fails, fix the cause on the branch; if you can't, leave the PR open and
+   say so.
 
 Final answer: the PR link (or 'no changes'), one line per changed skill, and anything you
 couldn't check (rate limits, missing access).

@@ -1,6 +1,7 @@
 ---
 name: ggml-org
-description: Organization skill for the ggml-org GitHub organization (ggml-org/llama.cpp, ggml-org/ggml, ggml-org/whisper.cpp, llama.vim, llama.vscode, ...): the AI usage policies that limit what an agent may do (Martin writes every text), where ggml changes go, security reports, and the repo table. Read after upstream-contributing, before the repository skill.
+description: >-
+  Organization skill for the ggml-org GitHub organization (ggml-org/llama.cpp, ggml-org/ggml, ggml-org/whisper.cpp, llama.vim, llama.vscode, ...): the AI usage policies that limit what an agent may do (Martin writes every text), where ggml changes go, security reports, and the repo table. Read after upstream-contributing, before the repository skill.
 disable-model-invocation: true
 ---
 
