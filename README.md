@@ -58,7 +58,6 @@ Check changes with `claude plugin validate .` (`just validate`).
 ## Monthly refresh
 
 `prompts/refresh-skills.md` is the refresh job for the organization and repository skills.
-`just refresh-skills [scope]` runs it with a local agent in a fresh clone under
-`~/.cache/skills-refresh/` (`AGENT=claude`, the default, or `AGENT=goose`). It opens at most one
-PR. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
+`just refresh-skills [scope]` runs it with a local agent in a throwaway clone that is deleted afterwards
+(`AGENT=claude`, the default, or `AGENT=goose`). It opens at most one PR and merges it itself. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
 the 1st of each month.
