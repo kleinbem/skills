@@ -199,6 +199,11 @@ these; an outside review of #571722 found two after a week of green runs:
   upstream\|drop with' …`), and the link matches the PR's current state (merged, open).
 - Re-check that unchanged derivations stay unchanged after a fix (`nix-instantiate` before and
   after), so you know whether tests must rerun.
+- Read the warnings of the green runs, not only the failures: group them (`grep -i warning log |
+  sed` away numbers and store hashes `| sort | uniq -c`) and sort them into ours, harmless and
+  upstream. Fix ours (e.g. a NixOS test passing `timeout=120` instead of
+  `dt.timedelta(...)`, a test-driver deprecation), explain the harmless ones (cmake `unused-cli`
+  for options the build never reads), and note upstream ones as a possible PR.
 - Judge outside review findings yourself before applying them: severities are often wrong, and a
   suggestion can contradict nixpkgs practice (e.g. marking a wrapper unfree when only its
   dependency is).
