@@ -22,6 +22,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `archlinux` | `archlinux-org` | Arch Linux: no AI policy (our rule instead), governance, channels, 0BSD package sources, repo table |
 | `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
+| `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
+| `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
 
 Contribution skills have three layers: `upstream-contributing` (always loaded) routes to the
@@ -53,11 +55,12 @@ plugins/<plugin>/.claude-plugin/plugin.json
 plugins/<plugin>/skills/<skill>/SKILL.md
 ```
 
-Check changes with `claude plugin validate .` (`just validate`).
+Check changes with `just check` (`scripts/check-skills.py` and `claude plugin validate .`), the
+same checks CI runs on every PR.
 
 ## Monthly refresh
 
 `prompts/refresh-skills.md` is the refresh job for the organization and repository skills.
 `just refresh-skills [scope]` runs it with a local agent in a throwaway clone that is deleted afterwards
-(`AGENT=claude`, the default, or `AGENT=goose`). It opens at most one PR and merges it itself. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
+(`AGENT=claude`, the default, or `AGENT=goose`). It opens at most one PR, which merges by itself once CI is green. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
 the 1st of each month.

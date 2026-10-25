@@ -1,6 +1,7 @@
 ---
 name: aaif-goose-org
-description: Organization skill for the aaif-goose GitHub organization (aaif-goose/goose, goose-mobile, vscode-goose, goosetown): goose's move from Block to the Agentic AI Foundation, governance, security reports, channels, and the repo table. Read after upstream-contributing, before the repository skill.
+description: >-
+  Organization skill for the aaif-goose GitHub organization (aaif-goose/goose, goose-mobile, vscode-goose, goosetown): goose's move from Block to the Agentic AI Foundation, governance, security reports, channels, and the repo table. Read after upstream-contributing, before the repository skill.
 disable-model-invocation: true
 ---
 

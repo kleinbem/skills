@@ -1,6 +1,7 @@
 ---
 name: archlinux-org
-description: Organization skill for Arch Linux (the AUR, the official repositories, the ArchWiki, RFCs): the missing AI policy and what we do instead, governance, channels, licensing of package sources, and the repo table. Read after upstream-contributing, before aur-contributing.
+description: >-
+  Organization skill for Arch Linux (the AUR, the official repositories, the ArchWiki, RFCs): the missing AI policy and what we do instead, governance, channels, licensing of package sources, and the repo table. Read after upstream-contributing, before aur-contributing.
 disable-model-invocation: true
 ---
 

@@ -7,6 +7,7 @@ default:
 refresh-skills scope="":
     scripts/refresh-skills.sh {{ quote(scope) }}
 
-# Check the marketplace and every plugin
-validate:
+# What CI runs: skill structure, then the marketplace and every plugin
+check:
+    nix shell --impure --expr 'with import <nixpkgs> {}; python3.withPackages (p: [p.pyyaml])' -c python3 scripts/check-skills.py
     claude plugin validate .
