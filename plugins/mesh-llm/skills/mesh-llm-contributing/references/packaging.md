@@ -45,3 +45,14 @@ Facts a distribution package (nixpkgs) depends on. Verified at upstream `main` d
 `~/.mesh-llm` (config, data) and `~/.cache/mesh-llm` for both products; Skippy also uses
 `~/.skippy`. Overrides: `MESH_LLM_HOME`, `MESH_LLM_DATA_DIR`, `MESH_LLM_CONFIG`,
 `MESH_LLM_PLUGIN_DIR`, `MESH_LLM_NATIVE_RUNTIME_CACHE_DIR`.
+
+## Installer (verified 2026-10-21)
+
+`install.sh` on main (~880 lines; `install.ps1` for Windows, `install.md` as the agent runbook,
+spec in `mesh/docs/specs/mesh-setup-installer.md`) is the README's one-liner. It detects Linux
+x86_64/aarch64 (with Jetson probing) and macOS arm64, picks cuda/rocm/vulkan/cpu/metal, checks
+sha256 sidecars, installs atomically into `~/.local/bin` and hands service setup to
+`mesh-llm setup --service`. It has no distribution awareness, so on NixOS the glibc binary doesn't
+run (no nix-ld). Planned: a small upstream PR that detects NixOS and points at
+`nixpkgs#mesh-llm`, opened only after NixOS/nixpkgs#571722 is merged (upstream must not name a
+personal repo).

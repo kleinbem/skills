@@ -24,6 +24,10 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   `/security/advisories/new`); no public issues or details before a fix is released.
 - **Channels:** the goose Discord, `#mesh-llm` channel (`discord.gg/n8R5VaWDAn`); the `goose-oss`
   invite in the mesh-llm repo is dead.
+- **Office hours:** the core team's weekly notes are a public Google Doc
+  (`https://docs.google.com/document/d/101iitJTVFba6wpcBFXfdwYQngPV5gEliYOy-Hq4NbVo`, readable via
+  `/export?format=txt`), with an async "Suggested/requested items" section. Read-only:
+  it's their document, and Martin doesn't add items there (2026-10-22).
 - **How the repos relate:** `mesh-llm` is the product (MeshLLM host + Skippy runtime) and moves
   several times a day. Skippy pins an upstream `ggml-org/llama.cpp` commit in
   `skippy/llama_cpp/upstream.txt` and applies its own patch queue; the `Mesh-LLM/llama.cpp` fork

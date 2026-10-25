@@ -162,6 +162,20 @@ merged PRs; numbers are examples):
   Its fixture hardcodes `/bin/bash` and `/usr/bin/true`; on NixOS run it under
   `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`
   (envfs doesn't satisfy it).
+- Pre-flight details (kleinbem/mesh-llm-ci, local clone `~/Develop/github.com/kleinbem/mesh-llm-ci`):
+  - A newer queued run cancels the waiting one (concurrency group).
+  - A `packages=` override sends those crates to the macOS and Windows rows too; crates that build
+    skippy-ffi fail on Windows there because upstream never tests them on Windows. Ignore that
+    row for such manual runs. `filter=` narrows the macOS/Windows test names.
+  - The Ubuntu full xtask suite always shows 3 "requires just" failures and one rotating flaky
+    process test: environment, not regressions.
+  - To prove a test fails without the fix, push a no-fix branch and run the pre-flight with
+    `packages=`/`filter=`.
+  - jj: pushing the working-copy commit to a `preflight/…` branch makes it immutable, and jj
+    quietly starts a new empty `@`. Keep an empty `@` on top (`jj new <change>`) before pushing,
+    rebase by change id (`jj rebase -r <change> -d main@origin`, `--ignore-immutable` once
+    pushed), never `-r @`, and check the head's description before pushing the PR branch
+    (#2528: an empty head failed the commit-convention check).
 - Platforms: code under `cfg(unix)` also runs on macOS, and `cfg(not(unix))` on Windows. If a
   platform keeps the old path, say so in the PR with the reason and the equivalent (on #2444 a
   maintainer added the Windows variant himself).
