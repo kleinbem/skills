@@ -26,6 +26,8 @@ Review only: don't edit, commit, push or comment anywhere. Read `upstream-contri
   each one is really fixed)
 - Decisions on purpose, so the reviewer doesn't re-litigate them (pins, scope cuts, deferred work,
   with the reason)
+- Earlier findings that were rejected, each with the reason, and the line "raise them again only
+  with new evidence" (otherwise every new reviewer brings them back)
 
 **Done, with evidence**
 - Checks and CI runs (run IDs, per platform, at which head; a different head counts only if the
@@ -37,12 +39,20 @@ Review only: don't edit, commit, push or comment anywhere. Read `upstream-contri
 **Not done**
 - What wasn't run or tested, and why
 
+**First, the mechanical checks**
+- The repo's check script, so the review spends its attention on what a script can't see (nixpkgs:
+  `nix-check-nixpkgs-pr --log <build log>` from kleinbem/nix-toolbox, run in the worktree)
+
 **Worth checking**
-- The repo skill's "Review checklist", plus anything specific to this change
+- On a second or later round: "look for what the earlier review missed", with the areas it didn't
+  cover (behaviour on restart and upgrade, runtime dependencies, closure size, platforms, update
+  scripts, what a maintainer asks on first read)
+- On a first round: the repo skill's "Review checklist", plus anything specific to this change
 
 **Output**
 Findings ranked by severity (blocker, should fix, nit), each with file:line, the rule or source it
-breaks, and a suggested fix. Then what was checked and found fine. Then open questions for Martin.
+breaks, a suggested fix, and how it was verified: in the built artifact (the rendered manual, the
+closure, the binary) where the claim is about one, not only in the source. Then what was checked and found fine. Then open questions for Martin.
 
 ---
 
@@ -54,7 +64,8 @@ upstream-contributing skill, then read the org and repository skills it routes t
 and check against the sources of truth in the checkout. Also review the PR body
 <body path>, and verify every fix from earlier review rounds.
 
-Review only: don't edit, commit, push or comment anywhere. Report your findings
-ranked by severity, each with file:line and a suggested fix, and say clearly what
-you checked and found fine.
+Review only: don't edit, commit, push or comment anywhere. Run the mechanical
+checks the handoff names first. Report your findings ranked by severity, each with
+file:line, a suggested fix and how you verified it, and say clearly what you checked
+and found fine. Keep it short.
 ```
