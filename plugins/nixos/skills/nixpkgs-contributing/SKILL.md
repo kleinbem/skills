@@ -184,3 +184,21 @@ For the review before ready (`upstream-contributing`, section 6):
 - NixOS tests: new style, falsifiable, no `! cmd` no-ops under errexit.
 - PR body: template kept, boxes true for the exact head (nixpkgs-review-gha judged by its report,
   not the run status), AI disclosure, short, "I".
+
+Mechanical consistency checks, run them (don't eyeball) before ready. Builds and tests don't catch
+these; an outside review of #571722 found two after a week of green runs:
+- Every variant's `meta.position` points into its own file (`nix-instantiate --eval -A
+  <variant>.meta.position`). A bare `.override` keeps the base file's position, so nixpkgs-update
+  never sees the variant's opt-out; re-anchor it like `llama-cpp-vulkan` does
+  (`overrideAttrs` that re-inherits `meta.description`).
+- Each variant file matches its model (`pkgs/by-name/ll/llama-cpp-vulkan/package.nix`); diff the
+  variant files against each other.
+- One link style in module docs: `{option}\`…\`` for options, not `[](#opt-…)`
+  (`grep -n '](#opt-' nixos/modules/…/*.md`).
+- Every workaround comment names its upstream PR or the reason (`grep -n -i 'workaround\|fixed
+  upstream\|drop with' …`), and the link matches the PR's current state (merged, open).
+- Re-check that unchanged derivations stay unchanged after a fix (`nix-instantiate` before and
+  after), so you know whether tests must rerun.
+- Judge outside review findings yourself before applying them: severities are often wrong, and a
+  suggestion can contradict nixpkgs practice (e.g. marking a wrapper unfree when only its
+  dependency is).
