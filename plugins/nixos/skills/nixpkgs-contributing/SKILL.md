@@ -224,7 +224,7 @@ For the review before ready (`upstream-contributing`, section 6):
   not the run status), AI disclosure, short, "I".
 
 Mechanical consistency checks, run them (don't eyeball) before ready. `nix-check-nixpkgs-pr` in
-kleinbem/nix-toolbox does the first four (`--log` for warnings, `--drvs-against <rev>` for the
+kleinbem/nix-toolbox does the first four (the option check only notes unlinked `{option}`) (`--log` for warnings, `--drvs-against <rev>` for the
 derivation comparison); run it in the PR worktree. Builds and tests don't catch
 these; an outside review of #571722 found two after a week of green runs:
 - Every variant's `meta.position` points into its own file (`nix-instantiate --eval -A
@@ -233,8 +233,9 @@ these; an outside review of #571722 found two after a week of green runs:
   (`overrideAttrs` that re-inherits `meta.description`).
 - Each variant file matches its model (`pkgs/by-name/ll/llama-cpp-vulkan/package.nix`); diff the
   variant files against each other.
-- One link style in module docs: `{option}\`…\`` for options, not `[](#opt-…)`
-  (`grep -n '](#opt-' nixos/modules/…/*.md`).
+- Option references in module docs that should link use `[](#opt-…)`: nixos-render-docs renders
+  `{option}\`…\`` as plain code without a link (`html.py`); both forms are allowed. Check the
+  built manual, not the source, before claiming a link renders.
 - Every workaround comment names its upstream PR or the reason (`grep -n -i 'workaround\|fixed
   upstream\|drop with' …`), and the link matches the PR's current state (merged, open).
 - Re-check that unchanged derivations stay unchanged after a fix (`nix-instantiate` before and
