@@ -10,7 +10,7 @@ disable-model-invocation: true
 Layer 2 of 3: read after `upstream-contributing`, before the repository skill; the repository
 skill wins where they differ. Sources: `Mesh-LLM/mesh-llm` (`CONTRIBUTING.md`, `AGENTS.md`,
 `SECURITY.md`), `Mesh-LLM/mesh-packaging` (`AGENTS.md`); the org's `.github` repo holds only its
-profile. As of 2026-10-21.
+profile. As of 2026-10-25.
 
 ## 0. Attribution
 
@@ -35,7 +35,9 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   holds experiment branches (last pushed 2026-08-30) and is not where fixes go. `mesh-packaging`
   owns distribution (Docker images, native packages, Homebrew via `homebrew-tap`); its scripts are
   TypeScript/Node. Distribution-specific changes (Nix, Arch/AUR) belong downstream unless they
-  replace fragile patching.
+  replace fragile patching. Default plugins live in their own repos (capsules:
+  `Mesh-LLM/capsules`); the mesh-llm release bundles each one's pinned release archive under
+  `plugins/` (#2546, #2520).
 - **No DCO sign-off;** Conventional Commits; CodeRabbit reviews mesh-llm PRs and expects answers.
 
 ## 2. Repositories
