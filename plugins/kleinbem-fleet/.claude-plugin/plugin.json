@@ -1,6 +1,6 @@
 {
   "name": "kleinbem-fleet",
-  "description": "Orientation for the kleinbem NixOS + OpenWrt fleet workspace",
+  "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits)",
   "author": {
     "name": "Martin Kleinberger"
   }
