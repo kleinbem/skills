@@ -11,7 +11,7 @@ This skill holds only what is specific to goose and wins where they differ.
 
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (also `CLAUDE.md`), `.github/pull_request_template.md`,
 `.github/ISSUE_TEMPLATE/` (bug report, feature request) and `.github/workflows/ci.yml`. Read them before acting; this
-skill summarises them as of 2026-10-18 and adds what applies to our setup.
+skill summarises them as of 2026-10-25 and adds what applies to our setup.
 
 Local setup (kleinbem): clone `~/Develop/github.com/aaif-goose/goose` (jj, colocated), remotes `origin` = upstream and
 `fork` = `kleinbem/goose`. Branches go to `fork`; PRs go from the fork to `aaif-goose/goose:main`.
@@ -84,7 +84,8 @@ Use Nix instead:
 - Don't open many PRs at once: submit in order of preference and wait for them to land.
 - An AI reviewer (Codex) comments on PRs. **Answer every comment**: fix it, or reply in one line why it isn't an
   issue. Unanswered AI review comments can get the PR closed.
-- Merge times for fork PRs vary from hours to about a week.
+- Merge times for fork PRs vary from hours to weeks: the 12 merged 2026-10-18 to 10-25 took 1 h to 23 days,
+  half of them over two weeks.
 
 ## 5. For nixpkgs
 
@@ -112,7 +113,9 @@ From the last 80 closed or merged pull requests from forks (2026-10, 37 merged, 
 - **The Codex reviewer enforces AGENTS.md:** most findings were P1 (15 of 19): the retired directory, `anyhow::Result`
   in tests, missing `goose-self-test.yaml` coverage for a feature, and regressions in behaviour that has to survive a
   change (vision support across provider updates, cancel through the submission path). It commented on only 4 of the
-  37 merged PRs, so a clean change usually gets none.
+  37 merged PRs then, but on 13 of the 37 merged 2026-10-18 to 10-25 (3 of 12 from forks: #12619, #12914, #13024,
+  11 findings on #13024), again citing `goose-self-test.yaml` (#12946). Expect findings and plan time to
+  answer them.
 - **Maintainers push fixes to contributors' branches** (#12236) and help with signing or platform builds (#12869);
   keep "Allow edits by maintainers" on and fetch the fork before every push.
 - **Known pre-existing CI failures** (for example MCP conformance) don't block a merge when the maintainer confirms

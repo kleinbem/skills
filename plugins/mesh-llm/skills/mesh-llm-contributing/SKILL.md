@@ -12,7 +12,8 @@ This skill holds only what is specific to Mesh-LLM/mesh-llm and wins where they 
 Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGENTS.md`,
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
-for the touched area before acting; the project moves fast (several merges a day).
+for the touched area before acting; the project moves fast (several merges a day; 42 from
+2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-10-25.
 
 ## 0. Before the first edit (do these, in order)
 1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
@@ -104,7 +105,9 @@ merged PRs; numbers are examples):
     crate's edition) and run `cargo fmt --all --check` before committing.
   - **No Python:** the repository's Python tooling is gone and the generic Python gate is retired.
     Automation is Rust in `tools/xtask` (`cargo xtool …`) behind thin `just` recipes; don't add
-    Python, not even temporary helpers.
+    Python, not even temporary helpers. Since #2530 the Quality gate enforces it: `just
+    ci-crate-lists` rejects Python sources, shebangs and direct interpreter calls not listed in
+    `ci/python-tooling-policy.json`.
   - **Shell-only:** a syntax check (`bash -n`) plus the nearest contract test.
   - **CI:** read `.agents/skills/manage-ci/SKILL.md` completely first, then run `just ci-validate`.
 - Script tests call `/bin/bash` and `/usr/bin/true`. On NixOS, run a local copy with the paths
@@ -253,6 +256,9 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
   the reason; don't leave them unanswered. It tends to ask for backward compatibility with
   features that were never released; a maintainer said to take that with a grain of salt (#2132).
+- A maintainer (ndizazzo) reviews with ranked findings (`[P2]`, `[P3]`), each reproduced at the
+  head (#2511, #2513, #2565); a P2 can come with "changes requested" (#2422, #2565), P3s are
+  usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.
 - A push dismisses earlier approvals (repository ruleset; #2073, #2257), another reason to push
   only complete changes.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to

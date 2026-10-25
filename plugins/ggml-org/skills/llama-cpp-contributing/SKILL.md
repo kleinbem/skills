@@ -16,7 +16,7 @@ Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (`CLAUDE.md` only p
 `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/` (six forms), the repo-local skills in
 `skills/` (`code-review`, `add-new-model`, `slice-model`, `update-fusion-table`), `docs/build.md`,
 `ci/README.md`, `CODEOWNERS`, `SECURITY.md`. Read `AGENTS.md` and `CONTRIBUTING.md` in full before
-anything else; this skill summarises them as of 2026-10-21 and adds what applies to our setup.
+anything else; this skill summarises them as of 2026-10-25 and adds what applies to our setup.
 
 The project moves fast (about 100 merges a week in October 2026) and is maintained by a small
 team (see the `ggml-org/*` groups at the top of `CODEOWNERS`: ggerganov, ngxson, CISC,
@@ -88,7 +88,9 @@ What this means for our work, concretely:
 - The `ggml-gh-bot` "automated PR checker" comments on opening and the PR is closed when it hits:
   more than one open PR from a new contributor (`PR_LIMIT`), several backends in one PR
   (`DUAL_BACKEND`), a large change without prior discussion (`LARGE_CHANGE`) (#30908, #30907,
-  #30763, #30690, #30650).
+  #30763, #30690, #30650), template sections missing (`PR_TEMPLATE`, #31017, #31122), "Allow
+  edits by maintainers" off (`MAINTAINER_CAN_MODIFY`, #31017, #31135), or a description that reads
+  AI-written (`AI_DETECTED`, #31017, #31122).
 
 ## 2. Designing and writing the change
 
@@ -136,7 +138,9 @@ cite most:
   CUDA (`ci/README.md`); heavy, run it on the workstation one at a time.
 - Checks CI runs on every PR besides the builds: `editorconfig-checker` (v3.0.3), `flake8` with
   `flake8-no-print` and a Python type check for Python changes, and the model naming check
-  (`src/llama-model.cpp` arch, class and `src/models/<name>.cpp` must match). The
+  (`src/llama-model.cpp` arch, class and `src/models/<name>.cpp` must match). C/C++ and CMake
+  changes also get `Behavior Check` (#31036): `ctest -L behavior -LE 'model|backend'` on a build
+  with `-DLLAMA_FATAL_WARNINGS=ON`. The
   `.pre-commit-config.yaml` covers trailing whitespace, end of file, YAML and large files.
 - Verify perplexity and performance didn't regress (`llama-perplexity`, `llama-bench`) when the
   change can affect them.
@@ -190,16 +194,18 @@ cite most:
   2026-10-21) that the private disclosure program is disabled and fixes go in as public PRs; emails
   are ignored. Findings "an autonomous AI agent can surface on its own add little".
 
-## 7. What the history shows (2026-10-21)
+## 7. What the history shows (2026-10-25)
 
-- Of the last 40 merged PRs, 27 came from forks. Hours from opening to merge for those:
-  0, 1, 1, 3, 3, 4, 5, 7, 7, 8, 8, 9, 10, 11, 13, 15, 16, 22, 31, 35, 40, 43, 49, 62, 72, 80, 81;
-  a focused fix usually lands within a day or two.
+- Of the last 40 merged PRs (2026-10-22 to 10-25), 20 came from forks. Hours from opening to
+  merge for those: 1, 1, 1, 2, 2, 2, 3, 3, 15, 18, 25, 25, 27, 29, 34, 43, 49, 50, 60, 71
+  (2026-10-21: 27 of 40, 0 to 81 h); a focused fix usually lands within a day or two.
 - Of the recently closed fork PRs: five were closed after the automated checker's notice (PR limit,
   several backends, large change); one as "out-of-scope" by a maintainer (#30772); one for an
   approach a maintainer called ugly, with the maintainer doing it properly himself (#30849); one as
   overlapping another PR (#30748); one superseded by a faster merged patch (#30701); one because it
-  would break builds without a toolchain (#30842).
+  would break builds without a toolchain (#30842). Closed 2026-10-21 to 10-25: four more after
+  the checker's notice (#31017, #31122, #31135, #31159), two self-closed to stay within the
+  new-contributor limit (#31020, #31024), three superseded by other PRs (#28550, #30226, #30916).
 - Merged fork PRs are small and specific: one backend, one model, one op, one server fix.
 
 ## 8. Our setup and current threads
