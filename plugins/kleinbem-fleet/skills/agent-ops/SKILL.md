@@ -46,6 +46,12 @@ description: >-
 - Checks and full builds go to GitHub runners; the workstation is for builds that need its store,
   hardware or a built binary. Use every machine that's free, but never two heavy local builds at
   once.
+- Build with `--no-link`, or put the out-link in the session scratchpad. Never leave `result*`
+  links in `~/.cache` or `$HOME`: each one is a GC root, and 47 of them once kept 50+ GiB of old
+  test builds alive (one was a whole older nixos-nvme system). Keep a root only when something
+  must outlive the session, name it after what it's for, and tell Martin so he can drop it.
+- Never put store paths into PATH by hand (`~/.local/bin/x -> /nix/store/…`): the link has no root,
+  shadows the system's version and breaks after the next GC. Install through nix-config.
 
 ## Waiting productively
 
