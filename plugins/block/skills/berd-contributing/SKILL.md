@@ -77,8 +77,8 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
 ## 2. Building and diagnosing on NixOS
 
 - Toolchain: `rust-toolchain.toml` (1.94.1 on 2026-10-19; nixpkgs' `rustc` is fine), pnpm 10.33, Node, `just`,
-  Tauri 2 prerequisites (webkitgtk, libsoup, openssl, glib-networking as nixpkgs' `goose-desktop`/`buzz-desktop`
-  use them). No Hermit here, unlike goose and buzz.
+  Tauri 2 prerequisites (webkitgtk, libsoup, openssl, glib-networking as nixpkgs' `goose-desktop`
+  uses them). No Hermit here, unlike goose and buzz.
 - `just setup` installs pnpm deps, builds the vendored `@aaif/goose-sdk` and builds the pinned goose into the
   platform cache; `just dev` fails if the cache doesn't match the lock. `GOOSE_BIN=/path/to/goose just dev` is the
   explicit override: with nixpkgs' `goose-cli` (a release) it tells whether Berd works without the pinned commit.
