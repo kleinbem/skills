@@ -79,7 +79,7 @@ Environment notes (NixOS):
   (`nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc nixpkgs#rustfmt nixpkgs#clippy`,
   plus `pkg-config openssl` for crates that need them).
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
-  environment of a Nix build (`nix-shell -A buzz-desktop`, unpack/patch/configure, `pnpm build`).
+  environment of a Tauri app's Nix build (`nix-shell -A goose-desktop` in nixpkgs, then `pnpm build`).
 
 ## 5. Ready for review
 `AGENTS.md`: open work as a **draft** and mark it ready only when, scaled to the change:
