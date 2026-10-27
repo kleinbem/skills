@@ -56,6 +56,11 @@ Every repo is jj colocated with git. Use jj, raw git only to rescue.
   - Never `jj abandon` the commit a bookmark points at, for the same reason.
   - Stacked PRs close when the base PR merges and its branch is deleted: rebase onto main, open
     a new PR.
+  - A local follow-up stacked on an upstream PR branch: when that branch is rewritten (a rebase
+    fetched from the fork, a maintainer push), jj can leave the follow-up conflicted on main with
+    the parent's whole diff folded in (2026-10-27: 1,112 added lines instead of 250). After any
+    rewrite of the parent, check `jj log -r 'conflicts()'` and the follow-up's `jj diff --stat`;
+    repair with `jj duplicate <last good commit> -d <new parent head>`, then rerun its pre-flight.
 
 ## Rebasing kleinbem PR branches
 

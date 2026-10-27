@@ -66,7 +66,8 @@ description: >-
 
 - `pgrep -f`/`pkill -f` with a pattern written in the same command line matches the calling
   shell (`bash -c '<command>'`): a wait never ends, `pkill` kills the shell (exit 144). Wait on a
-  PID (`while kill -0 $pid`) or a log marker, or use a character class (`"[n]ix-build"`).
+  PID (`while kill -0 $pid`) or a log marker, or use a character class (`"[n]ix-build"`). The
+  same over SSH: `ssh host 'pkill -f …'` kills the remote shell (exit 255). Kill by PID.
 - Under `set -euo pipefail`, `VAR=$(cmd_expected_to_fail | grep …)` aborts the script; wrap it:
   `(cmd 2>&1 || true) | grep …`. A script that `git add`s internally needs `git diff HEAD --quiet`
   to detect changes.
@@ -75,6 +76,9 @@ description: >-
 
 ## Verify with real builds
 
+- GPU tests on orin-nano (JetPack 6, driver for CUDA 12): nixpkgs master defaults to CUDA 13
+  (seen 2026-10-27), which that driver can't run. Build with `cudaPackages_12` and
+  `config.cudaCapabilities = [ "8.7" ]`.
 - Eval isn't verification: build the narrowest derivation that runs the check (for sops-nix,
   `config.system.build.sops-nix-manifest`; for module docs, the NixOS manual; for packages, their
   tests).
