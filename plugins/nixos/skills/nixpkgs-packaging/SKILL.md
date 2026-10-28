@@ -7,7 +7,7 @@ disable-model-invocation: true
 # Bringing an application into nixpkgs
 
 The lifecycle, phase by phase, distilled from MeshLLM (NixOS/nixpkgs#571722: 17 upstream fixes,
-one workaround left) and the Block packages (buzz-cli merged, buzz-relay and buzz-app open, a
+a few linked workarounds left) and the Block packages (buzz-cli merged, buzz-relay and buzz-app open, a
 0.X suite abandoned). Rules that already live elsewhere are only pointed to:
 `nixpkgs-contributing` (derivation, commit and review rules), `upstream-contributing` (shared
 upstream workflow, public steps), `agent-ops` (watchers, builds), `aur-contributing` (the Arch

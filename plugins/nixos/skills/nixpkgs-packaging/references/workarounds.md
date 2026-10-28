@@ -73,7 +73,7 @@ detection, `/etc` lookups.
 | An env var set in `preCheck` for some tests leaks into others | file an issue with options instead of guessing (M#2630); skip by name |
 | darwin: `__darwinAllowLocalNetworking` for loopback; `yes_sandbox_relaxed` in review-gha | package setting |
 | darwin: Metal can't create a command queue | `GGML_METAL_DEVICES=0` (llama-cpp precedent) |
-| darwin: interface enumeration needs ICU data | `sandboxProfile` allowing `/usr/share/icu` (dumbpipe precedent) |
+| darwin: interface enumeration needs ICU data (iroh: SIGSEGV in tests that start endpoints) | `sandboxProfile` allowing `/usr/share/icu` (dumbpipe precedent), on every derivation whose tests start them, the package's own check phase included |
 | darwin: Security-framework TLS fails (OSStatus -26276) | `sandboxProfile` with `(allow mach-lookup (global-name "com.apple.trustd") (global-name "com.apple.trustd.agent") (global-name "com.apple.SecurityServer"))` (buzz-app, review-gha run 40613244514) |
 | darwin: `chmod +a` (macOS ACLs) | the sandbox has no `/bin/chmod`, coreutils' lacks `+a`: skip by name. An upstream PR calling `/bin/chmod` was dropped before opening |
 | darwin: EPERM from a spawned shell | read its stderr first: in buzz-app it was the fixed `PATH` (row above), not the sandbox |
@@ -89,6 +89,28 @@ URL-scheme handlers.
 - Tauri's deep-link plugin rewrote `~/.local/share/applications/*-handler.desktop` on every start
   with the unwrapped path: patched downstream (Nix-only), the packaged `.desktop` declares the
   scheme instead.
+
+## Writing other applications' configuration
+
+Check the HOME of a test run for files that belong to other tools. `mesh-llm serve` writes
+`~/.pi/agent/models.json` on every model load, undocumented and without opt-out, replacing an
+unparseable file. A NixOS module with its own `HOME` contains it; for users it is an upstream
+issue (opt-out, only when the tool's directory exists, never overwrite what can't be parsed,
+atomic write).
+
+## Where the evidence is
+
+An app may log the thing you want to check somewhere else than stdout: mesh-llm writes llama.cpp's
+device and offload lines to `<runtime root>/<pid>/logs/skippy-native.log`, deleted on a clean
+exit. A GPU check that grepped stdout passed nothing for ten nights before anyone looked. Find the
+evidence's location with a built binary first, then write the check; prove the check on hardware.
+
+## Fallback resolvers
+
+iroh (MeshLLM's networking) falls back to public DNS (1.1.1.1, 8.8.8.8, 9.9.9.9, also over DoH)
+when the system resolver fails, and since 1.4 its own traffic ignores `HTTPS_PROXY`. A network
+canary through a proxy sees only the DoH part; an offline or privacy-sensitive install needs an
+upstream switch (iroh offers `with_fallback_mode(Never)`).
 
 ## Updaters and self-modification
 
