@@ -180,34 +180,9 @@ Practical notes:
   for module docs, the package's tests, the VM test.
 
 ## Building and testing in the kleinbem setup
-The workstation (nixos-nvme) is for builds and behaviour tests that need a built binary or local
-hardware; checks and full builds go to GitHub runners.
-- **kleinbem/nixpkgs-review-gha** (fork of Defelo's):
-  - `build.yml` takes flake refs (`-f packages="github:kleinbem/nixpkgs/<sha>#attr …"`), so it
-    tests a fork branch before the PR is switched. `review.yml` runs nixpkgs-review on a PR number.
-  - Defaults: x86_64 + aarch64-linux, aarch64-darwin, x86_64-darwin `no`, `post-result=false`
-    (posting needs Martin's OK), `on-success=nothing`.
-  - darwin: tests with `__darwinAllowLocalNetworking` need `yes_sandbox_relaxed` (as Hydra);
-    `yes_sandbox_true` refuses them. Run darwin whenever it is needed; there is no budget. GitHub
-    only limits parallel macOS jobs (5 on the Free plan), so a run can wait for a runner at busy
-    times; that is capacity, not an error.
-  - A job ends at GitHub's 6 h limit. Big multi-variant PRs (CPU+Vulkan+CUDA+ROCm runtimes) don't
-    fit on x86_64: run nixpkgs-review for that platform on nixos-nvme, whose store already holds
-    earlier test builds.
-  - A green run doesn't mean everything built: read the per-package report (`scripts/review-result`).
-    aarch64 never runs VM tests (no KVM on GitHub's ARM runners).
-  - Never `gh workflow disable` these workflows; cancel a run instead. They have been disabled from
-    outside several times (no entry in Martin's security log): re-enable only the one you need and
-    say so; if it keeps happening, GitHub Support with workflow ids and times.
-  - Estimate run times from the last comparable run. GitHub times are UTC.
-- **Caches:** public Cachix `kleinbem-nixpkgs-review` (review runs push) is for sharing builds with
-  testers; Attic (cache.kleinbem.dev) is Martin's private buffer, never point others at it.
-- **Shadow packages** in kleinbem/nix-packages that will move to nixpkgs follow this skill from day
-  one (by-name shape, `finalAttrs`, tests, `meta`), so the nixpkgs PR is a copy. A NixOS module
-  re-exported from a nixpkgs branch must drop `meta.doc`: every host builds the manual and rejects
-  chapters missing from nixpkgs' `redirects.json`. Export `{ config, lib, pkgs, ... }:` that
-  imports the file with exactly those args (deadnix strips unused `@args`) and removes
-  `meta.doc`; test with `nix build .#nixosConfigurations.<host>.config.system.build.manual.manualHTML`.
+nixpkgs-review-gha, the review-result script, hardware tests, caches, the nix-packages registry
+of open nixpkgs PRs and the holds are described in `nixpkgs-packaging`
+(`references/fleet.md`), together with the whole lifecycle of bringing an app into nixpkgs.
 
 ## Review checklist
 For the review before ready (`upstream-contributing`, section 6):
