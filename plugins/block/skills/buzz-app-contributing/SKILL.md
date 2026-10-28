@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-10-28 (main `fea9f6ab`); five PRs prepared, none opened yet (section 9).
+Summary as of 2026-10-28 (main `fea9f6ab`); four draft PRs open (section 9).
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
@@ -208,14 +208,15 @@ gh pr list -R block/buzz-app --state merged --limit 150 --json reviews --jq '[.[
   reproduce/expected/environment). Martin files them in the browser.
 
 ## 9. Our setup and current threads
-- Fork `kleinbem/buzz-app` not created yet. Clone `~/Develop/github.com/block/buzz-app` (jj
-  colocated, cloned 2026-10-28), workspaces in `~/Develop/github.com/block/buzz-app.ws/`.
-- Prepared, not opened (2026-10-28): five PRs: test tools on `PATH`; wipe refusal only in debug
-  builds; `/bin/chmod` in the macOS ACL test; git shim fixture; `BUZZ_GOOSE_ACP_BINARY` for a
-  prebuilt goose-acp. Plus an issue draft: build-time opt-out of Linux `buzz://`
-  self-registration. The nixpkgs package carries a workaround for each, linked to its PR/issue.
-- Downstream: nixpkgs draft NixOS/nixpkgs#577918 (`buzz-app`, built from a pinned `main`
-  commit); it was waiting for the first `desktop-v*` tag, which now exists (section 7). Our
+- Fork `kleinbem/buzz-app` (remote `fork`); clone `~/Develop/github.com/block/buzz-app` (jj
+  colocated), workspaces in `~/Develop/github.com/block/buzz-app.ws/`.
+- Drafts opened 2026-10-28: #1778 (wipe refusal per profile), #1779 (test tools and `PATH` from
+  the environment), #1780 (git shim fixture), #1781 (`BUZZ_GOOSE_ACP_BINARY`). The `/bin/chmod`
+  PR was dropped (the darwin sandbox has no `/bin/chmod`). Still to do: Martin's review, then the
+  DCO sign-off. Issue draft: build-time opt-out of Linux `buzz://` self-registration (Martin files).
+- Packaging facts: [references/packaging.md](references/packaging.md).
+- Downstream: nixpkgs draft NixOS/nixpkgs#577918 (`buzz-app`; 0.7.0-beta.2 is ready at kleinbem/nixpkgs a7a63fbb, green on all three platforms, the push to the PR waits for Martin; the
+  `desktop-v*` tags). Our
   block/buzz relay package serves 1.0 clients too (1.0 needs a relay from 2026-09-23 or later
   for `consistency: "strong"` reads).
 - Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits #941 (out of draft since;
