@@ -31,14 +31,23 @@ hardware; checks and full builds go to GitHub runners.
   commits that still had other problems).
 - `x86_64-darwin=no` by default: nixpkgs drops x86_64-darwin after 26.05, and it runs under
   Rosetta on the same arm64 runner. Only when a change is specific to it.
-- Debug a darwin failure in a shell on the runner instead of re-dispatching one fix at a time:
-  `-f upterm=true` with only `aarch64-darwin` enabled. The session opens after the build, failed
-  or not (review-gha#3), with everything it built still in the store. Martin
-  takes the `ssh …@uptermd.upterm.dev` line from the job's live log in the browser (the API has
-  no logs of running jobs) and joins with his GitHub SSH key (`limit-access-to-actor`). In the
-  session: `nix build -L github:kleinbem/nixpkgs/<sha>#attr`, `nix develop` + the failing phase,
-  lldb; the store stays warm between tries. The session has no timeout: `exit` ends it, or
-  `gh run cancel` it, otherwise it holds a macOS runner until the 6 h limit.
+- Nobody here has a Mac: a darwin failure is understood from what the run brings back. A failed
+  `build.yml` job uploads `evidence-<system>` (7 days, usually < 5 MB), and `review-result`
+  downloads it to `~/.cache/review-gha/<run>/` and lists it:
+  - `logs/<drv>.log`: full `nix log` of each failed derivation (the console log is interleaved)
+  - `builddirs/*.tar.gz`: text files the build wrote in its kept build directory (test output,
+    `config.log`, build-script output; no unpacked sources, Cargo `deps`, binaries)
+  - `crashes/`: macOS crash reports (`.ips`) with backtraces: read them before guessing a crash
+  - `sandbox-denials.txt`: every path or service the darwin sandbox refused (EPERM, TLS/trustd,
+    ICU, `/bin/chmod`: all were sandbox denials). Most lines are macOS's own services; the count
+    per process on top shows the build's (bash, coreutils, clang, the package's binaries)
+  - `hang/`: process list and macOS `sample` stacks when the build printed nothing for 15 min
+    (a background daemon holding the log open shows up here); the build step times out at
+    340 min so a hang is still collected
+  - `platform.txt`: macOS, SDK, Xcode, Nix versions and sandbox mode
+  Fix from the evidence in one round instead of one guess per hour-long run.
+- `upterm=true` opens an SSH shell on the runner after the build (review-gha#3), but only a
+  person with the actor's GitHub key can join it; agents use the evidence bundle.
 - Judge a run with `../nixpkgs-contributing/scripts/review-result <run-id> [--wait]`, never by
   its status. It reads `review.yml`'s reports and, for `build.yml` runs (no report; `nix build
   --keep-going` fails the job), each job's conclusion and the derivations that failed. aarch64 runs no VM tests (no KVM on GitHub's ARM runners).
