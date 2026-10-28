@@ -109,7 +109,9 @@ Make sure the upstream org and repo have skills before the first contact (`upstr
    pin; a fix covers only the path its PR names (`nixpkgs-contributing` §4).
 6. Hypotheses about a failure stay hypotheses until a built artifact confirms them. Two darwin
    crash theories (configd, Metal) were wrong before an lldb backtrace showed ICU; a Metal fix was
-   pushed for a crash it didn't cause. Reproduce the failing step alone before restructuring.
+   pushed for a crash it didn't cause. On darwin read the run's evidence bundle (crash reports,
+   sandbox denials, hang samples: `references/fleet.md` §2) before forming a theory. Reproduce
+   the failing step alone before restructuring.
    Test an upstream PR's premise in the sandbox it is meant for: a buzz-app PR switching a test to
    `/bin/chmod` was dropped because the darwin sandbox has no `/bin/chmod`.
 
