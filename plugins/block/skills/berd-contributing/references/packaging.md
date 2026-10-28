@@ -3,7 +3,7 @@
 Verified at upstream tag v0.6.4 (tag object f9fd33ce, 2026-09-10) unless a line says main
 (5b500297, 2026-10-27). "Source" = read in the tree, "built" = checked on the nixpkgs build
 (`berd-0.6.4`, store paths `pam6whyq…` and, with the tests enabled, `mvxrhcr5…`, 2026-10-28). Recheck on every bump. Package:
-kleinbem/nixpkgs branch `berd-init`, `pkgs/by-name/be/berd/package.nix`.
+kleinbem/nixpkgs branch `berd`, `pkgs/by-name/be/berd/package.nix`.
 
 ## Products
 - One app: `Berd` (Tauri 2 + React 19) with sidecars from `bundle.externalBin`: `goosed`

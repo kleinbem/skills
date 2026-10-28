@@ -11,12 +11,12 @@ This skill holds only what is specific to block/berd and wins where they differ.
 
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (also `CLAUDE.md`), `LAWS/`, `DESIGN.md`,
 `.github/ISSUE_TEMPLATE/{bug-report,feature-request}.yml`, `.github/PULL_REQUEST_TEMPLATE.md`,
-`.github/workflows/{ci,close-external-prs,close-needs-info}.yml`, `docs/release-and-updates.md`. Read them before
-acting; this skill summarises them as of 2026-10-19 and adds what applies to our setup.
+`.github/workflows/{ci,close-external-prs,close-needs-info,release}.yml`, `docs/release-and-updates.md`. Read them before
+acting; this skill summarises them as of 2026-10-28 and adds what applies to our setup.
 
 Berd is Apache-2.0, built by a small Block team, Tauri 2 + React 19, talking to a `goose serve` sidecar over ACP
 (`goose-backend.lock.json` pins a goose **main commit**, not a release). Latest release v0.6.4 (2026-09-10); `main`
-moves daily and is well ahead of it.
+moves daily and is well ahead of it (65 commits on 2026-10-28, mostly `berd-call` voice work).
 
 ## 0. The one rule: no outside pull requests
 
@@ -76,7 +76,7 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
 
 ## 2. Building and diagnosing on NixOS
 
-- Toolchain: `rust-toolchain.toml` (1.94.1 on 2026-10-19; nixpkgs' `rustc` is fine), pnpm 10.33, Node, `just`,
+- Toolchain: `rust-toolchain.toml` (1.94.1 on 2026-10-28; nixpkgs' `rustc` is fine), pnpm 10.33, Node, `just`,
   Tauri 2 prerequisites (webkitgtk, libsoup, openssl, glib-networking as nixpkgs' `goose-desktop`
   uses them). No Hermit here, unlike goose and buzz.
 - `just setup` installs pnpm deps, builds the vendored `@aaif/goose-sdk` and builds the pinned goose into the
@@ -90,11 +90,15 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
 - Bundles: `just bundle` stages `src-tauri/binaries/goosed-<host triple>` (Tauri `externalBin`) and runs
   `pnpm tauri build`; Linux release assets are AppImage and .deb. #336 shows the AppImage setting `PYTHONHOME`/
   `PYTHONPATH` to missing paths, a hint of what a packager must check.
-- The reference build is the nixpkgs package `pkgs/by-name/be/berd` (kleinbem/nixpkgs branch `berd-init`, 2026-10-28; before that `kleinbem/nix-packages` `pkgs/berd`). Facts it depends on, measured on the build: [references/packaging.md](references/packaging.md).
+- The reference build is the nixpkgs package `pkgs/by-name/be/berd` (kleinbem/nixpkgs branch `berd`, 2026-10-28; before that `kleinbem/nix-packages` `pkgs/berd`). Facts it depends on, measured on the build: [references/packaging.md](references/packaging.md).
   Berd 0.6.4 works with nixpkgs' `goose-cli` release as the `goosed` sidecar (tested 2026-10-19 with the bundled
   pin, 1.49.0 and 1.55.0: same `goose serve` interface, same answers), so the goose pin only matters when building
   Berd `main`. Upstream's cargo features `no-managed-acp-tools` and `no-bb-cli-install` turn off the runtime
   Node/npm downloads. Reproduce bugs in that build before reporting.
+- Next release, check first: `main` renamed the voice crate `berd-voice` to `berd-call` (#338), so the package's
+  sherpa-onnx `substituteInPlace` lines fail; `berd-call` keeps `default = ["static"]` and a `shared` feature. It
+  also moved to `ort` 2.0.0-rc.12 with `disable-linking` (find out how it locates onnxruntime), and #438 (closed
+  unmerged) tried to ship berd-call as standalone releases.
 
 ## 3. Reading the codebase (for a precise report)
 

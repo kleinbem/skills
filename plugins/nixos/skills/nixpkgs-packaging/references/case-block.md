@@ -72,7 +72,7 @@ buzz-cli's darwin build). Init PRs: median 2.5 days, p90 ~22 days.
 
 ## Berd (block/berd)
 
-nixpkgs draft `berd: init at 0.6.4` (branch kleinbem/nixpkgs:berd-init, 2026-10-28). Upstream
+nixpkgs draft `berd: init at 0.6.4` (branch kleinbem/nixpkgs:berd, 2026-10-28). Upstream
 takes no outside PRs: fixes are issues Martin files (`berd-contributing`).
 - **The shadow was a near copy.** nix-packages' Berd, written in nixpkgs form, needed two changes
   on master: pnpm `fetcherVersion` 4 → 5, pnpm on `nodejs-slim_24` (master's convention, not
