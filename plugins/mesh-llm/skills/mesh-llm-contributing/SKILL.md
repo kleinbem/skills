@@ -156,6 +156,11 @@ merged PRs; numbers are examples):
   (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
   the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log).
   What stays local: behaviour of a built binary and distribution-specific tests.
+  The macOS and Windows rows run `--lib` only, as upstream's do; for integration tests
+  (`tests/`) on those platforms add `-f targets=all` (kleinbem/mesh-llm-ci#3, until merged
+  dispatch with `--ref macos-all-targets`). macOS code that spawns `ps` or `sysctl` passes on
+  runners and fails in the Nix darwin sandbox; prefer `libc` calls (`proc_pidpath`,
+  `proc_pidinfo`).
   Not covered by the pre-flight: upstream's Quality step "Test CI, packaging, and SDK contracts"
   (`just ci-automation-contracts`, `just/ci.just`), which runs the `xtask` test binaries with
   `--features automation-contracts`, among them `--test migration_lifecycle` (the tests of

@@ -77,6 +77,9 @@ detection, `/etc` lookups.
 | darwin: Security-framework TLS fails (OSStatus -26276) | `sandboxProfile` with `(allow mach-lookup (global-name "com.apple.trustd") (global-name "com.apple.trustd.agent") (global-name "com.apple.SecurityServer"))` (buzz-app, review-gha run 40613244514) |
 | darwin: `chmod +a` (macOS ACLs) | the sandbox has no `/bin/chmod`, coreutils' lacks `+a`: skip by name. An upstream PR calling `/bin/chmod` was dropped before opening |
 | darwin: EPERM from a spawned shell | read its stderr first: in buzz-app it was the fixed `PATH` (row above), not the sandbox |
+| darwin: `ps`, `sysctl` not on PATH; code spawns them for process names, start times, thread counts | upstream: use `proc_pidpath` / `proc_pidinfo` via `libc` (mesh-llm process identity, thread-leak test); downstream skip by name meanwhile. `proc_pidinfo(PROC_PIDTBSDINFO)` of another account's process is EPERM without root, `pbi_comm` cuts names at 16 bytes |
+| darwin: no Metal means a GPU-budgeting app plans 0 bytes (mesh-llm: no CPU fallback on macOS) | the serve test runs on Linux only, linked to the upstream issue; check `yes_sandbox_false` to tell sandbox from app behaviour |
+| darwin: suite has unknown failures | a DIAG commit with `--no-fail-fast` (cargoTestFlags) on the fork shows all of them in one run; never in the PR |
 | darwin: a test that backgrounds a daemon hangs the build | `trap 'kill $(jobs -p) 2>/dev/null' EXIT`, redirect stdout and stderr, `timeout` |
 | A platform where upstream's CI doesn't run that test kind | skip with "upstream's macOS CI runs --lib only" (#571722, control-plane SIGSEGV) |
 
