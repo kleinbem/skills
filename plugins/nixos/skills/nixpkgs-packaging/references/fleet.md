@@ -103,6 +103,10 @@ and opens or comments one issue when red. Cron runs start hours late (GitHub). *
 mesh-llm's canary sat red from 10-23 (startup now contacts public DNS resolvers). Writing one is
 ~150–250 lines of mostly copy; a shared template is still missing.
 
+The Berd behaviour test (`~/.cache/berd-test/scripts/e2e-nix.sh`: Xvfb, `NO_AT_BRIDGE=1`, a chat
+through `berdctl`, llama-server with a 0.5B model) is a candidate step for that template: any
+agent app with a CLI can reuse it.
+
 ## 8. Watching upstream
 
 `nix-packages/watch/upstream-prs/prs.txt` (weekly, one issue): conflicts, merges, new human

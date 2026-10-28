@@ -58,6 +58,13 @@ same bug. So:
 - **Responsiveness of upstream** (measure merge times of outside PRs, `contribution-skill-authoring`
   §3) sets the strategy: responsive (Mesh-LLM, median 2.5 days) → fix everything upstream and track
   main; slow or closed (block/buzz: no outside PR merged) → carry linked patches, keep them few.
+- **Pick the next app by what it adds and what blocks it.** Ask what it gives Martin that the
+  fleet doesn't already have, and whether it can start today. ai-rules writes per-repo agent files
+  that nix-config's `ai-agents.nix` already fans out fleet-wide (aittributor and lhm: jj runs no
+  git hooks): worth packaging for others, not next. buzz-acp looked central, but its package left
+  with the closed 0.X suite and its module waits on the relay; check it still belongs to Buzz 1.0
+  first. Berd (unblocked, on goose) went next. Check `ListAgents` and ask the sessions on
+  neighbouring products before starting; ownership is in the handover.
 
 ## Phase 1: learn the application before packaging it
 
@@ -103,6 +110,11 @@ Make sure the upstream org and repo have skills before the first contact (`upstr
 - Skips by exact test name, grouped by cause, each group with its link or reason.
 - Build-only tests for variants no builder can run (`runtime-rocm` gfx1100, `runtime-cuda`).
 - darwin sandbox specifics (local networking, background daemons, ICU, Metal): workarounds.md.
+- Agent apps get a behaviour test with a real turn: the app headless under Xvfb, a chat created
+  through its own CLI, a tiny local model answering, the reply asserted in the app's store (Berd:
+  `berdctl session create`, llama-server with Qwen2.5 0.5B, `PONG` read from goose's
+  `sessions.db`). Give the model 8k+ context (goose's first prompt is ~4.2k tokens) and point
+  goose at chat completions (workarounds.md, "Neighbours").
 
 ## Phase 4: platforms and hardware
 
@@ -112,6 +124,8 @@ x86_64, and the hardware the package claims (GPU backends on real devices). flee
 machines, commands and durations. Run darwin whenever it helps; there is no budget. Linux
 derivations that a darwin-only change must not touch: compare `nix-instantiate` drvPaths before
 and after, so earlier Linux results stay valid.
+A review-gha build that produces the same store path as the local build proves both tested the
+same derivation (Berd: `pam6whyq…` locally and on x86_64-linux); note it in the PR's evidence line.
 
 ## Phase 5: use it in the fleet before the merge
 
