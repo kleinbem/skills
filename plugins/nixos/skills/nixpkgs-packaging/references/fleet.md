@@ -26,6 +26,19 @@ hardware; checks and full builds go to GitHub runners.
 - darwin: tests with `__darwinAllowLocalNetworking` need `yes_sandbox_relaxed` (as Hydra). Run
   darwin whenever it helps; GitHub only limits parallel macOS jobs (5 on Free), waiting for a
   runner is capacity, not an error.
+- Get Linux green first, then run darwin once. Darwin jobs start right away; what costs time is a
+  failed try (mesh-llm on 2026-10-28: three darwin runs failed after up to an hour each on
+  commits that still had other problems).
+- `x86_64-darwin=no` by default: nixpkgs drops x86_64-darwin after 26.05, and it runs under
+  Rosetta on the same arm64 runner. Only when a change is specific to it.
+- Debug a darwin failure in a shell on the runner instead of re-dispatching one fix at a time:
+  `-f upterm=true -f packages=` with only `aarch64-darwin` enabled (the upterm step runs only
+  when the build step didn't fail, so leave `packages` empty and build in the session). Martin
+  takes the `ssh …@uptermd.upterm.dev` line from the job's live log in the browser (the API has
+  no logs of running jobs) and joins with his GitHub SSH key (`limit-access-to-actor`). In the
+  session: `nix build -L github:kleinbem/nixpkgs/<sha>#attr`, `nix develop` + the failing phase,
+  lldb; the store stays warm between tries. The session has no timeout: `exit` ends it, or
+  `gh run cancel` it, otherwise it holds a macOS runner until the 6 h limit.
 - Judge a run with `../nixpkgs-contributing/scripts/review-result <run-id> [--wait]`, never by
   its status. It reads `review.yml`'s reports and, for `build.yml` runs (no report; `nix build
   --keep-going` fails the job), each job's conclusion and the derivations that failed. aarch64 runs no VM tests (no KVM on GitHub's ARM runners).
