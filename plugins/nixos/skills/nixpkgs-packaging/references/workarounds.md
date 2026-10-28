@@ -89,6 +89,9 @@ URL-scheme handlers.
 - Tauri's deep-link plugin rewrote `~/.local/share/applications/*-handler.desktop` on every start
   with the unwrapped path: patched downstream (Nix-only), the packaged `.desktop` declares the
   scheme instead.
+- A patch that removes such a file must keep what the file did: the plugin's handler had
+  `Exec=… %u`, Tauri's bundled `.desktop` only `Exec=Buzz`, so links started the app without the
+  link. An independent review caught it (#577918); assert the `Exec` line in `installCheckPhase`.
 
 ## Writing other applications' configuration
 
