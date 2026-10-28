@@ -2,8 +2,9 @@
 
 Packages: `skippy-native-runtime` (+`-vulkan`), `mesh-llm` (+`-cuda`, `-rocm`), `skippy`, module
 `services.mesh-llm`, VM test. Opened 2026-10-08 as a draft, ready 2026-10-25, no human review yet
-on 2026-10-28. 17 Mesh-LLM PRs merged; one workaround left (CA bundle, waits on Mesh-LLM#2577)
-plus vendored llama.cpp#26103 patches.
+on 2026-10-28. 17 Mesh-LLM PRs merged. Left: `cacert` in tests (Mesh-LLM#2577), vendored
+llama.cpp#26103 patches, test skips waiting on #2605, #2629 and issue #2630, and Nix-only
+adaptations with stated reasons (CUDA toolkit override, cargo config, archive removal).
 
 ## What worked
 

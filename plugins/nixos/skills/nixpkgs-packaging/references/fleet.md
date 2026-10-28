@@ -32,6 +32,10 @@ hardware; checks and full builds go to GitHub runners.
 - A job ends at GitHub's 6 h limit; multi-variant packages (CPU+Vulkan+CUDA+ROCm) don't fit on
   x86_64 — run that platform's nixpkgs-review on nixos-nvme. Typical runs: 25 min – 2.5 h; a
   full workspace test suite on x86_64 about 1 h in the debug profile.
+- An HTTPS push to the nixpkgs fork can fail with HTTP 408 ("remote end hung up") even for one
+  commit. Then create the commit through the API: blobs for the changed files, a tree on the
+  parent's tree, a commit, a fast-forward of the ref (`gh api repos/<fork>/git/{blobs,trees,commits,refs}`);
+  compare the resulting tree with `git rev-parse HEAD^{tree}`.
 - `gh run view --json jobs` can show running jobs without `started_at`; ask
   `gh api repos/<r>/actions/runs/<id>/jobs` before concluding a job hasn't started. Logs of
   running jobs aren't available.
@@ -102,7 +106,9 @@ from an empty-hash build, runs the package's tests plus checks a release can't s
 network hosts through a logging proxy, integration with a neighbour app, the NixOS test with KVM),
 and opens or comments one issue when red. Cron runs start hours late (GitHub). **Act on red:**
 mesh-llm's canary sat red from 10-23 (startup now contacts public DNS resolvers). Writing one is
-~150–250 lines of mostly copy; a shared template is still missing.
+~150–250 lines of mostly copy; a shared template is still missing. The canary and the GPU check
+build a prep branch (`<app>-next`): move it with the package, or they test an old state (mesh-llm's
+sat at 2026-10-24 while the package moved on).
 
 The Berd behaviour test (`~/.cache/berd-test/scripts/e2e-nix.sh`: Xvfb, `NO_AT_BRIDGE=1`, a chat
 through `berdctl`, llama-server with a 0.5B model) is a candidate step for that template: any
