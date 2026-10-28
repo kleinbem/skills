@@ -13,7 +13,7 @@
     {
       "name": "nixos",
       "source": "./plugins/nixos",
-      "description": "NixOS organization: nixos-org (two AI policies, security, RFCs, repo table), nixpkgs-contributing, nixpkgs-maintaining"
+      "description": "NixOS organization: nixos-org (two AI policies, security, RFCs, repo table), nixpkgs-contributing, nixpkgs-maintaining, nixpkgs-packaging (bringing an app into nixpkgs end to end)"
     },
     {
       "name": "block",
