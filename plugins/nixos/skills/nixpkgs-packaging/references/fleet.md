@@ -32,8 +32,8 @@ hardware; checks and full builds go to GitHub runners.
 - `x86_64-darwin=no` by default: nixpkgs drops x86_64-darwin after 26.05, and it runs under
   Rosetta on the same arm64 runner. Only when a change is specific to it.
 - Debug a darwin failure in a shell on the runner instead of re-dispatching one fix at a time:
-  `-f upterm=true -f packages=` with only `aarch64-darwin` enabled (the upterm step runs only
-  when the build step didn't fail, so leave `packages` empty and build in the session). Martin
+  `-f upterm=true` with only `aarch64-darwin` enabled. The session opens after the build, failed
+  or not (review-gha#3), with everything it built still in the store. Martin
   takes the `ssh …@uptermd.upterm.dev` line from the job's live log in the browser (the API has
   no logs of running jobs) and joins with his GitHub SSH key (`limit-access-to-actor`). In the
   session: `nix build -L github:kleinbem/nixpkgs/<sha>#attr`, `nix develop` + the failing phase,
