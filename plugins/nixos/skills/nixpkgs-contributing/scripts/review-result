@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Summarise a nixpkgs-review-gha run from its report artifact.
+# Summarise a nixpkgs-review-gha run (review.yml or build.yml).
 #
 # A run's status is "success" even when packages failed to build: the
 # workflow only fails on infrastructure errors. This reads the per-system
@@ -74,5 +74,23 @@ for system in "${systems[@]}"; do
   fi
 done
 
-[ "${#systems[@]}" -gt 0 ] || { echo "✗ run $run has no review jobs"; rc=1; }
+# build.yml runs have no report: `nix build --keep-going` fails the job
+# itself, so its conclusion is the result; name the derivations that failed.
+if [ "${#systems[@]}" -eq 0 ]; then
+  builds=$(gh api "repos/$repo/actions/runs/$run/jobs" --paginate --jq '.jobs[]
+    | select(.name | startswith("build ("))
+    | [.id, (.name | ltrimstr("build (") | rtrimstr(")")), .conclusion] | @tsv')
+  [ -n "$builds" ] || { echo "✗ run $run has no review or build jobs"; exit 1; }
+  while IFS=$'\t' read -r id system conclusion; do
+    if [ "$conclusion" = success ]; then
+      echo "✓ $system: built"
+      continue
+    fi
+    rc=1
+    failed=$(gh api --allow-escape-sequences "repos/$repo/actions/jobs/$id/logs" 2>/dev/null \
+      | grep -oE "error: (builder for|Cannot build) '[^']+\.drv'" \
+      | grep -oE "/nix/store/[^']+\.drv" | sed -e 's|^/nix/store/[a-z0-9]*-||' -e 's|\.drv$||' | sort -u | paste -sd ' ' || true)
+    echo "✗ $system: $conclusion${failed:+, failed: $failed}"
+  done <<<"$builds"
+fi
 exit "$rc"

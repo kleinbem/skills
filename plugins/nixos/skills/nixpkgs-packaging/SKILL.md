@@ -69,6 +69,11 @@ don't guess: a logging `HTTPS_PROXY`, an empty `SSL_CERT_FILE`, `bwrap` with a b
 `strace -f -e execve`, `patchelf --print-needed`. Every surprise here becomes either an upstream
 PR or a documented package decision.
 
+Also read the per-platform config overlays (`tauri.linux.conf.json`, …): buzz-app's Linux overlay
+renames `productName` to "Buzz Foundation", which moves the resource dir to `lib/Buzz Foundation`.
+And note when an app reuses a predecessor's app id (`xyz.block.buzz.desktop` from Buzz 0.X): a
+behaviour test then starts on the old profile, not on a first run.
+
 Make sure the upstream org and repo have skills before the first contact (`upstream-contributing`
 "First contact").
 
@@ -82,13 +87,24 @@ Make sure the upstream org and repo have skills before the first contact (`upstr
    is the cause upstream's (FHS path, network at test time, ignored env var, regression) or the
    sandbox's (darwin Metal, timing)? Upstream causes get an upstream PR (pre-flight first,
    fleet.md); sandbox causes get a skip or setting with the reason.
+   For every skip, ask in this order: is it an upstream bug (→ upstream PR)? Is there a Nix-side
+   setting that makes the test pass (a `sandboxProfile`, a config file from the store, a missing
+   check input)? Only then skip, by name, with the link or the Nix-only reason. buzz-app's 17 Linux
+   skips become 2 once BA#1778–#1781 ship.
 4. Carry the fix downstream meanwhile, linked. Fix a *class* upstream when one cause shows up in
    several places (MeshLLM: one "local client without CA" helper fixed four crates).
+   **Prove each upstream PR on the package before it merges:** a TEST-ONLY branch on
+   `kleinbem/nixpkgs` (`<app>-test-<what>`) applies the PRs as patches and deletes the skips they
+   cover, plus a control branch without the patches; build both on review-gha on every platform.
+   The control must fail on exactly those tests (buzz-app: 17 failures without, green with
+   BA#1778–#1781); link both runs in the upstream PR. Never push these branches to the PR.
 5. Drop each workaround in the update that ships the fix — after grepping the source at the new
    pin; a fix covers only the path its PR names (`nixpkgs-contributing` §4).
 6. Hypotheses about a failure stay hypotheses until a built artifact confirms them. Two darwin
    crash theories (configd, Metal) were wrong before an lldb backtrace showed ICU; a Metal fix was
    pushed for a crash it didn't cause. Reproduce the failing step alone before restructuring.
+   Test an upstream PR's premise in the sandbox it is meant for: a buzz-app PR switching a test to
+   `/bin/chmod` was dropped because the darwin sandbox has no `/bin/chmod`.
 
 ## Phase 3: tests that prove the package works
 
@@ -109,7 +125,10 @@ Make sure the upstream org and repo have skills before the first contact (`upstr
 Before "ready", the exact head is green on x86_64-linux, aarch64-linux, aarch64-darwin
 (nixpkgs-review-gha, judged with `scripts/review-result`, not the run status), the VM test on
 x86_64, and the hardware the package claims (GPU backends on real devices). fleet.md has the
-machines, commands and durations. Run darwin whenever it helps; there is no budget. Linux
+machines, commands and durations. Run darwin whenever it helps; there is no budget.
+Before each round, check the version under test: the tag is the newest one of its family
+(`git ls-remote --tags`), and every branch and run builds that tag's hash. A transient failure
+(cache.nixos.org HTTP 416, a one-off rustc SIGABRT) gets one rerun before anyone investigates it. Linux
 derivations that a darwin-only change must not touch: compare `nix-instantiate` drvPaths before
 and after, so earlier Linux results stay valid.
 
@@ -119,6 +138,10 @@ Pin the PR's commit in nix-packages' registry, let nix-config's gate build it wi
 nixpkgs, install it where it is useful, and point a canary at upstream main (fleet.md). Daily use
 finds what CI can't (a service that silently falls back to the CPU, a 19 GB download filling a
 tmpfs). A package the fleet runs is also a package Martin can vouch for in the PR.
+
+When a behaviour test fails against a fleet service, check the service directly (`curl`) before
+blaming the package: buzz-app's "Community discovery failed" was a 502 from the relay, cut off by
+a container egress rule (kleinbem/nix-gantry#5).
 
 ## Phase 6: the PR
 
@@ -137,7 +160,8 @@ tmpfs). A package the fleet runs is also a package Martin can vouch for in the P
 - The registry entry goes by itself (weekly "nixpkgs PRs merged" PR); switch modules in nix-config
   first when the entry has one (fleet.md).
 - `passthru.updateScript` must keep working (r-ryantm); one script updates a package family
-  (`nixpkgs-contributing` §2).
+  (`nixpkgs-contributing` §2). When r-ryantm stops proposing updates, read its log: lefthook sat at
+  2.1.15 because 2.2 needs Go 1.27 (`buildGo127Module`).
 - Release bump: read the release notes, drop the workarounds whose fixes it contains (grep the new
   pin), rerun the full matrix including hardware, then the PR.
 - Keep the canary against upstream main and act on red: it is the early warning for the next

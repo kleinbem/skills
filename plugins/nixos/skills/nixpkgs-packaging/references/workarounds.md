@@ -16,7 +16,7 @@ env var honoured, a test that fails on the old code, a before/after measurement 
 | Repo's own cargo config (sccache, custom linkers) | `.cargo/config.toml` | none needed: `rm` it in `postPatch` with a reason (permanent, Nix-only) | #571722 |
 | Release tooling rewrites runpaths, builds extra tools | packaging script hard-codes `$ORIGIN`, builds with cargo | opt-in flags (`--keep-runpath`, `--no-model-package-tool`) | M#2392 (3 h) |
 | Artifact identity can't be set (id, rank) | `jq` edits of a manifest | flag (`--id-suffix`); find existing env vars first | M#2526 |
-| Upstream's build fetches or builds a sidecar itself (git clone in `beforeBuildCommand`) | Tauri config, npm scripts | override the command in the build; build the sidecar from nixpkgs' source; ask upstream for an env var naming the binary | BA#1781 (`BUZZ_GOOSE_ACP_BINARY`) |
+| Upstream's build fetches or builds a sidecar itself (git clone in `beforeBuildCommand`) | Tauri config, npm scripts | ask upstream for an env var naming a prebuilt binary; meanwhile override only the step that fetches. Run every other step of upstream's command offline first: buzz-app's `build-agent-command.mjs` worked in the sandbox and replaced a hand-written `preBuild` | BA#1781 (`BUZZ_GOOSE_ACP_BINARY`) |
 | Upstream downloads a toolchain at runtime (Node) | strace/proxy at startup | env var pointing at a provided binary | block/buzz#7153 |
 
 ## Toolchain and compiler matrix
@@ -48,8 +48,10 @@ detection, `/etc` lookups.
 | Symptom | Fix |
 |---|---|
 | Runs `hostname`, `/bin/bash`, `/usr/bin/env`, `/usr/bin/true` | syscalls instead of commands (M#2444 `gethostname`); tests take bash and `PATH` from the environment (M#2604) |
-| Hard-coded `/bin/cp`, `/usr/bin/head` in tests | cheap `substituteInPlace` downstream; upstream PR only if it recurs |
-| Built-in terminal sets `PATH=/usr/local/bin:/usr/bin:/bin` | skip the tests with the reason; upstream issue |
+| Hard-coded `/bin/cp`, `/bin/kill`, `/usr/bin/head` in tests | one upstream PR for the class, tests call tools by name (BA#1779); `substituteInPlace` meanwhile |
+| Tests spawn a shell with a fixed `PATH=/usr/local/bin:/usr/bin:/bin` | the test passes its own `PATH` to the child (BA#1779); on darwin this showed up as EPERM, not as "not found" |
+| Test fixtures point at host files (`/usr/bin/git` as a shim target) | fixtures in a tempdir (BA#1780) |
+| `#!/usr/bin/env` scripts, `/etc/profile` for a login shell | Nix-only: the sandbox has neither; skip by name with that reason |
 
 ## Network and CA bundle
 
@@ -65,13 +67,16 @@ detection, `/etc` lookups.
 |---|---|
 | Terminal width 0 | upstream: tests set their width (M#2605); skip meanwhile |
 | Timing assertions on a busy builder | skip by name: "timing assertion, fails on a busy builder" |
-| Release profile breaks debug-only helpers | `checkType = "debug"` if upstream tests in dev, else upstream `cfg(any(debug_assertions, test))` |
+| Release profile breaks debug-only helpers | `checkType = "debug"` if upstream tests in dev, else upstream `cfg(any(debug_assertions, test))`, or the test asserts per profile with `cfg!(debug_assertions)` (BA#1778) |
+| Tests start `dbus-daemon --session` (reads `/etc/dbus-1/session.conf`) | Nix-only, no skip: `--config-file=${dbus}/share/dbus-1/session.conf` and `dbus` in `nativeCheckInputs` (buzz-app) |
 | Tests reach a dynamically loaded runtime without loading it | upstream test-support helper (M#2629) |
 | An env var set in `preCheck` for some tests leaks into others | file an issue with options instead of guessing (M#2630); skip by name |
 | darwin: `__darwinAllowLocalNetworking` for loopback; `yes_sandbox_relaxed` in review-gha | package setting |
 | darwin: Metal can't create a command queue | `GGML_METAL_DEVICES=0` (llama-cpp precedent) |
 | darwin: interface enumeration needs ICU data | `sandboxProfile` allowing `/usr/share/icu` (dumbpipe precedent) |
-| darwin: Security-framework TLS fails (OSStatus -26276), `chmod +a`, EPERM on process groups | skip by name with the reason |
+| darwin: Security-framework TLS fails (OSStatus -26276) | `sandboxProfile` with `(allow mach-lookup (global-name "com.apple.trustd") (global-name "com.apple.trustd.agent") (global-name "com.apple.SecurityServer"))` (buzz-app, review-gha run 40613244514) |
+| darwin: `chmod +a` (macOS ACLs) | the sandbox has no `/bin/chmod`, coreutils' lacks `+a`: skip by name. An upstream PR calling `/bin/chmod` was dropped before opening |
+| darwin: EPERM from a spawned shell | read its stderr first: in buzz-app it was the fixed `PATH` (row above), not the sandbox |
 | darwin: a test that backgrounds a daemon hangs the build | `trap 'kill $(jobs -p) 2>/dev/null' EXIT`, redirect stdout and stderr, `timeout` |
 | A platform where upstream's CI doesn't run that test kind | skip with "upstream's macOS CI runs --lib only" (#571722, control-plane SIGSEGV) |
 

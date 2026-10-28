@@ -27,7 +27,8 @@ hardware; checks and full builds go to GitHub runners.
   darwin whenever it helps; GitHub only limits parallel macOS jobs (5 on Free), waiting for a
   runner is capacity, not an error.
 - Judge a run with `../nixpkgs-contributing/scripts/review-result <run-id> [--wait]`, never by
-  its status. aarch64 runs no VM tests (no KVM on GitHub's ARM runners).
+  its status. It reads `review.yml`'s reports and, for `build.yml` runs (no report; `nix build
+  --keep-going` fails the job), each job's conclusion and the derivations that failed. aarch64 runs no VM tests (no KVM on GitHub's ARM runners).
 - A job ends at GitHub's 6 h limit; multi-variant packages (CPU+Vulkan+CUDA+ROCm) don't fit on
   x86_64 — run that platform's nixpkgs-review on nixos-nvme. Typical runs: 25 min – 2.5 h; a
   full workspace test suite on x86_64 about 1 h in the debug profile.
