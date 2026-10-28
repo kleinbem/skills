@@ -54,6 +54,13 @@ fi
 rc=0
 for system in "${systems[@]}"; do
   report=$(jq --arg s "$system" '.[] | select(.system == $s)' <<<"$reports")
+  # The report job is skipped when any review job didn't succeed (a
+  # cancelled darwin job, say); each system's own report is still there.
+  if [ -z "$report" ]; then
+    own=$(gh api "repos/$repo/actions/runs/$run/artifacts" \
+      --jq ".artifacts[] | select(.name == \"report_$system.json\") | .id")
+    [ -z "$own" ] || report=$(gh api "repos/$repo/actions/artifacts/$own/zip" | jq '.head //= .commit')
+  fi
   if [ -z "$report" ]; then
     conclusion=$(jq -r --arg s "$system" 'select(.system == $s) | .conclusion' <<<"$jobs")
     echo "✗ $system: no report (job $conclusion)"
