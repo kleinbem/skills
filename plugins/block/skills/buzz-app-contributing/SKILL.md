@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-10-23 (main `c2210b45`); first-contact research, no contribution yet.
+Summary as of 2026-10-28 (main `fea9f6ab`); five PRs prepared, none opened yet (section 9).
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
@@ -17,9 +17,11 @@ the `main` rulesets. There is **no** `CONTRIBUTING.md`, **no** PR template, and 
 links Block's org governance. Read them before acting on a rule from memory; they change daily.
 
 Shape: Buzz 1.0 beta ("Buzz 0.X is still available and supported in block/buzz"). Created
-2026-09-10; about 1,540 PRs in six weeks, a dozen Block engineers merging many PRs a day, most PRs
-written and reviewed by agents. It is a client of block/buzz's relay; only `buzz-audio-client`
-is shared code. Not the same repo as block/buzz: different files, rules, toolchain and reviewers.
+2026-09-10; about 1,780 PRs and issues in seven weeks, a dozen Block engineers merging many PRs a
+day, most PRs written and reviewed by agents. The app and Cargo package are now named `Buzz`
+(#789), identifier `xyz.block.buzz.desktop` (#1656), version 0.7.0 (#1643). It is a client of
+block/buzz's relay; only `buzz-audio-client` is shared code. Not the same repo as block/buzz:
+different files, rules, toolchain and reviewers.
 
 ## 0. Hard rules that decide the agent's role
 - **Outside PRs are accepted** (no close-external-prs gate), but outside merges are rare (section 7).
@@ -42,11 +44,11 @@ is shared code. Not the same repo as block/buzz: different files, rules, toolcha
   (e.g. "🤖 Fixed in <sha>: …", #1325, #1498). Martin decides whether his replies follow it.
 
 ## 1. Before starting
-- Search PRs and issues; many internal PRs are open at any time (159 open on 2026-10-23), and
+- Search PRs and issues; many internal PRs are open at any time (183 open on 2026-10-28), and
   the area may already be in flight on a staff branch. Don't compete with an open PR.
-- No issue-first rule. Issues are barely used (16 ever; outside issues #1037, #1090, #1569 have
-  no reply). For anything beyond a small fix, the PR itself must carry the scope checkpoint below;
-  expect a maintainer to rescope or take it over.
+- No issue-first rule. Issues are barely used (19 ever; outside issues #1037, #1090, #1569,
+  #1600, #1613 have no reply). For anything beyond a small fix, the PR itself must carry the
+  scope checkpoint below; expect a maintainer to rescope or take it over.
 - `AGENTS.md` "Engineering standard": state outcome and **non-goals** first; for non-trivial work
   publish a **scope checkpoint** (required behaviour, non-goals, existing owners to reuse,
   expected files, rough production diff budget). Put it in the PR description.
@@ -95,19 +97,24 @@ Upstream's gate is its Lefthook hooks plus CI; `just scan` is explicitly **not**
 - **jj doesn't run git hooks.** Run them by hand before pushing: `bin/lefthook run pre-commit
   --all-files` and the push checks (`bin/pnpm exec tsc --noEmit`, `bin/pnpm exec vitest run
   <paths>`, `bin/pnpm design:typecheck && bin/pnpm design:check`, `bin/cargo fmt --all -- --check`,
-  the clippy line above). Untested here; adjust once tried.
+  the clippy line above). On NixOS drop the `bin/` prefix and use the nix shells below.
+- jj: `jj squash` into a described commit opens an editor; pass `--use-destination-message`.
 - Manual testing of shipped behaviour uses `BUZZ_DEV_VIEWER= just desktop` (native path);
   broker-backed `just web` runs "do not count as acceptance". Report host and mode exercised.
 - Before delivery, compare against the fetched `main`: "GitHub PR checks run the merged tree".
 
-NixOS notes (as of 2026-10-23, not yet tried):
-- Hermit pins just 1.58.0, Node 24.18.0, pnpm 11.8.0, Rust 1.98.1, a patched Lefthook
-  `2.2.3-buzz.1` (built from source with Go), CMake. The workstation has nix-ld, so Hermit's
-  downloaded binaries may run; try `bin/just --list` in a fresh clone first.
-- Fallback: `nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_11 nixpkgs#rustc nixpkgs#cargo
-  nixpkgs#clippy nixpkgs#rustfmt nixpkgs#cmake nixpkgs#pkg-config` (nixpkgs has rustc 1.99,
-  pnpm_11 11.27, lefthook 2.1.15). nixpkgs' lefthook is below `min_version` and is rejected, so
-  run the hook commands directly. Newer clippy may flag existing code: compare with `main`.
+NixOS notes (as of 2026-10-28):
+- Hermit pins just 1.58.0, Node 24.18.0, pnpm 11.8.0, Rust 1.98.1, stock Lefthook 2.2.2
+  (the patched `2.2.3-buzz.1` is gone since #1644), CMake. We use nixpkgs instead of Hermit.
+- Verified: `nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_11 -c pnpm install --frozen-lockfile
+  --ignore-scripts`; in that shell `node --test tests/integration/<file>` and
+  `pnpm exec biome check --error-on-warnings <files>` run.
+- Verified: `nix shell nixpkgs#cargo nixpkgs#rustfmt -c cargo fmt --all -- --check`.
+- Rust desktop tests: run through the nixpkgs `buzz-app` package build (nixpkgs-review-gha
+  runs), not locally.
+- nixpkgs has rustc 1.99, pnpm_11 11.27, lefthook 2.1.15. nixpkgs' lefthook is still below
+  `min_version` (2.2.2) and is rejected, so run the hook commands directly. Newer clippy may flag
+  existing code: compare with `main`.
 - Desktop (Tauri) needs WebKitGTK/GTK, libsecret, dbus (native notification tests), ffmpeg ≥ 8
   for media tests; borrow from a Nix build env of a Tauri package. Playwright browsers:
   nixpkgs' `playwright-driver.browsers` must match `@playwright/test` 1.63.0.
@@ -134,11 +141,12 @@ Marking ready also triggers the Codex review (section 6).
   integration, browser measurements, 21 browser-journey shards, native fixture), `DCO Check`,
   **1 approving review from a code owner** (`@block/buzz-oss-team`; Builderlab plugin also
   `@block/buzz-builderlab-oss-team`). `require_extra_approval_for_unattributed_changes` is set
-  (meaning unverified). Stale approvals are not dismissed on push.
+  (meaning unverified). Stale approvals are not dismissed on push. Unchanged on 2026-10-28.
 - Fork PRs: only `DCO Check`, `Semgrep OSS`, `zizmor` run at first; `CI` sits in
   `action_required` until a maintainer approves the run (#1556, #1571, #1576 on 2026-10-23).
-  Normal, not a failure. Windows validation is manual dispatch only; Linux CI is not Windows
-  evidence (#1247 fixed tests that failed there).
+  Normal, not a failure. An approval alone doesn't unblock it: #1556 and #881 were approved
+  (10-25, 10-26) and still had no `CI` run on 10-28. Windows validation is manual dispatch only;
+  Linux CI is not Windows evidence (#1247 fixed tests that failed there).
 - Advisory flake check reruns changed tests 10× per engine; a flaky new test shows up there.
 - **Reviewers are mostly agents** run through maintainers' accounts:
   `chatgpt-codex-connector[bot]` (on open, ready, or `@codex review`; P1–P3 badges; reviews
@@ -146,9 +154,9 @@ Marking ready also triggers the Codex review (section 6).
   reviewed head and base) and "Carl", kalvinnchau's, salman1993's and morgmart's agents
   (`🤖 [P2] …`), plus direct human comments (loganj, wesbillman). Per `AGENTS.md` they comment,
   rarely Request Changes; "recommend blocking" / unresolved P1/P2 is a blocker either way.
-  Approvers on the last 150 merged: kalvinnchau 60, wesbillman 36, loganj 16, salman1993 13,
-  wpfleger96 10, baxen 9. Triage/merge of outside PRs seen from wesbillman, ngthuydiem (#1247),
-  loganj (#1528).
+  Approvers on the last 150 merged (2026-10-28): kalvinnchau 38, wesbillman 32, loganj 32,
+  baxen 18, salman1993 11, wpfleger96 7, ngoodger-block 5. Triage/merge of outside PRs seen from
+  wesbillman, ngthuydiem (#1247), loganj (#1528).
 - Recurring findings (sample of 60 merged PRs, 2026-10-23):
   - **Async/lifecycle ordering**: stale results after cancel/replace, state lost across
     remount or tab close, deferred visibility (#1527, #1521, #1325, #844, #1556).
@@ -163,21 +171,25 @@ Marking ready also triggers the Codex review (section 6).
 - Answer every finding in its thread: "Fixed in `<sha>`: <what>; <test> fails before, passes
   after" (#1556, #1527), or one line why not.
 
-## 7. What the history shows (2026-10-23)
-- 1,154 merged PRs since 2026-09-10; 39 from forks, almost all by Block/Square/Cash staff
-  (company field, own-branch PRs, self-merges). At most three merged fork PRs from accounts
-  without such signs: #93 (54 h), #1247 (109 h), #1528 (19 h). Internal PRs: median 12 h,
-  p90 66 h to merge. GitHub's `CONTRIBUTOR` label means nothing here (staff keep membership
+## 7. What the history shows (2026-10-28)
+- 1,298 merged PRs since 2026-09-10; 43 from forks, almost all by Block/Square/Cash staff
+  (company field, own-branch PRs, self-merges; the new ones since 10-23 are staff too, e.g. #1524
+  merged by the author's `-square` account). At most three merged fork PRs from accounts
+  without such signs: #93 (54 h), #1247 (109 h), #1528 (19 h). Internal PRs: median 11 h,
+  p90 71 h to merge. GitHub's `CONTRIBUTOR` label means nothing here (staff keep membership
   private).
-- Outside PRs still open on 2026-10-23: #35 (since 09-12, changes requested), #881 (changes
-  requested), drafts #448, #553, #1156, and #1556, #1571, #1576 awaiting CI approval.
+- Outside PRs still open on 2026-10-28: #35 (since 09-12, changes requested), #881 and #1556
+  (approved, CI never run), #1571, #1576 (awaiting CI approval), #1051, #1052, drafts #448,
+  #553, #1053, #1064, #1156.
 - Closures without merge are mostly self-closures (retargeted, cherry-picked into a bigger PR:
   #946 into #941 with authorship kept, #1063).
-- Releases: no semver yet. `Desktop previews` builds `main` every 6 h (00:17/06:17/12:17/18:17
-  UTC) into prereleases `v0.0.0-preview.<run>.<attempt>` (158 on 2026-10-23); old previews and
-  their tags are pruned (last 10 + last 7 days). `desktop-vX.Y.Z[-beta.N]` tags via the
-  "Desktop release tag" workflow are reserved for real releases; none exist yet. README:
-  "Builds come straight from `main`; there's no stable release channel yet."
+- Releases: `Desktop previews` builds `main` every 6 h (00:17/06:17/12:17/18:17 UTC) into
+  prereleases `v0.7.0-preview.<run>.<attempt>` (`v0.0.0-…` before #1643; 37 kept on 10-28, old
+  ones and their tags pruned). Release tags `desktop-vX.Y.Z[-beta.N]` come from the
+  "Desktop release tag" workflow (dispatched from `main`, annotated tag on a given `main` SHA):
+  `desktop-v0.7.0-beta.1` (`d2f80496`) and `-beta.2` (`b0c92eae`), both 2026-10-27 by Kalvin
+  Chau. They are tags only, no GitHub release. README still says "Builds come straight from
+  `main`; there's no stable release channel yet."
 
 Measurement commands (rerun on refresh):
 ```bash
@@ -196,15 +208,19 @@ gh pr list -R block/buzz-app --state merged --limit 150 --json reviews --jq '[.[
   reproduce/expected/environment). Martin files them in the browser.
 
 ## 9. Our setup and current threads
-- Fork `kleinbem/buzz-app` (not created yet), clone `~/Develop/github.com/block/buzz-app`
-  (read-only research clone: `~/.cache/buzz-app`).
-- Downstream: a nixpkgs draft for 1.0 (`buzz-app`, built from a pinned `main` commit, since
-  preview tags are pruned) is being built; it leaves draft with the first `desktop-v*` tag. Our
+- Fork `kleinbem/buzz-app` not created yet. Clone `~/Develop/github.com/block/buzz-app` (jj
+  colocated, cloned 2026-10-28), workspaces in `~/Develop/github.com/block/buzz-app.ws/`.
+- Prepared, not opened (2026-10-28): five PRs: test tools on `PATH`; wipe refusal only in debug
+  builds; `/bin/chmod` in the macOS ACL test; git shim fixture; `BUZZ_GOOSE_ACP_BINARY` for a
+  prebuilt goose-acp. Plus an issue draft: build-time opt-out of Linux `buzz://`
+  self-registration. The nixpkgs package carries a workaround for each, linked to its PR/issue.
+- Downstream: nixpkgs draft NixOS/nixpkgs#577918 (`buzz-app`, built from a pinned `main`
+  commit); it was waiting for the first `desktop-v*` tag, which now exists (section 7). Our
   block/buzz relay package serves 1.0 clients too (1.0 needs a relay from 2026-09-23 or later
   for `consistency: "strong"` reads).
-- Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits draft #941 (it uses
-  `client::start`/`serve::start` and `disable_iroh_relays` on 0.78.1); the relay switch is
-  restored in Mesh-LLM/mesh-llm#2564 (draft). block/buzz#8557 is the 0.X side.
+- Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits #941 (out of draft since;
+  it uses `client::start`/`serve::start` and `disable_iroh_relays` on 0.78.1); the relay-switch
+  draft Mesh-LLM/mesh-llm#2564 was closed. block/buzz#8557 is the 0.X side.
 
 ## Review checklist
 For the review before ready (`upstream-contributing`, section 6; `AGENTS.md` "Reviewing"
