@@ -74,6 +74,18 @@ description: >-
 - `! cmd` never fails a script under `set -e` (also in nixpkgs `runCommand` tests); write
   `if cmd; then echo "unexpected success" >&2; exit 1; fi`.
 
+## Find the cause before the PR
+
+- Every kleinbem PR auto-merges once green, so opening one is merging it. Know why something
+  fails before changing how it works.
+- One host's symptom isn't a fleet finding. Check the same thing on the other hosts first (one
+  `ssh` loop; no-touch grants make it free). If they're fine, the cause is in that host's config
+  or hardware, and so is the fix.
+- Try the one-off manual fix first: how it behaves points at the cause. On nixos-nvme, chrony had
+  0 RTC samples and the clock sat at 2021. Swapping chrony to `rtcsync` fleet-wide (nix-config
+  #355) was wrong: `acpi_tad` held rtc0, `hwclock --rtc /dev/rtc1` worked, the other five hosts
+  trimmed fine, and the fix was blacklisting one module on one host (#356).
+
 ## Verify with real builds
 
 - GPU tests on orin-nano (JetPack 6, driver for CUDA 12): nixpkgs master defaults to CUDA 13
