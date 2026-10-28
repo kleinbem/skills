@@ -10,7 +10,7 @@ Layer 3 of 3: read `upstream-contributing` and `nixos-org` first (as files, `~/.
 This skill holds only what is specific to Nixpkgs and wins where they differ.
 
 Sources of truth, in the Nixpkgs checkout: `CONTRIBUTING.md`, `pkgs/README.md`,
-`pkgs/by-name/README.md`, `maintainers/README.md` (summarised here as of 2026-10-21). Read the
+`pkgs/by-name/README.md`, `maintainers/README.md` (summarised here as of 2026-10-21, rechecked 2026-10-28). Read the
 relevant section before acting on a rule from memory.
 
 ## 0. Before starting
