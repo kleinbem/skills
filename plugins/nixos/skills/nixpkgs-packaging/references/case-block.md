@@ -1,7 +1,8 @@
 # Case: Block's Buzz (buzz-cli, buzz-relay, buzz-app)
 
 Merged: buzz-cli co-maintainer (#569636, 2.4 days), buzz-cli 0.5.28 (#577535, 3.3 days). Open:
-buzz-relay + module (#574877), buzz-app (#577918, draft). Closed: seven single-package drafts
+buzz-relay + module (#574877), buzz-app (#577918, draft, 0.7.0-beta.2; upstream test fixes
+block/buzz-app#1778–#1781, drafts). Closed: seven single-package drafts
 (#569154–#569247), the six-package suite (#570552), buzz-desktop (#571723), goose 1.56 (#578469,
 duplicate of a maintainer's #578652).
 
@@ -19,6 +20,9 @@ duplicate of a maintainer's #578652).
 - **block/buzz merged no outside PR** (security review needs a maintainer first; outside merge
   rate ≤6 %). → With slow upstreams, carry linked patches and keep them few; spend effort where it
   merges (the surrounding community: Mesh-LLM, mulatta's buzz.nix, sebfried).
+- **A GUI test read as an app bug** ("Community discovery failed") was the fleet: the reused app id
+  loaded the old profile, and a container egress rule dropped the relay's replies (nix-gantry#5). →
+  Check existing state and the backend before blaming the package.
 - **Metadata errors** (wrong `githubId`, over-attribution forcing a push on an approved PR) →
   mechanical checks before pushing; attribution per change.
 
@@ -44,8 +48,16 @@ duplicate of a maintainer's #578652).
 - Reproducibility: `--remap-path-prefix` / `-ffile-prefix-map`, `disallowedReferences = [ src ]`.
 - `OPENSSL_NO_VENDOR = 1` (keyring vendors openssl), `AWS_LC_SYS_CMAKE_BUILDER = 1`,
   `dontUseCmakeConfigure` when only build scripts use cmake.
-- Tests: release profile breaks debug-only helpers (upstreamed for 1.0: buzz-app#1778–#1780);
-  17 Linux + 16 darwin skips, each with its reason; offline smoke tests in `passthru.tests`.
+- Tests: 17 Linux skips at beta.2, sorted by cause into four upstream PRs (BA#1778 per-profile
+  assertion, #1779 tools and `PATH` from the environment, #1780 tempdir fixtures, #1781 prebuilt
+  goose-acp) and two Nix-side fixes (dbus `--config-file`, a darwin `sandboxProfile` for trustd).
+  With them applied (TEST-ONLY branches, review-gha 40612213130 Linux, 40613244514 darwin) two
+  skips remain on Linux (`/usr/bin/env`, `/etc/profile`) and one more on darwin (`chmod +a`).
+  Offline smoke tests in `passthru.tests`.
+- Linux `productName` comes from `tauri.linux.conf.json` ("Buzz Foundation"): resource dir and
+  desktop file follow it, the binary is `Buzz`.
+- Deep-link self-registration: a build-time switch upstream would replace the Nix-only patch
+  (issue text drafted, Martin files it).
 
 ## Daemon + module (buzz-relay)
 
