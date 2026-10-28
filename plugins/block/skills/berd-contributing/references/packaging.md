@@ -26,7 +26,9 @@ kleinbem/nixpkgs branch `berd-init`, `pkgs/by-name/be/berd/package.nix`.
   "0"; `UPDATER_ENABLED` unless "false" (the Linux release sets it to false). Source.
 - `VITE_ENVIRONMENT`: the release sets `production`; unset means `development`, and
   `telemetryBuildEnabled()` (`src/shared/telemetry/client.ts`) is then false: no telemetry can be
-  sent, even after opting in. The environment is read only by the telemetry code. Source.
+  sent, even after opting in. Only the telemetry code reads it: `vite.config.ts` picks the OTLP
+  endpoint from it (`otel.berd.xyz` for production, a dummy `.invalid` host otherwise). The nixpkgs
+  package sets `production` like the release. Source.
 - Downloads at build time that a sandbox must replace: goose built from `goose-backend.lock.json`
   (a goose main commit; v0.6.4 → 5e909259, main → 7debb275), sherpa-onnx prebuilt static libraries
   (the app depends on `berd-voice` with `features = ["static"]`; on main the crate is `berd-call`
@@ -42,22 +44,32 @@ kleinbem/nixpkgs branch `berd-init`, `pkgs/by-name/be/berd/package.nix`.
 - Data: `~/.local/share/xyz.block.berd/` (`berd.sqlite`, `berdctl/control-*.json`, avatars,
   `installation-cohort-v1.json` = `{"cohort":"fresh-with-landing-v1"}`), goose state under
   `~/.local/share/goose`, `~/.local/state/Block/goose`. Built.
-- Network at startup (strace `-f -e connect`, fresh home, 2026-10-28): only avatar images from
-  `dwwgwmfqqjotj.cloudfront.net` (Berd's own threads; ~90 assets, retried every 30 s on failure).
-  Built. During a session (`berdctl info models`, chat) further HTTPS connections went to
-  160.79.104.10 (Anthropic's range), Cloudflare-hosted hosts and `169.254.169.254:80` (AWS
-  instance metadata): suspected goose's provider setup, not yet attributed to a process.
+- Network (strace `-f -e execve,connect,sendto…`, fresh home, production build, 2026-10-28;
+  names from the nscd lookups, programs from the execve chain). Built:
+  - Berd: avatar images from `dwwgwmfqqjotj.cloudfront.net`, the only CDN name looked up
+    (~90 assets, retried every 30 s on failure).
+  - goose (`goosed`), at its start: `models.dev` (model catalog) and `169.254.169.254:80`
+    (AWS instance metadata, suspected from its AWS/Bedrock provider setup).
+  - Telemetry: without opt-in no lookup of or connection to `otel.berd.xyz`; with
+    `telemetry-settings.json` = `{"schemaVersion":1,"enabled":true}` in the app-data dir it connects
+    there. Consent is fail-closed: events wait in a buffer until consent loads, the native export
+    gate checks it again.
+  - `api.anthropic.com` came from the user's own `claude-agent-acp` → `claude`, which Berd started
+    when the test asked every harness for its models (`berdctl info models` without
+    `--harness-id`), not on its own.
 - It ignores `HTTPS_PROXY`: the logging proxy saw no request while the connects went direct. Built.
 - External commands: the user's login shell (`/bin/zsh` here) to capture the directory
-  environment (times out after 10 s under strace), lookups of `npm`, `git`, `git-lfs` and the
-  user's own `goose` on that `PATH`. Built.
+  environment (times out after 10 s under strace); a doctor probe (`src-tauri/src/commands/doctor.rs`)
+  of the user's tools on that `PATH`: `npm prefix -g`, `git --version`, `git lfs version`,
+  `gh --version`, `gh auth status`, `goose acp --help`, `claude-agent-acp --cli auth status`, and
+  `bash -l -c 'type -P -- <agent>'` per known ACP agent. Built.
 - Writes about itself: nothing (no `.desktop` handler, autostart or service unit in the test home).
   The packaged `.desktop` declares `x-scheme-handler/berd`. Built.
 - Updater: `tauri-plugin-updater` is compiled in, but `lib.rs` registers it only when the config
   has `plugins.updater.pubkey`, and release channels load from `release-channels.json` in the
   resource dir; both come only from upstream's release overlay (`pnpm tauri:release:config`).
   Built: no `release-channels.json` (asserted in `passthru.tests.sidecars`).
-- Telemetry: disabled by default in official builds (`TELEMETRY.md`); see `VITE_ENVIRONMENT` above.
+- Telemetry: off until the user opts in (`TELEMETRY.md`), also in the nixpkgs package; see above.
 - Headless runs need `NO_AT_BRIDGE=1` (libatk-bridge segfault without an a11y bus). Built.
 
 ## Tests
