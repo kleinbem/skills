@@ -69,3 +69,23 @@ test on x86_64 and aarch64; IPv6 bind strings bracketed; darwin test daemons wit
 
 Every merge needs a committer. What worked: ask one who touched the package (booxter had fixed
 buzz-cli's darwin build). Init PRs: median 2.5 days, p90 ~22 days.
+
+## Berd (block/berd)
+
+nixpkgs draft `berd: init at 0.6.4` (branch kleinbem/nixpkgs:berd-init, 2026-10-28). Upstream
+takes no outside PRs: fixes are issues Martin files (`berd-contributing`).
+- **The shadow was a near copy.** nix-packages' Berd, written in nixpkgs form, needed two changes
+  on master: pnpm `fetcherVersion` 4 → 5, pnpm on `nodejs-slim_24` (master's convention, not
+  `nodejs_24`). Before copying a shadow, read the fetcher's deprecation throws on master
+  (`pkgs/build-support/node/fetch-pnpm-deps`). The copy goes away for a registry entry once the
+  PR exists (nix-packages README).
+- **Release, not main.** 0.6.4 is the newest tag and runs on nixpkgs' goose-cli as the `goosed`
+  sidecar; main pins a goose commit. Track the tag until upstream releases.
+- **Tauri resource dir:** `libexec/berd/{bin,lib}` with the wrapper in `bin/` (case above);
+  `no-managed-acp-tools` and `no-bb-cli-install` features stop runtime downloads; the updater
+  stays out (no release overlay key).
+- **Behaviour test** (SKILL.md Phase 3): headless chat through `bin/berd`, the packaged `goosed`
+  and `berdctl` against llama-server answered `PONG`; harness in `~/.cache/berd-test/scripts`
+  (to move into the canary template).
+- **Platforms:** Linux only so far; darwin needs the Catch sidecar (macOS Swift, block/catch)
+  and the bundle layout.

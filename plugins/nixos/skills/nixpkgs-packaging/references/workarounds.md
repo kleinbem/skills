@@ -96,6 +96,14 @@ Make sure a Nix build never ships an updater: check that upstream compiles it ou
 endpoint/key, and assert it in `installCheckPhase` (grep the binary for the plugin and the feed
 URL; buzz-app). A patch that "disables" an updater can silently do nothing (seen on N#549345).
 
+## Neighbours: when two packaged apps disagree
+
+Not a package workaround but a fleet and test setting, until one side is fixed.
+
+| Symptom | Cause | Meanwhile |
+|---|---|---|
+| goose fails a turn: `Failed to parse Responses stream event: missing field created_at` | goose's openai provider sends a stock base path to the Responses API; llama-server (nixpkgs llama-cpp 0.7.0, `tools/server/server-task.cpp`) sends `response.created` without `created_at`, which OpenAI's response object has | goose config `OPENAI_BASE_PATH: chat/completions`; no llama.cpp or goose report yet (2026-10-28). Check every goose → llama.cpp-based endpoint in the fleet (the mesh provider) |
+
 ## The lifecycle of one workaround
 
 1. Find it (test failure, review, measurement); write down the cause, not just the symptom.
