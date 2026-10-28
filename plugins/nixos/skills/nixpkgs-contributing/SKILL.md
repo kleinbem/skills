@@ -188,8 +188,9 @@ hardware; checks and full builds go to GitHub runners.
   - Defaults: x86_64 + aarch64-linux, aarch64-darwin, x86_64-darwin `no`, `post-result=false`
     (posting needs Martin's OK), `on-success=nothing`.
   - darwin: tests with `__darwinAllowLocalNetworking` need `yes_sandbox_relaxed` (as Hydra);
-    `yes_sandbox_true` refuses them. At most 2–3 darwin runs a day, never two at once; collect
-    everything one run can tell. "Not acquired by runner" means stop for the day.
+    `yes_sandbox_true` refuses them. Run darwin whenever it is needed; there is no budget. GitHub
+    only limits parallel macOS jobs (5 on the Free plan), so a run can wait for a runner at busy
+    times; that is capacity, not an error.
   - A job ends at GitHub's 6 h limit. Big multi-variant PRs (CPU+Vulkan+CUDA+ROCm runtimes) don't
     fit on x86_64: run nixpkgs-review for that platform on nixos-nvme, whose store already holds
     earlier test builds.
