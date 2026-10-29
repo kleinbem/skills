@@ -104,6 +104,11 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   directory's newest test binary is whatever was built last (a "0/100" once came from the probe
   binary, not the fix).
 - Claims about runtime behaviour need a built binary and a run, not a reading of the code.
+- Keep each proof run's output in a file (`~/.cache/<repo>-<N>-<what>.txt`) the moment it runs:
+  a later build overwrites the binary, and a reviewer can't check "fails on main" from memory.
+- Numbers taken from logs (how many runs, which failed, the exact command, local or CI) are
+  claims too: check them against the log before writing them down. An issue draft said "once in
+  three runs, `cargo test --workspace`"; it was two local runs of the Nix check phase in release.
 - Checks and test suites go to GitHub runners where we have them (`kleinbem/mesh-llm-ci`,
   nixpkgs-review-gha); the workstation is for builds and behaviour tests. Run heavy local builds
   one at a time (parallel Rust/CUDA/VM builds fail on memory).

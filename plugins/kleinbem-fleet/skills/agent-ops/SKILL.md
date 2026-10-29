@@ -61,6 +61,11 @@ description: >-
   Irish time.
 - Keep multi-day work out of the scratchpad (`/tmp` is tmpfs, wiped on reboot): worktrees next to
   the clone, logs in `~/.cache`, drafts in Obsidian.
+- Big things never go to the scratchpad either: `/tmp` is an 8 GB tmpfs shared by every session.
+  Cargo targets (`CARGO_TARGET_DIR=~/.cache/<name>-target`), toolchains, models and clones go under
+  `~/.cache`. On 2026-10-29 a 2.5 GB model and two build targets in old sessions' scratchpads
+  filled it, and every session's tool output failed with ENOSPC. Delete your own scratchpad's
+  large files when done.
 
 ## Shell traps
 
