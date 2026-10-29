@@ -38,8 +38,12 @@ duplicate of a maintainer's #578652).
 - Sidecars built from nixpkgs sources in a `let` (goose-acp from goose-cli's src and cargoDeps,
   upstream's features, `buildType = "lean"`) or in `preBuild` (`cargo build --offline --frozen`).
 - Linux wrapper: `dontWrapGApps`, one `wrapProgramShell` with the GApps args, `--suffix PATH` for
-  fallback tools (the user's own win), `--set-default SSL_CERT_FILE`, `--run` for a per-user
-  GStreamer registry; GStreamer base, good, bad (MediaRecorder) and libav.
+  fallback tools (the user's own win), `--run` for a per-user GStreamer registry; GStreamer
+  base, good, bad (MediaRecorder) and libav.
+- No `SSL_CERT_FILE` in the wrapper: NixOS doesn't set it in the session, so a wrapper value
+  replaces `/etc/ssl/certs` and drops CAs from `security.pki` for the app and every sidecar it
+  starts (goosed failed against a Caddy-CA host, 2026-10-29). rustls and glib-networking find
+  the system store; `cacert` belongs in `nativeCheckInputs` only.
 - darwin: a binary wrapper inside the bundle as its executable (applies when started from
   Finder), one ad-hoc `rcodesign sign` of the bundle, no hardened runtime.
 - Updater: compiled out without endpoint/key; `installCheckPhase` greps the binary for the plugin
