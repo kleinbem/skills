@@ -103,6 +103,8 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
   thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
   way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
+- Also read the review body. Findings outside the diff land there, not in a thread, so the gate
+  doesn't see them: handle them the same way and answer in a PR comment.
 - A Major finding you can't settle with evidence goes to Martin. Don't resolve it to get the merge.
 - List open threads: `gh api graphql -f query='{repository(owner:"kleinbem",name:"<repo>"){pullRequest(number:<n>){reviewThreads(first:50){nodes{id isResolved comments(first:1){nodes{path body}}}}}}}'`.
   Resolve one: `gh api graphql -f query='mutation{resolveReviewThread(input:{threadId:"<id>"}){thread{isResolved}}}'`.
