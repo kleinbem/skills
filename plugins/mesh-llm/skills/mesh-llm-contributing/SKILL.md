@@ -85,9 +85,21 @@ merged PRs; numbers are examples):
   its own merge point (#2359, #2374). A gate (a setting that turns something off) needs a test
   that the gated work really doesn't happen, not only that the value parses: pass the request
   in as a closure so the test can make it panic (#2446).
+- **Stack:** test threads have 2 MiB, and #2177 removed `RUST_MIN_STACK` from the Windows unit
+  row on purpose, so growth shows. Don't propose raising the limit (or `opt-level` tricks as the
+  fix); shrink the frame that grew (#1976 boxed route futures, #2690 split the CLI into
+  flattened `Args` groups). Measure before and after (section 2).
+- **CLI types (`mesh-llm-cli`):** clap derive defines every option of a struct in one function,
+  and debug frames add up (clap-rs/clap#5134), so big option sets go into `#[derive(Args)]`
+  structs (`Cli`'s groups in `parser/top_level_options.rs`, #2690). `#[command(flatten)]` keeps
+  the `--help` order only when a group is a contiguous run of the old fields, flattened where the
+  run was. Re-export new public types at the crate root next to `Cli` (`lib.rs`). Flatten empties
+  the parent's implicit `ArgGroup`; nothing uses group ids today.
 - **Docs follow the code:** doc comments that state a contract, README examples and the API
   reference for new API objects change with it (#2291, #2300); a UI change needs a screenshot and
-  documented behaviour (#2315).
+  documented behaviour (#2315). A doc comment that explains a mechanism must match what the code
+  really does (#2690's review: clap_derive defines fields in declaration order, so "returns
+  before the subcommands are defined" was false for most groups).
 - **Claims:** title and body claim no more than the code does (#2298: "phase 1" instead of
   enforcement; #2377: "one body claim is false"). Reviewers reproduce stated test counts at the
   head commit, so give exact commands and counts.
@@ -146,7 +158,18 @@ merged PRs; numbers are examples):
   with and without the change.
 - When a change replaces a mechanism (a command → a system call), grep for comments, doc comments,
   docs and error messages that describe the old one (a maintainer had to fix `parse_hostname`'s doc
-  on #2444).
+  on #2444). For a mechanical rename of fields, drive the rewrite from rustc's E0609 spans
+  (`cargo check --message-format json`), then grep docs and design docs for the old names
+  (#2690 missed `mesh/docs/design/VIRTUAL_LLM.md`).
+- A CLI refactor that should not change the surface: compare against main with
+  `cargo run -p mesh-llm-cli --bin mesh-llm-cli-inventory -- --check <main's inventory.json>` and
+  a throwaway test that dumps `render_help`/`render_long_help` of every command, all options
+  unhidden; both byte-identical (#2690).
+- Stack use: a throwaway test that re-runs the overflowing test as a child on a thread of a given
+  size (binary search, 16 KiB steps; dispatch it with `packages=`/`filter=` on all three
+  platforms). Frame sizes: `objdump -d -C` of the debug test binary; frames over a page allocate
+  through a probe loop (`sub $N,%r11`), so add that to the final `sub $M,%rsp`, or every large
+  frame reads as 4 KiB.
 - Pre-flight check on GitHub's runners instead of the workstation, before opening the PR and
   after every push: push the branch to the fork, then
   `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha> -f title="<PR title>"`.
@@ -243,6 +266,8 @@ merged PRs; numbers are examples):
   - the body has no `TODO` left and all PR cross-links are filled in.
 - The human submitter reviews the change before it is opened. Never claim review or testing in
   their name that they did not do.
+- PRs here open non-draft, so the independent review (`upstream-contributing`, section 6) runs
+  before opening, not before ready: on #2690 it found two wrong numbers and a false doc claim.
 
 ## 5. CI on the pull request
 Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI work) and
@@ -261,6 +286,8 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
   the reason; don't leave them unanswered. It tends to ask for backward compatibility with
   features that were never released; a maintainer said to take that with a grain of salt (#2132).
+  Its "Docstring Coverage" pre-merge warning counts every function a diff touches; maintainers
+  merge with 0% (#2629, #2662, #2677), so don't add doc comments to untouched logic for it.
 - A maintainer (ndizazzo) reviews with ranked findings (`[P2]`, `[P3]`), each reproduced at the
   head (#2511, #2513, #2565); a P2 can come with "changes requested" (#2422, #2565), P3s are
   usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.
