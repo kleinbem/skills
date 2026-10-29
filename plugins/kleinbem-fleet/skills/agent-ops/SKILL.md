@@ -4,8 +4,9 @@ description: >-
   How an agent runs long work in the kleinbem fleet: watching builds and CI so
   failures are reported unasked, polling without rate limits or YubiKey
   popups, local build priority on nixos-nvme, waiting productively, shell
-  traps, and verifying with real builds. Load before starting builds, CI runs,
-  background jobs or waits.
+  traps, answering CodeRabbit so PRs merge, and verifying with real builds.
+  Load before starting builds, CI runs, background jobs or waits, and after
+  opening a kleinbem PR.
 ---
 # Running long work in the kleinbem fleet
 
@@ -90,6 +91,22 @@ description: >-
   0 RTC samples and the clock sat at 2021. Swapping chrony to `rtcsync` fleet-wide (nix-config
   #355) was wrong: `acpi_tad` held rtc0, `hwclock --rtc /dev/rtc1` worked, the other five hosts
   trimmed fine, and the fix was blacklisting one module on one host (#356).
+
+## CodeRabbit gates every PR
+
+Public kleinbem repos require the `CodeRabbit` check and resolved conversations (github-config
+#30), so an armed PR doesn't merge until its review is answered. Config: `kleinbem/coderabbit`.
+
+- After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
+  thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
+  way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
+- A Major finding you can't settle with evidence goes to Martin. Don't resolve it to get the merge.
+- List open threads: `gh api graphql -f query='{repository(owner:"kleinbem",name:"<repo>"){pullRequest(number:<n>){reviewThreads(first:50){nodes{id isResolved comments(first:1){nodes{path body}}}}}}}'`.
+  Resolve one: `gh api graphql -f query='mutation{resolveReviewThread(input:{threadId:"<id>"}){thread{isResolved}}}'`.
+- A new push triggers a fresh review with new threads, so answer them all again before walking away.
+- Bot PRs and bot pushes report `skipped`. A rate-limited review reports a passing check plus a
+  comment: the PR then merges unreviewed, so say so in your report.
+- Private repos (kleinbem-secrets, mesh-llm-gpu) have no CodeRabbit.
 
 ## Verify with real builds
 
