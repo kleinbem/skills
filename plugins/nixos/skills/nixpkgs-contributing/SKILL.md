@@ -16,6 +16,12 @@ relevant section before acting on a rule from memory.
 ## 0. Before starting
 - Search open and closed PRs (and issues) for the package first:
   `gh search prs --repo NixOS/nixpkgs "<attr>"`. Build on or credit existing work instead of duplicating it.
+- Split a new app across PRs from the start: the packages (app, its runtime, thin variants like
+  `-cuda`) in one PR, extra products in their own, the NixOS module last. Later PRs can open
+  at once as drafts that contain the base commits ("Depends on #N; only the last commit is
+  new"), rebased once the base merges. The package PR then doesn't link the module's
+  `nixosTests`; the module PR adds it. One PR with 7 packages and a module (#571722) got no
+  human review in three weeks; it is being split into these three.
 
 ### Decide the base branch first
 - Check rebuild count (CI `rebuild` labels; estimate locally beforehand).
