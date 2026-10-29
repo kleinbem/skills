@@ -10,6 +10,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `nixos` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks, review patterns |
 | `nixos` | `nixpkgs-maintaining` | Nixpkgs maintainer work: update PRs, merge bot, teams |
 | `nixos` | `nixpkgs-packaging` | Bringing an app into nixpkgs end to end: shape, workaround-free loop with upstream, tests, platforms and hardware, fleet use before merge, after merge |
+| `nixos` | `nixpkgs-reviewing` | Reviewing Nixpkgs pull requests: triage, mechanical verification, derivation and module auditing, and drafting concise GitHub suggestions with AI disclosure |
 | `block` | `block-org` | Block organization (block/*): DCO and org checks, security, governance, repo table |
 | `block` | `buzz-contributing` | Pull requests to block/buzz: title, DCO, PR template, tests and checks |
 | `block` | `buzz-app-contributing` | Pull requests to block/buzz-app (Buzz 1.0): DCO, Co-authored-by, scope checkpoint, ready checklist, reviewers |
