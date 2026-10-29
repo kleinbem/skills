@@ -109,6 +109,11 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Numbers taken from logs (how many runs, which failed, the exact command, local or CI) are
   claims too: check them against the log before writing them down. An issue draft said "once in
   three runs, `cargo test --workspace`"; it was two local runs of the Nix check phase in release.
+  A claim about main ("main fails the same way") needs a run on main, not the fix's run read
+  backwards.
+- "Without a variable" means unset (`env -u VAR`, `unset VAR`): `VAR=` sets it to an empty
+  string, which code may read as a value (an empty path list became the working directory and
+  failed six unrelated tests).
 - Checks and test suites go to GitHub runners where we have them (`kleinbem/mesh-llm-ci`,
   nixpkgs-review-gha); the workstation is for builds and behaviour tests. Run heavy local builds
   one at a time (parallel Rust/CUDA/VM builds fail on memory).
@@ -119,6 +124,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   "our"; grep drafts for these words before showing them.
 - Short and natural: result first, a few plain sentences, no work log or file inventory. No
   commit hashes in comments or replies ("fixed in a85ded92"): say what changed instead.
+  Comments aren't small talk and don't hand decisions back ("should I push it here or as a
+  follow-up?"): decide, and say what happens.
   That holds for hidden HTML comments in a body too: anyone can read them in the raw text or
   the API. Test evidence for the reviewer goes into the review handoff.
 - Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the
@@ -140,7 +147,13 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   `fork` = `kleinbem/<repo>`. One jj workspace per PR branch.
 - **Rebase onto current upstream `main` right before every push and before opening**, even when the
   new commits look unrelated; rerun the affected checks and the pre-flight on the new head. Don't
-  trade the rebase for a note in the PR.
+  trade the rebase for a note in the PR. When main moves faster than a pre-flight (Mesh-LLM: every
+  20-30 minutes), still rebase right before the push, but rerun the pre-flight only if the new
+  commits touch code, tests or the CI catalog; after script- or doc-only commits the green run on
+  the previous base stands (Martin's OK, 2026-10-29).
+- An approved PR with green CI isn't pushed to for a non-blocking point: a push needs the CI
+  approved again and can miss the merge window. Send the fix as a follow-up and say so in the
+  thread (Mesh-LLM#2698's P3).
 - Maintainers push to contributor branches: fetch the fork before every push and build on its
   head. Keep "Allow edits by maintainers" on.
 - Push complete changes, not small steps: fork CI often needs maintainer approval per push, and

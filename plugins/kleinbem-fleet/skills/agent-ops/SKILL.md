@@ -67,6 +67,9 @@ description: >-
   `~/.cache`. On 2026-10-29 a 2.5 GB model and two build targets in old sessions' scratchpads
   filled it, and every session's tool output failed with ENOSPC. Delete your own scratchpad's
   large files when done.
+- Start every background job as a tracked task (the tool's background option), never with `&` or
+  `disown`: an untracked job sends no notification, and a second watcher for the same thing is
+  the result.
 
 ## Shell traps
 
