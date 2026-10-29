@@ -155,13 +155,26 @@ merged PRs; numbers are examples):
   change process-wide state such as `PATH` inside a test (tests run in parallel, and `set_var` is
   `unsafe` in Rust 2024); re-run the test binary as a child with `--exact <test>` and the
   environment set on the child.
+- **Timing tests** (#2670, #2696): hold a slow callback on a `CallbackGate` (`test_support.rs`)
+  instead of sleeping and checking milliseconds. A deadline the worker must reach the plugin
+  within needs room for a busy machine (500 ms there), and a wait whose result comes from the
+  callback gets a generous bound (10 s): neither slows a passing test. Declare a gate's release
+  guard after the `Arc` of the driver, or a failing assertion aborts the binary through the gate's
+  timeout instead of failing cleanly. Fixing one flaky test, sweep the file for the same pattern
+  and run the whole suite repeatedly under load (`timeout 120 sh -c 'while :; do :; done' &` times
+  4 × cores): CI found a fifth test the issue hadn't named.
+- A proof probe must break every place that enforces the property: the proposal deadline is held
+  both in `propose`'s reply wait and in the passive fence, and a probe that broke only one let a
+  test pass (#2696).
 - Claims about runtime behaviour need a built binary, not only reading the code. Grep for every
   caller of what you gate (the startup update check had a second caller in the console API). To
   check outgoing requests, run it behind a logging `HTTPS_PROXY` (reqwest honours it) and compare
   with and without the change.
 - When a change replaces a mechanism (a command → a system call), grep for comments, doc comments,
   docs and error messages that describe the old one (a maintainer had to fix `parse_hostname`'s doc
-  on #2444). For a mechanical rename of fields, drive the rewrite from rustc's E0609 spans
+  on #2444). Also compare the old mechanism's behaviour in edge cases: `ps -o comm=` kept the name
+  from exec time, `proc_pidpath` follows a renamed or deleted file (#2673); an in-place write kept
+  the file's Windows DACL, a renamed temporary file doesn't (#2684). For a mechanical rename of fields, drive the rewrite from rustc's E0609 spans
   (`cargo check --message-format json`), then grep docs and design docs for the old names
   (#2690 missed `mesh/docs/design/VIRTUAL_LLM.md`).
 - A CLI refactor that should not change the surface: compare against main with
@@ -265,7 +278,9 @@ merged PRs; numbers are examples):
   commands and output; UI changes need a screenshot.
 - AI assistance can be stated in the PR text. Keep it out of commit trailers (see above).
 - After opening, don't retitle the PR or rewrite its description for later updates; summarise
-  non-obvious follow-up work in comments (`.github/instructions/pr.instructions.md`).
+  non-obvious follow-up work in comments (`.github/instructions/pr.instructions.md`). A body
+  sentence that a later fix made false is the exception: correct that sentence (with Martin's OK),
+  so the body never claims what the code no longer does (#2673, #2684).
 - **Right before opening, check (all of them, every PR):**
   - main hasn't moved since the last rebase (`gh api repos/Mesh-LLM/mesh-llm/commits/main`);
   - no open PR touches the same files (`gh pr view <N> --json files` over the open PRs); if one
@@ -285,6 +300,9 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 `.github/workflows/`.
 - Five required checks, one workflow each: Quality, Website, Linux, macOS, Windows. A planner
   selects the work from the changed paths and crates; unselected lanes succeed without running.
+  A green `PR / macOS` or `PR / Windows` can hide a skipped platform job (`macOS=skipped` on
+  #2672 and #2683, `Windows=skipped` on #2681): a platform-specific change needs its own run on
+  that platform, named in Validation.
   Quality runs commit convention, `cargo fmt`, Clippy over the affected crates and their reverse
   dependencies, CI contracts and consistency (incl. `no-console-print`, the env-mutation census) and
   `cargo machete`; Linux runs the Rust tests of the affected crates and their reverse dependencies.
@@ -299,6 +317,8 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   features that were never released; a maintainer said to take that with a grain of salt (#2132).
   Its "Docstring Coverage" pre-merge warning counts every function a diff touches; maintainers
   merge with 0% (#2629, #2662, #2677), so don't add doc comments to untouched logic for it.
+  Some findings exist only in its review body ("Nitpick comments: N", "Outside diff range"), not
+  as threads: read every CodeRabbit review body after a push (#2696).
 - A maintainer (ndizazzo) reviews with ranked findings (`[P2]`, `[P3]`), each reproduced at the
   head (#2511, #2513, #2565); a P2 can come with "changes requested" (#2422, #2565), P3s are
   usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.

@@ -100,6 +100,9 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - A failing test or warning: compare against unmodified `main` on the same host before blaming the
   change. Say "suspected" until a cause is proven.
 - A regression test must fail on the old code: run it once without the fix.
+- After building a probe or an old version, rebuild the head before measuring it: a target
+  directory's newest test binary is whatever was built last (a "0/100" once came from the probe
+  binary, not the fix).
 - Claims about runtime behaviour need a built binary and a run, not a reading of the code.
 - Checks and test suites go to GitHub runners where we have them (`kleinbem/mesh-llm-ci`,
   nixpkgs-review-gha); the workstation is for builds and behaviour tests. Run heavy local builds
@@ -175,6 +178,12 @@ skill may forbid even more (llama.cpp: the agent never commits, pushes or posts)
   After every push, list each open PR's unresolved threads (`gh api graphql` reviewThreads,
   `isResolved`): a CodeRabbit thread on Mesh-LLM#2494 went unanswered for three days and turned an
   approval into "changes requested".
+- A point the PR's own change causes is not out of scope: Mesh-LLM#2684 declined CodeRabbit's
+  Windows-ACL point as a follow-up, and a maintainer requested changes for it, because the new
+  rename had lost the DACL the old in-place write kept. Fix regressions in the PR; defer only
+  what was already there.
+- Track what you promise in a review ("I'll do a follow-up"): open it when the PR merges.
+  Mesh-LLM#2528's promised follow-up was prepared but not opened after the merge.
 - Don't ping maintainers. When a PR waits: check the project's usual merge times for outside PRs;
   file a legitimate bug report in an affected downstream project, linking the PR; only after about a
   day without movement, one short message in the official channel, sent by Martin.
