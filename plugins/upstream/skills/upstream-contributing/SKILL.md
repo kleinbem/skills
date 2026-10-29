@@ -119,6 +119,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   "our"; grep drafts for these words before showing them.
 - Short and natural: result first, a few plain sentences, no work log or file inventory. No
   commit hashes in comments or replies ("fixed in a85ded92"): say what changed instead.
+  That holds for hidden HTML comments in a body too: anyone can read them in the raw text or
+  the API. Test evidence for the reviewer goes into the review handoff.
 - Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the
   repo the text is posted in (a nixpkgs body's `#2492` pointed at nixpkgs, not Mesh-LLM).
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
