@@ -74,6 +74,9 @@ merged PRs; numbers are examples):
   the logic in a small module named for it and leave one call in the big file.
 - **Persisted state:** write atomically (temporary file, rename, directory sync) and treat only
   `NotFound` as "no record"; other read errors must not reset state (#2057, #2102, #2142).
+  Replacing a user's file keeps its access: its mode on Unix, and on Windows its DACL, which a
+  temporary file renamed over it doesn't carry (it inherits the directory's ACL); set and verify
+  it through the temporary file's handle before writing, or leave the file alone (#2684).
 - **Protocol and wire changes:** keep them additive (new fields, subprotocol feature strings),
   test a mixed mesh with an older release, and say whether a protocol version bump is needed
   (#2285, #2299, #2316).
@@ -182,8 +185,13 @@ merged PRs; numbers are examples):
   The macOS and Windows rows run `--lib` only, as upstream's do; for integration tests
   (`tests/`) on those platforms add `-f targets=all` (kleinbem/mesh-llm-ci#3, until merged
   dispatch with `--ref macos-all-targets`). macOS code that spawns `ps` or `sysctl` passes on
-  runners and fails in the Nix darwin sandbox; prefer `libc` calls (`proc_pidpath`,
-  `proc_pidinfo`).
+  runners and fails in the Nix darwin sandbox; prefer `libc` calls. For a process's identity use
+  what the kernel recorded at exec (`proc_pidinfo` `PROC_PIDT_SHORTBSDINFO` `pbsi_comm`, any
+  account; `sysctl` `KERN_PROCARGS2`'s exec path, same account), not `proc_pidpath`, which
+  follows the file: a renamed executable reports the new name, a deleted one `ENOENT` (#2673).
+  The automatic plan can leave out the platform a change is for: a change inside
+  `cfg(target_os = "macos")` got no macOS row (#2673). Check the run's job list; if the platform
+  is missing, dispatch again with `packages=<crate>` and `filter=`.
   Not covered by the pre-flight: upstream's Quality step "Test CI, packaging, and SDK contracts"
   (`just ci-automation-contracts`, `just/ci.just`), which runs the `xtask` test binaries with
   `--features automation-contracts`, among them `--test migration_lifecycle` (the tests of
@@ -207,6 +215,9 @@ merged PRs; numbers are examples):
     rebase by change id (`jj rebase -r <change> -d main@origin`, `--ignore-immutable` once
     pushed), never `-r @`, and check the head's description before pushing the PR branch
     (#2528: an empty head failed the commit-convention check).
+  - Rebase a PR of several commits from its first one (`jj rebase -s <first change> -d
+    main@origin`); `-s <bookmark>` moves only the commits from the bookmark on and leaves a
+    conflict that deletes the file the first commit added (#2684).
 - Platforms: code under `cfg(unix)` also runs on macOS, and `cfg(not(unix))` on Windows. If a
   platform keeps the old path, say so in the PR with the reason and the equivalent (on #2444 a
   maintainer added the Windows variant himself).
@@ -291,6 +302,8 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - A maintainer (ndizazzo) reviews with ranked findings (`[P2]`, `[P3]`), each reproduced at the
   head (#2511, #2513, #2565); a P2 can come with "changes requested" (#2422, #2565), P3s are
   usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.
+  He checks what CodeRabbit raises and the PR declines, and platform edge cases: Windows ACLs
+  (#2684), a running executable renamed or deleted (#2673).
 - A push dismisses earlier approvals (repository ruleset; #2073, #2257), another reason to push
   only complete changes.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
