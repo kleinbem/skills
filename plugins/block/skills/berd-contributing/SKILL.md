@@ -96,9 +96,9 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
   Berd `main`. Upstream's cargo features `no-managed-acp-tools` and `no-bb-cli-install` turn off the runtime
   Node/npm downloads. Reproduce bugs in that build before reporting.
 - Next release, check first: `main` renamed the voice crate `berd-voice` to `berd-call` (#338), so the package's
-  sherpa-onnx `substituteInPlace` lines fail; `berd-call` keeps `default = ["static"]` and a `shared` feature. It
-  also moved to `ort` 2.0.0-rc.12 with `disable-linking` (find out how it locates onnxruntime), and #438 (closed
-  unmerged) tried to ship berd-call as standalone releases.
+  sherpa-onnx `substituteInPlace` lines fail; `berd-call` keeps `default = ["static"]` and a `shared` feature (sherpa-onnx-sys refuses
+  `static` and `shared` together, so an added feature can't replace the patch). #438 (closed unmerged) tried to
+  ship berd-call as standalone releases.
 
 ## 3. Reading the codebase (for a precise report)
 
