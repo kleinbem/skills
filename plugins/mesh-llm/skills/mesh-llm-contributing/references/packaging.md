@@ -98,6 +98,12 @@ with a module (NixOS `services.mesh-llm`) don't need it.
   the bundle-dir env leak (#2630), timing tests; on darwin, iroh needs ICU
   (`sandboxProfile` allowing `/usr/share/icu`) and Metal can't create a command queue
   (`GGML_METAL_DEVICES=0`).
+- `cargo test --workspace` unifies features, so `skippy-package-builder` is built with the dynamic
+  runtime there and its binary can't load one: `tests/local_inspect.rs` fails. That's a workspace
+  test artifact, not a user bug (the binary isn't shipped); skip that test, not the crate.
+  `successful_artifact_hook_may_leave_verified_copies_for_rechecking` hardcodes `/usr/bin/true`.
+- `lock_cost::concurrent_commit_calls_stay_within_the_ingress_budget` asserts only in release
+  (`cfg!(debug_assertions)` returns early); with `checkType = "debug"` it can't fail.
 
 ## Paths
 

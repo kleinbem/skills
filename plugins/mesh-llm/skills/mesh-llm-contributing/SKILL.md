@@ -162,7 +162,9 @@ merged PRs; numbers are examples):
   guard after the `Arc` of the driver, or a failing assertion aborts the binary through the gate's
   timeout instead of failing cleanly. Fixing one flaky test, sweep the file for the same pattern
   and run the whole suite repeatedly under load (`timeout 120 sh -c 'while :; do :; done' &` times
-  4 × cores): CI found a fifth test the issue hadn't named.
+  4 × cores): CI found a fifth test the issue hadn't named. Before raising a bound, check the
+  fixture's own waits: a fake server that holds its connection 5 s ends the probe by EOF, so a
+  shutdown bound above that would pass even with the cancel broken.
 - A proof probe must break every place that enforces the property: the proposal deadline is held
   both in `propose`'s reply wait and in the passive fence, and a probe that broke only one let a
   test pass (#2696).
@@ -213,7 +215,9 @@ merged PRs; numbers are examples):
   `cargo test --locked -p xtask --features automation-contracts --test migration_lifecycle <filter> -- --test-threads=1`.
   Its fixture hardcodes `/bin/bash` and `/usr/bin/true`; on NixOS run it under
   `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`
-  (envfs doesn't satisfy it).
+  (envfs doesn't satisfy it). The reverse also holds: envfs serves `/usr/bin/<tool>` from `PATH`,
+  so a hardcoded path that fails in the Nix sandbox passes on the workstation; reproduce with
+  `bwrap --dev-bind / / --tmpfs /usr/bin -- <test binary> <filter>`.
 - Pre-flight details (kleinbem/mesh-llm-ci, local clone `~/Develop/github.com/kleinbem/mesh-llm-ci`):
   - A newer queued run cancels the waiting one (concurrency group).
   - A `packages=` override sends those crates to the macOS and Windows rows too; crates that build
@@ -286,7 +290,8 @@ merged PRs; numbers are examples):
   - no open PR touches the same files (`gh pr view <N> --json files` over the open PRs); if one
     does, compare the hunks and mention a real overlap in the body;
   - Diagnostics names the PR that introduced the behaviour (`git log -S '<symbol>'` on main;
-    follow moves back to the original PR, e.g. #2494: #452 introduced it, #1082 moved it);
+    follow moves back to the original PR, e.g. #2494: #452 introduced it, #1082 moved it). For a
+    test, search its name: a test "from the Skippy split (#2099)" came with #1718;
   - the pre-flight ran on the exact head commit, also after a message-only amend (an identical
     tree can be shown with `git rev-parse <old>^{tree} <new>^{tree}`, but run it anyway);
   - the body has no `TODO` left and all PR cross-links are filled in.

@@ -176,6 +176,14 @@ Practical notes:
   for every path that still needs it, or build once without it. A fix covers the path its PR
   names, not every path with the same symptom (#571722: #2492 fixed `serve`, two
   `scan-refresh` tests still needed `cacert`).
+- Skip single tests (`checkFlags`), not whole crates or packages: an exclude hides every later
+  failure of that crate, and each skip needs a comment with the upstream link. Before carrying a
+  skip into an update, check the test can still fail under the build's profile (a timing test
+  that asserts only in release is inert with `checkType = "debug"`).
+- A hand-pinned `rev` bump: recompute the old pin's hash the same way first
+  (`nix-prefetch-url --unpack <archive>` then `nix hash convert --to sri`); if it matches the stored
+  hash, the method is right for the new one. Compare the two revs' lockfiles and pins to know
+  which other hashes (cargo, pnpm, vendored sources) change.
 - Eval isn't verification. Build the narrow derivation that runs the check: the NixOS manual
   for module docs, the package's tests, the VM test.
 
