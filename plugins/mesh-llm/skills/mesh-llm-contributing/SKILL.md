@@ -304,8 +304,12 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.
   He checks what CodeRabbit raises and the PR declines, and platform edge cases: Windows ACLs
   (#2684), a running executable renamed or deleted (#2673).
-- A push dismisses earlier approvals (repository ruleset; #2073, #2257), another reason to push
-  only complete changes.
+- A push keeps earlier approvals: main's ruleset has `dismiss_stale_reviews_on_push: false` and
+  `require_last_push_approval: false` (checked 2026-10-29; approvals survived force-pushes on
+  #2528, #2577 and #2605; it dismissed them in #2073 and #2257, so recheck with
+  `gh api repos/Mesh-LLM/mesh-llm/rules/branches/main`). Each push still needs a maintainer to
+  approve the fork's CI run again, so push only complete changes, and don't touch a PR that is
+  approved and green just to rebase it.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
   ask for a cherry-pick because it was off.
 - `main` moves several times a day, so the rebase before every push (`upstream-contributing`)
@@ -315,7 +319,7 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   #2474) makes Plan fail on all older PRs ("source slice catalog differs from the protected planner
   catalog"), even on approved ones, and only a rebase fixes it; check with
   `git diff <head> origin/main -- ci/slices.yml ci/ownership.yml` before expecting CI to pass.
-  A push dismisses approvals, so rebase all affected PRs in one go, pre-flight first.
+  Each push needs CI approval again, so rebase all affected PRs in one go, pre-flight first.
 - Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
   build on its head; pushing a stale local bookmark would overwrite their work.
 
