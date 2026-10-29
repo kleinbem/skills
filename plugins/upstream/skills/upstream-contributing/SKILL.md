@@ -21,7 +21,7 @@ model invocation of manual skills.
 
 | Organization | Org skill | Repository skills |
 |---|---|---|
-| NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work), `nixpkgs-packaging` (a new app end to end) |
+| NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work), `nixpkgs-packaging` (a new app end to end), `nixpkgs-reviewing` (reviewing PRs) |
 | block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing` |
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |

@@ -47,7 +47,7 @@ The org has no single policy file; the policies live in the repos, and they diff
 
 | Repo | Repository skill | Notes |
 |---|---|---|
-| NixOS/nixpkgs | `nixpkgs-contributing`; `nixpkgs-maintaining` for maintainer work | Nixpkgs AI policy |
+| NixOS/nixpkgs | `nixpkgs-contributing`; `nixpkgs-maintaining` for maintainer work; `nixpkgs-reviewing` for reviews | Nixpkgs AI policy |
 | NixOS/nix | none yet | **human-authored texts only**; C++; first PRs tightly scoped |
 | NixOS/nixos-hardware | none yet | Matrix `#nixos-hardware:nixos.org`; relevant for our Jetson and Pi hardware modules |
 | NixOS/nixfmt | none yet | ask on Matrix before touching `Predoc.hs` |
