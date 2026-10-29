@@ -157,7 +157,7 @@ tmpfs). A package the fleet runs is also a package Martin can vouch for in the P
 
 When a behaviour test fails against a fleet service, check the service directly (`curl`) before
 blaming the package: buzz-app's "Community discovery failed" was a 502 from the relay, cut off by
-a container egress rule (kleinbem/nix-gantry#5).
+a container egress rule (kleinbem-dev/nix-gantry#5).
 
 ## Phase 6: the PR
 
