@@ -314,6 +314,10 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - Fork PRs wait in `action_required` until a maintainer approves the run, and each new push can need
   approval again: push once the change is complete, not in small steps. Runs left unapproved are
   closed as "failed" (zero jobs) when the PR merges; those notification emails are harmless.
+- Keep about 3–4 of Martin's PRs waiting on maintainers and refill as they merge; ready fixes
+  wait locally with a green pre-flight and a drafted body. 12 open at once (2026-10-29) only
+  lengthened the approval queue. Group fixes by cause (one PR for a class of sandbox failures)
+  rather than one PR per test (`nixpkgs-packaging` Phase 2).
 - The first failing job cancels the other lanes of the same revision; a cancelled lane is not a
   failure of its own.
 - The `ci:canary` label is only for PRs that change CI.
