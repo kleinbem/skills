@@ -63,3 +63,17 @@ adaptations with stated reasons (CUDA toolkit override, cargo config, archive re
 - A push dismissed two approvals (#2446) → push complete changes; don't push from a stale bookmark
   onto a branch a maintainer committed to (#2444).
 - The full test suite died on GitHub twice (memory) before `checkType = "debug"` and no debug info.
+
+## If I started again
+
+1. A week of audit first: the whole test suite in a sandbox-like environment, every failure in one
+   list grouped by cause, the facts sheet from a built binary.
+2. One tracking issue upstream with that list; Martin introduces himself on Discord. Pre-flight
+   (`kleinbem/mesh-llm-ci`), review-gha darwin and the Orin ready before the first PR.
+3. 5–8 themed upstream PRs instead of ~30 small ones, at most 3–4 waiting at a time.
+4. nixpkgs as three PRs from the start (packages, Skippy, module), ideally on a release.
+5. Every platform and the claimed hardware green in week 1–2, gaps stated in the PR.
+6. AUR and the fleet on the same findings, in parallel.
+Kept from what worked: never block nixpkgs on upstream, probes that fail on the old code,
+independent review before opening, short texts with real results, lessons into skills at once.
+

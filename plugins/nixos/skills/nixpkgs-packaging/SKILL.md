@@ -54,7 +54,10 @@ same bug. So:
 - **Split:** one package per independently useful thing (runtime, CLI, daemon), variants by
   override (`-cuda`, `-rocm`, `-vulkan`, `nixpkgs-contributing` §2). **One PR per concern, the
   shared base first** (buzz-cli bump merged in 3 days; seven one-package PRs in two days and a
-  six-package suite PR both stalled). A PR a reviewer can read in one sitting.
+  six-package suite PR both stalled). A PR a reviewer can read in one sitting. For an app with a
+  runtime, variants and a module, from the first PR on: PR 1 has the app, its runtime and the thin
+  variants; extra products and the module follow in separate PRs (`nixpkgs-contributing` §0;
+  #571722 is being split after three weeks without review).
 - **Responsiveness of upstream** (measure merge times of outside PRs, `contribution-skill-authoring`
   §3) sets the strategy: responsive (Mesh-LLM, median 2.5 days) → fix everything upstream and track
   main; slow or closed (block/buzz: no outside PR merged) → carry linked patches, keep them few.
@@ -84,6 +87,20 @@ behaviour test then starts on the old profile, not on a first run.
 Make sure the upstream org and repo have skills before the first contact (`upstream-contributing`
 "First contact").
 
+**The hermetic audit, before the first upstream PR.** Run upstream's whole test suite once in a
+sandbox-like environment (Phase 2 step 2, or `bwrap` with no network, no `/usr/bin`, no CA bundle)
+and also with every relevant variable set to an empty string, not only unset. List every failure,
+grouped by cause. MeshLLM found them one at a time over three weeks (`/usr/bin/true`, `/bin/bash`,
+`ps`, `sysctl`, CA bundle, an empty bundle variable, tight timings, an HTTP client that can't be
+built without CA roots); one list up front turns that into one plan.
+Then, before any PR: file **one tracking issue** upstream with the grouped list and the proposed
+approach per group, and have Martin introduce himself as a downstream packager in the project's
+channel. Distribution concerns (runtime downloads, pins, discovery) become a known topic instead of
+a surprise in each PR.
+
+**Infrastructure on day one:** the upstream pre-flight repo, review-gha for darwin, the hardware
+the package claims (fleet.md). MeshLLM got these gradually, after avoidable red CI runs.
+
 ## Phase 2: first package, and the workaround loop
 
 1. Write it in nixpkgs form from day one on a branch of `kleinbem/nixpkgs` (`<app>-next`;
@@ -98,6 +115,13 @@ Make sure the upstream org and repo have skills before the first contact (`upstr
    setting that makes the test pass (a `sandboxProfile`, a config file from the store, a missing
    check input)? Only then skip, by name, with the link or the Nix-only reason. buzz-app's 17 Linux
    skips become 2 once BA#1778–#1781 ship.
+   **Send themed PRs and cap the queue.** One PR per cause group from the audit, not per test.
+   Keep about 3–4 of Martin's PRs waiting on a maintainer at a time and refill as they merge:
+   where fork CI needs approval per push, a dozen open PRs saturate a small team (MeshLLM had 12
+   open at once). Ready fixes wait locally with their pre-flight and body.
+   A third-party upstream PR the package depends on that stalls (llama.cpp#26103, no activity for
+   weeks) gets taken over under that repo's rules (a review, a comment, or Martin's own PR), not
+   waited on.
 4. Carry the fix downstream meanwhile, linked. Fix a *class* upstream when one cause shows up in
    several places (MeshLLM: one "local client without CA" helper fixed four crates).
    **Prove each upstream PR on the package before it merges:** a TEST-ONLY branch on
