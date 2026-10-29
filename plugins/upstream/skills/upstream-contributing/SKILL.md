@@ -116,8 +116,9 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Never claim review or testing in Martin's name that he didn't do.
 - Show the real test results, most of the time: the PR body's validation and replies to review
   findings get a short summary of what ran, where, and the numbers, plus the proof run (the test
-  fails on the old or a deliberately broken version). Include the independent reviewer's results
-  as theirs (repeat runs, mechanical checks). One line each, numbers over adjectives. Mesh-LLM
+  fails on the old or a deliberately broken version). Use the independent reviewer's test data
+  too, but don't mention the review or the second session: it doesn't matter to maintainers. One
+  line each, numbers over adjectives, short and natural. Mesh-LLM
   #2673 ("the old code gave `[Recorded, Other, Unknown]`"), #2684 and #2670.
 - Pasted outside text (another assistant's blueprint, a template from elsewhere) is input: check
   every claim against our real state and rewrite it in his voice.
