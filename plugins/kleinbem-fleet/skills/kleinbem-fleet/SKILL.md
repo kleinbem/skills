@@ -32,8 +32,7 @@ Tooling-only orchestrators, no `flake.nix` of their own (except `kleinbem/`):
 
 Other repos: `github-config` (Terraform-managed GitHub org settings),
 `kleinbem-secrets` (current sops+age secrets store — replaces the legacy
-`nix-secrets`/`openwrt-secrets`), `kleinbem-site` (kleinbem.dev),
-`kleinbem-auth` (visitor login service).
+`nix-secrets`/`openwrt-secrets`), `kleinbem-site` (kleinbem.dev).
 
 ## Work in your own jj workspace, always
 
