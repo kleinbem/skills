@@ -49,8 +49,21 @@ same bug. So:
   `<last-release>-unstable-YYYY-MM-DD` when upstream merges fixes fast and releases slowly (lets
   upstream fixes land in days instead of waiting for a release; MeshLLM). Watch for repos whose
   tags or crate versions don't mean what they say (Block: `Cargo.toml` never bumped; `mobile-v*`
-  and `desktop-v*` tags in one repo → `nix-update --version-regex`). Changing the policy later
-  costs force-pushes on a reviewed PR (#571722 had 18).
+  and `desktop-v*` tags in one repo). Changing the policy later costs force-pushes on a reviewed
+  PR (#571722 had 18). Package the newest real tag from the start: buzz-app went main commit →
+  beta.1 → beta.2 → 0.7.0, a rebuild and re-review each time.
+- **Update script, decided and tested now:** nix-update reads GitHub *releases* (releases.atom),
+  not tags. Tags without releases (buzz-app's `desktop-v*`, while its previews have releases) need
+  `gitUpdater { rev-prefix = "desktop-v"; ignoredVersions = "-"; }` (the filter keeps
+  `-beta.N` tags out) followed by `nix-update --version=skip` for the
+  hashes (`_experimental-update-script-combinators.sequence`, as atomgit-cli). Test it from the
+  previous tag: set `version` and the source hash back, run
+  `nix-shell maintainers/scripts/update.nix --argstr package <attr> --argstr skip-prompt true`,
+  and the file must come out identical to the hand-made bump. A no-op at the newest tag only
+  proves it finds the tag.
+- **Reuse what nixpkgs has.** A bundled component that nixpkgs already ships (goose) comes from
+  that package, not a second build: buzz-app's own 40-line goose-acp build became a binary wrapper
+  around `goose acp` from goose-cli, as Berd already did. Check sibling packages for the pattern.
 - **Split:** one package per independently useful thing (runtime, CLI, daemon), variants by
   override (`-cuda`, `-rocm`, `-vulkan`, `nixpkgs-contributing` §2). **One PR per concern, the
   shared base first** (buzz-cli bump merged in 3 days; seven one-package PRs in two days and a
@@ -106,7 +119,13 @@ the package claims (fleet.md). MeshLLM got these gradually, after avoidable red 
 1. Write it in nixpkgs form from day one on a branch of `kleinbem/nixpkgs` (`<app>-next`;
    `nixpkgs-contributing` §2). No copies elsewhere: the fleet re-exports the branch (fleet.md).
 2. Build in the sandbox and **run upstream's whole test suite** once with `--no-fail-fast` to see
-   every failure in one pass (`nixpkgs-contributing` §4 practical notes).
+   every failure in one pass (`nixpkgs-contributing` §4 practical notes), on all three platforms
+   at once. For a Cargo workspace that means `cargoTestFlags = [ "--workspace" "--no-fail-fast" ]`
+   when upstream's CI tests the workspace: buzz-app tested one crate first and found its skips
+   over six build rounds.
+   Audit every input against the build log and the output: buzz-app carried `openssl`, `perl` and
+   `OPENSSL_NO_VENDOR` for a crate feature that was never enabled (no `Compiling openssl-sys`, no
+   libssl in NEEDED).
 3. For each failure or patch, classify it with [references/workarounds.md](references/workarounds.md):
    is the cause upstream's (FHS path, network at test time, ignored env var, regression) or the
    sandbox's (darwin Metal, timing)? Upstream causes get an upstream PR (pre-flight first,
@@ -175,7 +194,9 @@ same derivation (Berd: `pam6whyq…` locally and on x86_64-linux); note it in th
 ## Phase 5: use it in the fleet before the merge
 
 Pin the PR's commit in nix-packages' registry, let nix-config's gate build it with the fleet's
-nixpkgs, install it where it is useful, and point a canary at upstream main (fleet.md). Daily use
+nixpkgs, install it where it is useful, and point a canary at upstream main (fleet.md). Do it in
+the first week: the GUI test needs the app on a device, and buzz-app's last open box was the one
+that waited for the fleet's nixpkgs. Daily use
 finds what CI can't (a service that silently falls back to the CPU, a 19 GB download filling a
 tmpfs). A package the fleet runs is also a package Martin can vouch for in the PR.
 
@@ -188,7 +209,12 @@ a container egress rule (kleinbem-dev/nix-gantry#5).
 - `nixpkgs-contributing` §1, §3 and the review checklist; `upstream-contributing` §4–§6.
 - One commit per package plus one for the module; `Assisted-by:` per change.
 - Body: what it is, why these packages, "Tested" with the platform and hardware matrix of the exact
-  head, the upstream fixes and the remaining linked workarounds, honest checkboxes.
+  head, the upstream fixes and the remaining linked workarounds, honest checkboxes. Keep the whole
+  PR template from the first draft (a review flagged buzz-app's trimmed one).
+- Iterate on fresh fork branches (`<app>-r1`, `-r2`, …) and move the PR only at milestones: the
+  agent can't force-push, so each move is a script Martin runs. Before each move: rebase, the
+  3-platform build, and an independent review of that exact head (buzz-app's round 2 found a newer
+  tag, dead inputs and a broken update script; round 3 a version gap to state).
 - Draft until Martin says ready; an independent review (`upstream-contributing/review-handoff.md`)
   and `nix-check-nixpkgs-pr` before that.
 - After opening: answer bots, don't ping; for merging, ask a committer who has touched related
@@ -209,6 +235,13 @@ a container egress rule (kleinbem-dev/nix-gantry#5).
 - Mirror changes to the AUR packages (`aur-contributing`): nixpkgs first, AUR follows.
 
 ## Working rules for the agent
+
+- One session owns a package's PR; its state lives in `~/.cache/<app>-handover.md` (head, runs,
+  decisions, open steps). Other sessions send their change to the owner instead of replacing the
+  head: a fix based on an old head nearly undid buzz-app's 0.7.0 bump.
+- Before drafting an upstream issue, search upstream *and its dependencies* and ask what upstream
+  gains: buzz-app's missing `%u` was already tauri-apps/tauri#15928, and the self-registration
+  opt-out would only have served Nix. Never put an untested claim in it.
 
 - One background watcher per running job; report results unasked (`agent-ops`).
 - Upstream PRs get a pre-flight on GitHub's runners before opening and after every push
