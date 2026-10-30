@@ -30,6 +30,9 @@ Every repo is jj colocated with git. Use jj, raw git only to rescue.
 - Pushing `@` to a branch with raw git (a pre-flight branch) makes it immutable, and jj quietly
   starts a new empty `@`. Keep an empty `@` on top (`jj new <change>`), rebase by change id, never
   `-r @`.
+- Run `jj new` right after a push that leaves the pushed commit at `@`. A pushed commit that is
+  still `@` gets amended by the next edit, and the next push rewrites the remote branch (skills#100: a CodeRabbit fix amended the
+  pushed commit; repaired with a child commit on `<b>@origin` and abandoning the amended one).
 - Recovery: `jj op log`, then `jj undo` or `jj op restore <op>`.
 
 ## Pushing
