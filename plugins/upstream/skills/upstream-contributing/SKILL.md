@@ -22,7 +22,7 @@ model invocation of manual skills.
 | Organization | Org skill | Repository skills |
 |---|---|---|
 | NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work), `nixpkgs-packaging` (a new app end to end), `nixpkgs-reviewing` (reviewing PRs) |
-| block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing` |
+| block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing`, `catch-contributing` |
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
 | Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing` |
@@ -58,6 +58,7 @@ is authoritative; update this table when one changes):
 | Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits |
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
+| block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
