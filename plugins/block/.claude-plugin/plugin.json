@@ -1,6 +1,6 @@
 {
   "name": "block",
-  "description": "Block organization (block/*): block-org (DCO and org checks, security, governance, repo table), buzz-contributing, buzz-app-contributing, berd-contributing",
+  "description": "Block organization (block/*): block-org (DCO and org checks, security, governance, repo table), buzz-contributing, buzz-app-contributing, berd-contributing, catch-contributing",
   "author": {
     "name": "Martin Kleinberger"
   }
