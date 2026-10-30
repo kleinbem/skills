@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-10-28 (main `fea9f6ab`); four draft PRs open (section 9).
+Summary as of 2026-10-28 (main `fea9f6ab`); current PR status in section 9.
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
