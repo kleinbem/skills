@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-10-28 (main `fea9f6ab`); four draft PRs open (section 9).
+Summary as of 2026-10-28 (main `fea9f6ab`); current PR status in section 9.
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
@@ -134,6 +134,13 @@ NixOS notes (as of 2026-10-28):
    later edits change behaviour. (Rarely seen in practice: 5 of the last 100 merged PRs, but it
    is the written rule; follow it.)
 
+Never attest a test the human didn't run. When Martin can't run a change himself (macOS-only
+code, no Mac), mark it ready **without** `buzz-review-completed` and say so in Testing: "I have no
+Mac; the test ran on GitHub's macOS runner (link). On macOS: `<command>`" (#1780). Make step 3
+easy: one script that shows each test failing on `main` and passing with the PR, and for a
+packaging or tooling change the real use too (#1781: the Nix-built goose-acp staged without
+network, answering an ACP `initialize`); pre-run it first so his run has no surprises.
+
 Marking ready also triggers the Codex review (section 6).
 
 ## 6. CI, bots and reviewers
@@ -210,13 +217,15 @@ gh pr list -R block/buzz-app --state merged --limit 150 --json reviews --jq '[.[
 ## 9. Our setup and current threads
 - Fork `kleinbem/buzz-app` (remote `fork`); clone `~/Develop/github.com/block/buzz-app` (jj
   colocated), workspaces in `~/Develop/github.com/block/buzz-app.ws/`.
-- Drafts opened 2026-10-28: #1778 (wipe refusal per profile), #1779 (test tools and `PATH` from
-  the environment), #1780 (git shim fixture), #1781 (`BUZZ_GOOSE_ACP_BINARY`). The `/bin/chmod`
-  PR was dropped (the darwin sandbox has no `/bin/chmod`). Still to do: Martin's review, then the
-  DCO sign-off. Issue draft: build-time opt-out of Linux `buzz://` self-registration (Martin files).
+- PRs, all ready since 2026-10-30, no force-push from now on: #1778 (wipe refusal per profile),
+  #1779 (test tools and `PATH` from the environment), #1780 (git shim fixture; macOS-only, no
+  attestation), #1781 (`BUZZ_GOOSE_ACP_BINARY`, rebuilt on top of #1864's download), #1961 (test
+  doesn't depend on the temporary directory's parents). Martin's test scripts:
+  `~/.cache/buzz-app-upstream/pr-checks.sh` and `check-1781.sh`. The Linux `buzz://`
+  self-registration patch stays Nix-only (decided 2026-10-29, no issue).
 - Packaging facts: [references/packaging.md](references/packaging.md).
-- Downstream: nixpkgs draft NixOS/nixpkgs#577918 (`buzz-app`; 0.7.0-beta.2 is ready at kleinbem/nixpkgs a7a63fbb, green on all three platforms, the push to the PR waits for Martin; the
-  `desktop-v*` tags). Our
+- Downstream: NixOS/nixpkgs#577918 (`buzz-app: init at 0.7.0`, ready since 2026-10-30; the
+  `desktop-v*` tags; goose-acp is a wrapper for nixpkgs' `goose acp`). Our
   block/buzz relay package serves 1.0 clients too (1.0 needs a relay from 2026-09-23 or later
   for `consistency: "strong"` reads).
 - Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits #941 (out of draft since;
