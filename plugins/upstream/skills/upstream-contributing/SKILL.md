@@ -170,9 +170,10 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 ## 6. Independent review before ready
 
 Before a PR goes ready (or, if it already is, before its first human review), a fresh session
-reviews it, ideally on another model than the one that wrote it: the author session is blind to
-its own choices. For buzz and buzz-app this is also upstream's rule (`AGENTS.md`: an agent review
-ran and its blockers were fixed or declined).
+reviews it on the default model: the fresh context makes it independent, not another model. The
+author session is blind to its own choices. Reviews cost token budget, so run one before opening
+and rerun only after substantial changes. For buzz and buzz-app this is also upstream's rule
+(`AGENTS.md`: an agent review ran and its blockers were fixed or declined).
 - The author session writes a handoff from the template `review-handoff.md` next to this skill
   (`~/.agents/skills/upstream-contributing/review-handoff.md`) to
   `~/.cache/<repo>-<N>-review-handoff.md`, and gives Martin the prompt at its end. Martin starts
