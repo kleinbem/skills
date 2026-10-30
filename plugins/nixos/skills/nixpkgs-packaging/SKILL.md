@@ -148,6 +148,13 @@ the package claims (fleet.md). MeshLLM got these gradually, after avoidable red 
    cover, plus a control branch without the patches; build both on review-gha on every platform.
    The control must fail on exactly those tests (buzz-app: 17 failures without, green with
    BA#1778–#1781); link both runs in the upstream PR. Never push these branches to the PR.
+   The test branch also drops the package's own `substituteInPlace` lines that a PR makes
+   unnecessary, not only the skips: buzz-app's `/bin/cp` substitution no longer matched after
+   BA#1779 and cost a run. Delete test and round branches the day their result is in (buzz-app
+   left 15 on the fork).
+   While an upstream PR is a draft, check upstream main for changes to its files every day, not
+   only before a push: block/buzz-app#1864 rewrote the script BA#1781 changed, and the PR had to
+   be redone on top.
 5. Drop each workaround in the update that ships the fix — after grepping the source at the new
    pin; a fix covers only the path its PR names (`nixpkgs-contributing` §4).
 6. Hypotheses about a failure stay hypotheses until a built artifact confirms them. Two darwin
@@ -169,6 +176,15 @@ the package claims (fleet.md). MeshLLM got these gradually, after avoidable red 
   big test binaries; skip on a platform what upstream's CI doesn't run there either, and say so
   (Mesh-LLM's macOS CI runs `--lib` only).
 - Skips by exact test name, grouped by cause, each group with its link or reason.
+- Local test loops (upstream PRs, fail-on-main checks) run in the debug profile with
+  `CARGO_INCREMENTAL=1`, release only for the tests that need it: switching buzz-app between PR
+  states in release rebuilt for 25+ minutes per step, debug took minutes.
+- Before Martin tests anything himself, the agent pre-runs it in one script he can rerun: a fresh
+  jj workspace, the dependencies installed (`pnpm install`, a fixture `dist/`), tools resolved
+  before the network is cut (`unshare -rn`), each check "fails on main, passes with the PR", then
+  the real use. buzz-app's five upstream PRs passed his runs first time
+  (`~/.cache/buzz-app-upstream/pr-checks.sh`, `check-1781.sh`). Never attest a test he didn't
+  run (`buzz-app-contributing` §5).
 - Build-only tests for variants no builder can run (`runtime-rocm` gfx1100, `runtime-cuda`).
 - darwin sandbox specifics (local networking, background daemons, ICU, Metal): workarounds.md.
 - Agent apps get a behaviour test with a real turn: the app headless under Xvfb, a chat created
@@ -211,6 +227,9 @@ a container egress rule (kleinbem-dev/nix-gantry#5).
 - Body: what it is, why these packages, "Tested" with the platform and hardware matrix of the exact
   head, the upstream fixes and the remaining linked workarounds, honest checkboxes. Keep the whole
   PR template from the first draft (a review flagged buzz-app's trimmed one).
+- Settle the build shape (bundled components from nixpkgs, version policy, split) before the
+  first review round, not between rounds: buzz-app's goose-acp decision came after the polish and
+  took the PR from r2 to r9.
 - Iterate on fresh fork branches (`<app>-r1`, `-r2`, …) and move the PR only at milestones: the
   agent can't force-push, so each move is a script Martin runs. Before each move: rebase, the
   3-platform build, and an independent review of that exact head (buzz-app's round 2 found a newer
