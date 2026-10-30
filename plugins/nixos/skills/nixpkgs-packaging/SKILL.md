@@ -54,7 +54,8 @@ same bug. So:
   beta.1 → beta.2 → 0.7.0, a rebuild and re-review each time.
 - **Update script, decided and tested now:** nix-update reads GitHub *releases* (releases.atom),
   not tags. Tags without releases (buzz-app's `desktop-v*`, while its previews have releases) need
-  `gitUpdater { rev-prefix = "desktop-v"; }` followed by `nix-update --version=skip` for the
+  `gitUpdater { rev-prefix = "desktop-v"; ignoredVersions = "-"; }` (the filter keeps
+  `-beta.N` tags out) followed by `nix-update --version=skip` for the
   hashes (`_experimental-update-script-combinators.sequence`, as atomgit-cli). Test it from the
   previous tag: set `version` and the source hash back, run
   `nix-shell maintainers/scripts/update.nix --argstr package <attr> --argstr skip-prompt true`,
