@@ -66,7 +66,16 @@ description: >-
   Cargo targets (`CARGO_TARGET_DIR=~/.cache/<name>-target`), toolchains, models and clones go under
   `~/.cache`. On 2026-10-29 a 2.5 GB model and two build targets in old sessions' scratchpads
   filled it, and every session's tool output failed with ENOSPC. Delete your own scratchpad's
-  large files when done.
+  large files when done. Tools that build next to their input count too: ESPHome puts `.esphome/`
+  (about 1 GB for a P4) beside the YAML. Keep the YAML where it is (relative `!include`,
+  `!secret` and local components resolve from there) and set `esphome: build_path:` to an
+  absolute path such as `/home/martin/.cache/esphome-builds/<device>`: ESPHome doesn't expand
+  `~`, so a literal `~/...` lands next to the YAML again (2026-10-30: a P4 build in the
+  scratchpad hit ENOSPC at the last link step).
+- Claude Code (2.x as of 2026-10-30) doesn't remove a session's scratchpad when it ends. A user
+  tmpfiles rule (nix-config `ai-agents.nix`) ages out anything under `/tmp/claude-<uid>`
+  untouched for 3 days, so nothing that has to outlive a pause belongs there. It covers only
+  that path, not a `CLAUDE_CODE_TMPDIR` set elsewhere.
 - Start every background job as a tracked task (the tool's background option), never with `&` or
   `disown`: an untracked job sends no notification, and a second watcher for the same thing is
   the result.
