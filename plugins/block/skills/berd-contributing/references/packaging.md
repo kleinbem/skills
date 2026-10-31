@@ -35,6 +35,33 @@ kleinbem/nixpkgs branch `berd`, `pkgs/by-name/be/berd/package.nix`.
   since block/berd#338, same feature setup), the Catch universal binary on macOS. Source.
 - Distribution switches upstream provides: cargo features `no-managed-acp-tools` (no Node/npm
   download of ACP bridges at run time) and `no-bb-cli-install`. Source.
+- Release overlay: the Linux lane runs with `BERD_RELEASE_CHANNEL=disabled`, so
+  `scripts/release/build-tauri-release-config.mjs` writes an empty `tauri.release.conf.json` and
+  the release .deb has no `release-channels.json`; a build without the overlay is the same. goose
+  comes from `scripts/ensure-local-goose.sh`: `cargo build --locked --release -p <package> --bin
+  <bin>` with package and binary from `goose-backend.lock.json` (`goose-cli`, `goose` at v0.6.4),
+  default features; nixpkgs' `goose-cli` builds the same binary from its release's Cargo.lock. Source.
+- The nixpkgs package against the release workflow (2026-10-31): Block gates unset (= the
+  release's "0"), `VITE_AUTH_GATE=0`, `VITE_BYO_KEY_PROVIDERS=1`, `VITE_ENVIRONMENT=production`,
+  `VITE_UPDATER_ENABLED=false` as on Linux; features `berdctl` as in the release, plus the two
+  distribution switches above. Source.
+- Compared with the v0.6.4 release .deb (2026-10-31, built `bvyq98…`): same files under
+  `lib/Berd/` (sounds, `distro/` agents and skills, `runtime-config.json`, byte-identical) and the
+  same Linux `catch` stub. Differences, all intended: `Categories=` empty there (block/berd#450),
+  `Exec=Berd` vs the wrapper `berd`, sherpa-onnx/onnxruntime static there (Berd 106 MB, also
+  `libstdc++`) vs shared libraries from nixpkgs (73 MB, block/berd#449), goose pin 5e909259 vs a
+  goose release (block/berd#456). The .deb's `Depends:` lists only `libvulkan1`,
+  `libwebkit2gtk-4.1-0`, `libgtk-3-0`. Rerun on every bump, with the release .deb in `deb/` and `O=$(nix-build -A berd --no-out-link)/libexec/berd`:
+  ```
+  debx=$(mktemp -d)   # a new empty directory, so nothing from an earlier version is left over
+  dpkg-deb -x deb/Berd_<version>_linux-x86_64.deb "$debx"
+  diff -r "$debx"/usr/lib/Berd "$O/lib/Berd"
+  diff "$debx"/usr/share/applications/Berd.desktop "$O/../../share/applications/Berd.desktop"
+  diff <(patchelf --print-needed "$debx"/usr/bin/Berd | sort) <(patchelf --print-needed "$O/bin/Berd" | sort)
+  diff <(cd "$debx"/usr/bin && find . -type f -printf '%s %P\n' | sort -k2) \
+       <(cd "$O/bin" && find -L . -type f -printf '%s %P\n' | sort -k2)   # every binary differs in size (own build, goosed a wrapper); look for new or missing files
+  ```
+  Built.
 - macOS: `build.rs` compiles Berd's own Swift package (`swift/BerdAirPodsBridge`, swift-rs,
   SwiftPM, macOS 14) and adds `-rpath /usr/lib/swift`. Source; not built yet.
 
@@ -92,8 +119,9 @@ kleinbem/nixpkgs branch `berd`, `pkgs/by-name/be/berd/package.nix`.
 
 ## Upstream
 - No outside PRs (closed automatically); issues through the two forms only (this skill, §0–§1).
-- Issue candidates from packaging (drafts in Obsidian `Projects/Buzz nixpkgs/Drafts/`, Martin files):
-  goose release pin or minimum goose release; app-level switch for sherpa-onnx `shared`;
-  empty `Categories=` in the Linux `.desktop` (Tauri `bundle.category` unset; the nixpkgs package
-  sets `Development;Utility;`).
+- Issues from packaging (2026-10-29 to 10-31): block/berd#449 sherpa-onnx `shared`, #450 empty
+  `Categories=`, #451 deep links and no single instance on Linux, #452 release with #272, #455
+  notification listener, #456 goose release (release notes name it since #458), #457
+  move-to-Applications switch, #462 goose serve survives SIGTERM; block/catch#6, #7. The package
+  links each workaround to its issue; #461 (upstream PR, Parakeet archives) is carried as a patch.
 - Other packaging: none found in nixpkgs, nix-community, the AUR or Repology (2026-10-28).
