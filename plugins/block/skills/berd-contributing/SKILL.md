@@ -89,7 +89,9 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
   build jobs, all on macOS, Windows and Linux runners.
 - Bundles: `just bundle` stages `src-tauri/binaries/goosed-<host triple>` (Tauri `externalBin`) and runs
   `pnpm tauri build`; Linux release assets are AppImage and .deb. #336 shows the AppImage setting `PYTHONHOME`/
-  `PYTHONPATH` to missing paths, a hint of what a packager must check.
+  `PYTHONPATH` to missing paths, a hint of what a packager must check. How the nixpkgs build compares with the
+  release workflow and the release .deb (2026-10-31: same gates, features and files; differences listed) is in
+  [references/packaging.md, "Build"](references/packaging.md#build).
 - The reference build is the nixpkgs package `pkgs/by-name/be/berd` (kleinbem/nixpkgs branch `berd`, 2026-10-28; before that `kleinbem/nix-packages` `pkgs/berd`). Facts it depends on, measured on the build: [references/packaging.md](references/packaging.md).
   Berd 0.6.4 works with nixpkgs' `goose-cli` release as the `goosed` sidecar (tested 2026-10-19 with the bundled
   pin, 1.49.0 and 1.55.0: same `goose serve` interface, same answers), so the goose pin only matters when building
