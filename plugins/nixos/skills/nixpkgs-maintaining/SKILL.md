@@ -44,7 +44,7 @@ For writing the changes themselves, use the `nixpkgs-contributing` skill.
 
 ## What's waiting
 `kleinbem/nix-packages`, workflow `watch-maintained.yaml` (daily, `watch/maintained/run.sh`):
-lists the packages and modules with `kleinbem` in their maintainers from nixpkgs itself, and posts
+lists the packages and modules in nixpkgs whose maintainers include `kleinbem`, and posts
 into the issue "Watch: maintained nixpkgs packages" when something is new: PRs and issues by
 others naming a package, review requests, failed Hydra builds (`nixpkgs/trunk`), failed
 nixpkgs-update runs. Start there; run the script locally (`nix shell nixpkgs#brotli -c
@@ -95,8 +95,8 @@ For r-ryantm's PRs and other people's updates or fixes:
 - After a fix to one of our packages merges on master, decide per PR whether stable needs it. A
   security fix always does.
 - As a member of `@NixOS/nixpkgs-maintainers` you can manage labels: add
-  `backport release-YY.MM` to the merged (or still open) master PR; a workflow opens the backport PR
-  a few minutes later. Watch it like our own PR: CI, review, then the merge bot (backports via
+  `backport release-YY.MM` to the master PR. A workflow opens the backport PR a few minutes after
+  the label on a merged PR, or after the merge on a still open one. Watch it like our own PR: CI, review, then the merge bot (backports via
   label qualify).
 - When the label's cherry-pick conflicts (the bot comments so), backport by hand: branch from
   `release-YY.MM` (never `nixos-YY.MM`), `git cherry-pick -x <master commit>` (`-xe` with a reason
