@@ -10,7 +10,7 @@ disable-model-invocation: true
 Layer 2 of 3: read after `upstream-contributing`, before the repository skill; the repository
 skill wins where they differ. Sources: `Mesh-LLM/mesh-llm` (`CONTRIBUTING.md`, `AGENTS.md`,
 `SECURITY.md`), `Mesh-LLM/mesh-packaging` (`AGENTS.md`); the org's `.github` repo holds only its
-profile. As of 2026-10-25.
+profile. As of 2026-11-01.
 
 ## 0. Attribution
 
@@ -37,7 +37,8 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   TypeScript/Node. Distribution-specific changes (Nix, Arch/AUR) belong downstream unless they
   replace fragile patching. Default plugins live in their own repos (capsules:
   `Mesh-LLM/capsules`); the mesh-llm release bundles each one's pinned release archive under
-  `plugins/` (#2546, #2520).
+  `plugins/` (#2546, #2520). The Python SDK lives in `Mesh-LLM/mesh-llm-python-sdk`; a public
+  SDK change in mesh-llm needs a companion PR there (mesh-llm `AGENTS.md`, #2703).
 - **No DCO sign-off;** Conventional Commits; CodeRabbit reviews mesh-llm PRs and expects answers.
 
 ## 2. Repositories
@@ -46,6 +47,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 |---|---|---|
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | pre-flight CI in kleinbem/mesh-llm-ci |
 | Mesh-LLM/mesh-packaging | none yet | install paths, distro packages; our nixpkgs/AUR work touches it |
+| Mesh-LLM/mesh-llm-python-sdk | none yet | Python SDK, versioned separately; companion PRs for SDK changes |
 | Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork | none yet | |
 
 A repo with "none yet" gets its repository skill before our first contribution

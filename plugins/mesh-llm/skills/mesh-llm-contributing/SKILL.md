@@ -13,7 +13,7 @@ Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGEN
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
 for the touched area before acting; the project moves fast (several merges a day; 42 from
-2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-10-25.
+2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-11-01.
 
 ## 0. Before the first edit (do these, in order)
 1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
@@ -103,6 +103,10 @@ merged PRs; numbers are examples):
   documented behaviour (#2315). A doc comment that explains a mechanism must match what the code
   really does (#2690's review: clap_derive defines fields in declaration order, so "returns
   before the subcommands are defined" was false for most groups).
+- **SDK parity** (`AGENTS.md`, since #2703): a public SDK API change is complete only when the
+  native bridge, Rust, Node.js, Swift and Kotlin, their tests, product docs and the website examples
+  under `mesh/website/src/docs/` change together, and Python through a merged companion PR in
+  `Mesh-LLM/mesh-llm-python-sdk` pinned to the same native revision. Never hand-edit generated bindings.
 - **Claims:** title and body claim no more than the code does (#2298: "phase 1" instead of
   enforcement; #2377: "one body claim is false"). Reviewers reproduce stated test counts at the
   head commit, so give exact commands and counts.

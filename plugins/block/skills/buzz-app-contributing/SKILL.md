@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-10-28 (main `fea9f6ab`); current PR status in section 9.
+Summary as of 2026-11-01 (main `7878f060`); current PR status in section 9.
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
@@ -61,6 +61,11 @@ different files, rules, toolchain and reviewers.
   boundaries". Policy goes into its `src/features/*` owner; keys, signing and I/O stay in the Rust
   host; don't add feature logic to `browser-host/`.
 - Agent selection consumes `session.agentChoices` (`docs/agents.md#shared-agent-selection`).
+- New addressable dialogs and content tabs follow `docs/navigation-history.md`: Back/Forward keeps
+  a return path, explicit Close retires it; menus and popovers create no history (#1767).
+- User-facing behaviour changes update `docs/buzz-help.md`, which the `buzz_help` tool bundles
+  (#2033). Tools in `src/buzz-mcp/` follow its `AGENTS.md`: one small tool per action, no
+  discovery meta tool (#1937).
 
 ## 2. Commits and title
 - **Squash-only** (ruleset), so the PR title is the commit subject. No title validation.
@@ -103,9 +108,10 @@ Upstream's gate is its Lefthook hooks plus CI; `just scan` is explicitly **not**
   broker-backed `just web` runs "do not count as acceptance". Report host and mode exercised.
 - Before delivery, compare against the fetched `main`: "GitHub PR checks run the merged tree".
 
-NixOS notes (as of 2026-10-28):
-- Hermit pins just 1.58.0, Node 24.18.0, pnpm 11.8.0, Rust 1.98.1, stock Lefthook 2.2.2
-  (the patched `2.2.3-buzz.1` is gone since #1644), CMake. We use nixpkgs instead of Hermit.
+NixOS notes (as of 2026-11-01):
+- Hermit pins just 1.58.0, Node 24.18.0, pnpm 11.8.0, CMake; Rust 1.98.1 now comes from
+  `rust-toolchain.toml` through Hermit's `rustup` (#1871), stock Lefthook 2.2.2
+  (the patched `2.2.3-buzz.1` is gone since #1644). We use nixpkgs instead of Hermit.
 - Verified: `nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_11 -c pnpm install --frozen-lockfile
   --ignore-scripts`; in that shell `node --test tests/integration/<file>` and
   `pnpm exec biome check --error-on-warnings <files>` run.
