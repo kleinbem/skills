@@ -100,9 +100,9 @@ upstreams: copy the pattern when their CI needs approval for forks.
   `redirects.json`; test with
   `nix build .#nixosConfigurations.<host>.config.system.build.manual.manualHTML`).
 - **Add:** `nix run github:kleinbem-dev/nix-holds -- pr add NAME --pr N --repo kleinbem/nixpkgs
-  --attrs a,b --rev SHA [--scope ..] [--module name=path]` in nix-packages, always pinned (an
+  --attrs a,b --rev <full sha> [--scope ..] [--module name=path]` in nix-packages, always pinned (an
   unpinned entry doesn't evaluate; `pr list`, `pr merged` too).
-  **Pin** (move to a newer commit): the *Pin nixpkgs PR* workflow (`pr-pin` action; name + sha)
+  **Pin** (move to a newer commit): the *Pin nixpkgs PR* workflow (`pr-pin` action; name + full sha)
   opens an auto-merging PR; pin only a commit that is green on review-gha (not checked by the workflow).
   The daily lock update never moves a pin. **Remove:** the weekly *nixpkgs PRs merged* workflow
   (`pr-merged` action) opens a PR once nixpkgs has every attr in the same or a newer version (a draft when the entry
