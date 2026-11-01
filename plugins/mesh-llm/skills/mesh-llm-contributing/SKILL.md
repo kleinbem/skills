@@ -189,7 +189,8 @@ merged PRs; numbers are examples):
   through a probe loop (`sub $N,%r11`), so add that to the final `sub $M,%rsp`, or every large
   frame reads as 4 KiB.
 - Pre-flight check on GitHub's runners instead of the workstation, before opening the PR and
-  after every push: push the branch to the fork, then
+  before every push to its branch (so upstream's CI isn't spent on a failing head): push the head
+  to a `preflight-*` branch on the fork, then
   `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha> -f title="<PR title>"`.
   It runs upstream's own planner (`xtask ci plan`), so Clippy, tests and platform rows cover what
   upstream's PR lanes would, plus fmt, commit convention, `no-console-print`, the env census,
@@ -227,7 +228,7 @@ merged PRs; numbers are examples):
     process test: environment, not regressions.
   - To prove a test fails without the fix, push a no-fix branch and run the pre-flight with
     `packages=`/`filter=`.
-  - jj: pushing the working-copy commit to a `preflight/…` branch makes it immutable, and jj
+  - jj: pushing the working-copy commit to a `preflight-…` branch makes it immutable, and jj
     quietly starts a new empty `@`. Keep an empty `@` on top (`jj new <change>`) before pushing,
     rebase by change id (`jj rebase -r <change> -d main@origin`, `--ignore-immutable` once
     pushed), never `-r @`, and check the head's description before pushing the PR branch
@@ -311,9 +312,19 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   Quality runs commit convention, `cargo fmt`, Clippy over the affected crates and their reverse
   dependencies, CI contracts and consistency (incl. `no-console-print`, the env-mutation census) and
   `cargo machete`; Linux runs the Rust tests of the affected crates and their reverse dependencies.
-- Fork PRs wait in `action_required` until a maintainer approves the run, and each new push can need
-  approval again: push once the change is complete, not in small steps. Runs left unapproved are
-  closed as "failed" (zero jobs) when the PR merges; those notification emails are harmless.
+- **Write access since 2026-11-01** (i386 gave Martin write access to Mesh-LLM/mesh-llm, so CI runs
+  without approval; #2751):
+  - New PR branches go to the upstream repository, named `kleinbem/<topic>` (others use their own
+    prefix: `brody/`, `astrid/`); CI then starts on every push without an approval.
+  - The fork (`fork` remote, kleinbem/mesh-llm) stays for the PRs opened from it until they merge,
+    and for scratch work nobody upstream should see: `preflight-*`, stress tests, probes. Never push
+    scratch branches upstream: they clutter the branch list and can start CI.
+  - Write access is trust, not a shortcut: never push to `main` or to someone else's branch, never
+    merge (maintainers do), no force-push on a PR under review beyond the usual rebase.
+- Fork PRs (the ones opened before write access) wait in `action_required` until a maintainer
+  approves the run, and each new push can need approval again: push once the change is complete,
+  not in small steps. Runs left unapproved are closed as "failed" (zero jobs) when the PR merges;
+  those notification emails are harmless.
 - Keep about 3–4 of Martin's PRs waiting on maintainers and refill as they merge; ready fixes
   wait locally with a green pre-flight and a drafted body. 12 open at once (2026-10-29) only
   lengthened the approval queue. Group fixes by cause (one PR for a class of sandbox failures)
@@ -336,9 +347,10 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 - A push keeps earlier approvals: main's ruleset has `dismiss_stale_reviews_on_push: false` and
   `require_last_push_approval: false` (checked 2026-10-29; approvals survived force-pushes on
   #2528, #2577 and #2605; it dismissed them in #2073 and #2257, so recheck with
-  `gh api repos/Mesh-LLM/mesh-llm/rules/branches/main`). Each push still needs a maintainer to
-  approve the fork's CI run again, so push only complete changes, and don't touch a PR that is
-  approved and green just to rebase it.
+  `gh api repos/Mesh-LLM/mesh-llm/rules/branches/main`). On a fork PR each push still needs a
+  maintainer to approve the CI run again, so push only complete changes there, and don't touch a
+  PR that is approved and green just to rebase it. Upstream branches need no approval, but each
+  push still runs their CI: push complete changes there too.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
   ask for a cherry-pick because it was off.
 - `main` moves several times a day, so the rebase before every push (`upstream-contributing`)
@@ -348,9 +360,11 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   #2474) makes Plan fail on all older PRs ("source slice catalog differs from the protected planner
   catalog"), even on approved ones, and only a rebase fixes it; check with
   `git diff <head> origin/main -- ci/slices.yml ci/ownership.yml` before expecting CI to pass.
-  Each push needs CI approval again, so rebase all affected PRs in one go, pre-flight first.
-- Maintainers push commits to PR branches (#2444). Fetch the fork before any further push and
-  build on its head; pushing a stale local bookmark would overwrite their work.
+  On fork PRs each push needs CI approval again, so rebase all affected PRs in one go, pre-flight
+  first.
+- Maintainers push commits to PR branches (#2444). Fetch the branch's remote (`origin` for an
+  upstream branch, `fork` for an old fork PR) before any further push and build on its head;
+  pushing a stale local bookmark would overwrite their work.
 
 ## Review checklist
 For the review before ready (`upstream-contributing`, section 6):

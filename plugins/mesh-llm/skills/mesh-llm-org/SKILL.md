@@ -44,7 +44,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 
 | Repo | Repository skill | Notes |
 |---|---|---|
-| Mesh-LLM/mesh-llm | `mesh-llm-contributing` | pre-flight CI in kleinbem/mesh-llm-ci |
+| Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
 | Mesh-LLM/mesh-packaging | none yet | install paths, distro packages; our nixpkgs/AUR work touches it |
 | Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork | none yet | |
 
