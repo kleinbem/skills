@@ -94,14 +94,18 @@ upstreams: copy the pattern when their CI needs approval for forks.
 ## 5. Running it in the fleet before the merge (nix-packages registry)
 
 - `nix-packages/nixpkgs-prs.json` pins each open nixpkgs PR (owner, repo, rev, narHash, attrs,
-  modules); `lib/nixpkgs-prs.nix` builds the PR's own `package.nix` files against the flake's
-  nixpkgs (one scope per entry) and exports its modules without `meta.doc` (every host builds the
-  manual, which rejects chapters missing from nixpkgs' `redirects.json`; test with
+  scope, modules); nix-holds' `mkPrs` (kleinbem-dev/nix-holds, `prs.nix`) builds the PR's own
+  `package.nix` files against the flake's nixpkgs (one scope per entry) and exports its modules
+  without `meta.doc` (every host builds the manual, which rejects chapters missing from nixpkgs'
+  `redirects.json`; test with
   `nix build .#nixosConfigurations.<host>.config.system.build.manual.manualHTML`).
-- **Add:** an entry by hand. **Pin:** the *Pin nixpkgs PR* workflow (name + full sha) opens an
-  auto-merging PR; pin only a commit that is green on review-gha (not checked by the workflow).
+- **Add:** `nix run github:kleinbem-dev/nix-holds -- pr add NAME --pr N --repo kleinbem/nixpkgs
+  --attrs a,b --rev <full sha> [--scope c,d] [--module name=path]...` in nix-packages, always pinned (an
+  unpinned entry doesn't evaluate; `pr list`, `pr merged` too).
+  **Pin** (move to a newer commit): the *Pin nixpkgs PR* workflow (`pr-pin` action; name + full sha)
+  opens an auto-merging PR; pin only a commit that is green on review-gha (not checked by the workflow).
   The daily lock update never moves a pin. **Remove:** the weekly *nixpkgs PRs merged* workflow
-  opens a PR once nixpkgs has every attr in the same or a newer version (a draft when the entry
+  (`pr-merged` action) opens a PR once nixpkgs has every attr in the same or a newer version (a draft when the entry
   has modules: switch nix-config to nixpkgs' module first).
 - **Gate:** nix-config `checks.<system>.nixpkgs-prs` builds every registry attr a CI-built host
   installs, from that host's own pkgs (the exact derivation it fetches). build-all runs it on
