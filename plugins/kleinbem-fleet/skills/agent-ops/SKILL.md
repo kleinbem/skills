@@ -117,8 +117,8 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
   thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
   way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
-- Push the fix and check the PR head shows it (`gh pr view <n> --json headRefOid`) before you
-  resolve anything. The last resolved thread clears the gate, so an armed PR merges right then,
+- Push the fix and check the PR head is that commit or a descendant of it
+  (`gh pr view <n> --json headRefOid`; GitHub can lag a few seconds) before you resolve anything. The last resolved thread clears the gate, so an armed PR merges right then,
   without the fix (nix-config#466: fixes had to follow in #468).
 - Also read the review body. Findings outside the diff land there, not in a thread, so the gate
   doesn't see them: handle them the same way and answer in a PR comment.
