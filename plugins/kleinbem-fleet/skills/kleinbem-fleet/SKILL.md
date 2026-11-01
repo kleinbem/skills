@@ -97,7 +97,8 @@ workaround gets dropped when the fix arrives.
   approves it. Until it exists, open an issue in our repo ("report upstream: …") and link that.
 - Our own workarounds (waiting on another fleet change) link our own issue.
 - A comment that only mentions a workaround says `no-link: <why>`.
-- Check: `nix-check-workarounds --base main@origin` before a PR (CodeRabbit flags it too);
+- Check with `nix-check-workarounds` (kleinbem/nix-toolbox; the workspace devshell puts the
+  checkout's `bin/` on PATH): `--base main@origin` before a PR (CodeRabbit flags it too);
   `nix-check-workarounds --states <repo>` lists linked fixes that are merged or closed, so the
   workaround can go. Run it when a flake or package update comes in.
 
