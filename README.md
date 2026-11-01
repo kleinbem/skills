@@ -24,6 +24,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `mesh-llm` | `mesh-llm-contributing` | Mesh-LLM/mesh-llm: builds, validation, commit and PR rules, pre-flight CI |
 | `archlinux` | `archlinux-org` | Arch Linux: no AI policy (our rule instead), governance, channels, 0BSD package sources, repo table |
 | `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
+| `noooste` | `noooste-org` | Noooste (personal account): security reports, repo table |
+| `noooste` | `garage-ui-contributing` | Noooste/garage-ui: Conventional Commits PR titles, coverage gate, maintainer's review style, nixpkgs angle |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |

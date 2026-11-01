@@ -27,6 +27,7 @@ model invocation of manual skills.
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
 | Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing` |
 | Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
+| Noooste (personal account) | `noooste-org` | `garage-ui-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -59,6 +60,7 @@ is authoritative; update this table when one changes):
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
 | block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
+| Noooste/garage-ui | yes; features issue first | features | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (PR title only, squash) |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
