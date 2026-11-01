@@ -115,7 +115,7 @@ upstreams: copy the pattern when their CI needs approval for forks.
 - Shadow packages (real derivations in nix-packages) only for software no nixpkgs PR exists for
   yet; they follow `nixpkgs-contributing` from day one so the later PR is a copy.
 
-## 6. Holds (kleinbem/nix-holds-fleet, with kleinbem-dev/nix-detour)
+## 6. Holds (kleinbem/nix-detour-fleet, with kleinbem-dev/nix-detour)
 
 When a package breaks in nixos-unstable, `held-packages.json` keeps it on the last nixpkgs where
 it works (or stable) instead of freezing the fleet's whole nixpkgs. Consumed by nix-devshells,
@@ -124,7 +124,7 @@ release workflow opens a removal PR once the cause (`releaseWhen`) builds again;
 14 days. Its `check` only evaluates (consumers may adjust a held package). nix-config's Maintain
 Flake runs nix-detour's update action (report only since 2026-11-01): it names the packages to
 hold, also those reached through services or MCP configs, in the "Lock update fails validation"
-issue; a person adds them to nix-holds-fleet.
+issue; a person adds them to nix-detour-fleet.
 
 ## 7. Canaries against upstream main
 
