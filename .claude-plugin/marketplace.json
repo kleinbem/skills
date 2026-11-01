@@ -54,6 +54,11 @@
       "name": "noooste",
       "source": "./plugins/noooste",
       "description": "Noooste (personal GitHub account): noooste-org (security reports, repo table), garage-ui-contributing"
+    },
+    {
+      "name": "tifyr",
+      "source": "./plugins/tifyr",
+      "description": "tifyr organization (tifyr/gimp3-mcp): tifyr-org (security, repo table), gimp3-mcp-contributing"
     }
   ]
 }
