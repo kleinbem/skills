@@ -49,6 +49,11 @@
       "name": "matepad-pro",
       "source": "./plugins/matepad-pro",
       "description": "Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09) fleet tablet: headless APK installation, GBox sandboxing, Shizuku privilege escalation, ADB reverse tunnels, battery preservation, and diagnostic telemetry"
+    },
+    {
+      "name": "noooste",
+      "source": "./plugins/noooste",
+      "description": "Noooste (personal GitHub account): noooste-org (security reports, repo table), garage-ui-contributing"
     }
   ]
 }
