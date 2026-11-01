@@ -88,6 +88,33 @@ merged PRs; numbers are examples):
   its own merge point (#2359, #2374). A gate (a setting that turns something off) needs a test
   that the gated work really doesn't happen, not only that the value parses: pass the request
   in as a closure so the test can make it panic (#2446).
+- **Clean build environments** (as of 2026-10-31): distributions run the whole suite in a clean
+  environment with only the declared build dependencies, often on busy machines. Check every new
+  or changed test against these; each came up as its own PR or issue (several still open):
+  - no network and no CA bundle: a client for local endpoints trusts no roots
+    (`network::local_http::local_http_client`, #2492). Still open on main (2026-10-31 sandbox run):
+    141 tests need a bundle only to build their client, among them the analytics tests
+    `queued_events_are_delivered_as_a_batch_on_shutdown` and
+    `delivered_events_carry_the_privacy_properties_and_no_free_text`; themed PRs planned
+    (skippy-hf-hub first);
+  - only declared tools, no fixed paths: `/bin/bash` (#2604), `/usr/bin/true` (#2699), `sysctl`
+    (#2672), `ps` (#2673);
+  - no usable `HOME`: state only in the test's temp dirs (known open violation, not fixed
+    upstream: the SDK lifecycle tests write the real `~/.mesh-llm`);
+  - a foreign environment: the builder's `MESH_LLM_*` (#2630/#2707), no terminal (#2605); set them
+    with `Command::env` or remove them with `Command::env_remove` on the child, otherwise follow
+    the env-mutation contract;
+  - slow machines: the result must not depend on machine speed: wait for the event or state
+    rather than sleeping, generous bounds, retry only transient failures like ETXTBSY
+    (#2700/#2705, #2670/#2696, #2723 fixed by #2704, #2716/#2720);
+  - the build options packagers use, e.g. the dynamic native runtime (#2629);
+  - startup must not read its own executable in full (debug test binaries are ~2 GB; #2751).
+  A test that really needs network or hardware is `#[ignore]`d with the reason. The product side
+  is in `references/packaging.md`. Upstream's `AGENTS.md` and skills state rules without PR
+  numbers; keep the numbers for PR bodies.
+- **When a maintainer fixes the same thing differently**, close the own PR and the issue with a
+  short comment linking theirs, rather than rebasing on top (#2725 after i386's #2704). Verify
+  first where the failure reproduces (the Orin for timing flakes; GitHub runners often don't).
 - **Stack:** test threads have 2 MiB, and #2177 removed `RUST_MIN_STACK` from the Windows unit
   row on purpose, so growth shows. Don't propose raising the limit (or `opt-level` tricks as the
   fix); shrink the frame that grew (#1976 boxed route futures, #2690 split the CLI into
@@ -365,3 +392,4 @@ For the review before ready (`upstream-contributing`, section 6):
   Validation with only run boxes ticked); no `TODO` left.
 - The "right before opening" list in section 4, and the pre-flight on the exact head.
 - `ci/slices.yml` and `ci/ownership.yml` identical to main's (section 5).
+- New or changed tests pass the clean-build-environment list (section 1).

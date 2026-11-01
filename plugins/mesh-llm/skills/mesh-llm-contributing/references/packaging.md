@@ -105,6 +105,24 @@ with a module (NixOS `services.mesh-llm`) don't need it.
 - `lock_cost::concurrent_commit_calls_stay_within_the_ingress_budget` asserts only in release
   (`cfg!(debug_assertions)` returns early); with `checkType = "debug"` it can't fail.
 
+## Distribution builds of the product (2026-10-31)
+
+What a packager needs from the product, each fixed once already:
+- no build step downloads when its input is provided (pinned checkout, vendored crates and node
+  modules; upstream's `prepare-llama.sh` clones otherwise); no prebuilt tools, `PROTOC` from the
+  environment (#2448); the newer compilers distributions ship (#2495 / #2524);
+- build steps work with read-only inputs (#2456); installed files stay read-only, only
+  release-bundle installs replace the binary in place;
+- connections to outside services a packaged node doesn't need can be turned off (#2446 update
+  check, #2494 catalog for a local GGUF, #2496 runtime downloads); peer networking and iroh's
+  relay and net-report traffic are the product and stay (see Network); serving works without a CA
+  bundle (#2491, #2492, #2498), the runtime and doctor commands only with #2577 (open);
+- native libraries: a distribution build can keep runpaths (#2392); compatibility is checked
+  against what the process loads (#2438);
+- platform APIs instead of spawning tools (#2444, #2673);
+- an empty environment variable counts as unset (#2712, from systemd `Environment=`);
+- services start the stable command on `PATH` (#2648).
+
 ## Paths
 
 `~/.mesh-llm` (config, data) and `~/.cache/mesh-llm` for both products; Skippy also uses
