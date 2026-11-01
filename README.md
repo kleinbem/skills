@@ -26,6 +26,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
 | `noooste` | `noooste-org` | Noooste (personal account): security reports, repo table |
 | `noooste` | `garage-ui-contributing` | Noooste/garage-ui: Conventional Commits PR titles, coverage gate, maintainer's review style, nixpkgs angle |
+| `tifyr` | `tifyr-org` | tifyr organization: security reports, repo table |
+| `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
