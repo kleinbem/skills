@@ -19,7 +19,7 @@ For writing the changes themselves, use the `nixpkgs-contributing` skill.
 - A personal flake or overlay (e.g. `kleinbem/nix-packages`) is for staging before a merge,
   unreleased versions, and personal packages. Our own open nixpkgs PRs are re-exported from their
   branch, not copied, and leave it automatically once merged; a package broken in nixos-unstable
-  is held through kleinbem/nix-holds (`nixpkgs-packaging`, `references/fleet.md`).
+  is held through kleinbem/nix-holds-fleet (`nixpkgs-packaging`, `references/fleet.md`).
 - Project flakes (e.g. `mulatta/buzz.nix`) can carry fast-moving parts and modules not yet upstream.
   For shared out-of-tree work, the neutral home is the nix-community org, not a personal repo.
 - Before packaging something, search for existing work: open/closed Nixpkgs PRs, nix-community,
