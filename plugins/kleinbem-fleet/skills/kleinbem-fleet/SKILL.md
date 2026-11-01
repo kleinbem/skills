@@ -79,6 +79,13 @@ conductor. When no YubiKey is attached, avoid `jj` entirely: it
 auto-snapshots the working copy into a *signed* commit on nearly every
 command. Use plain `git` edits instead.
 
+## Code comments
+
+A comment says why the code is this way, in 1–3 lines. History ("was X,
+replaced with Y"), dates, debugging stories and alternatives tried go in
+the commit message or PR body, not the file. Keep real gotchas, short.
+When you edit near a long comment, shorten it too.
+
 ## nix-config specifics
 
 - Auto-generated ground-truth, refreshed by `just maintenance::sync-agent`:
