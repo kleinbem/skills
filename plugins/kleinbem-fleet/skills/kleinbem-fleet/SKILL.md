@@ -86,6 +86,22 @@ replaced with Y"), dates, debugging stories and alternatives tried go in
 the commit message or PR body, not the file. Keep real gotchas, short.
 When you edit near a long comment, shorten it too.
 
+## Workarounds link their report
+
+Same rule as in nixpkgs: every workaround or fix for someone else's bug (a patch, an override,
+a pin, `doCheck = false`, a blacklisted module, a feature switched off) gets a comment with a
+link to the upstream issue or PR it waits on: a URL or `owner/repo#123`. That link is how the
+workaround gets dropped when the fix arrives.
+- No report yet: draft one in the same session through `upstream-contributing` (a new project
+  first gets its contribution skill; the skill decides issue, PR or both). Martin files or
+  approves it. Until it exists, open an issue in our repo ("report upstream: …") and link that.
+- Our own workarounds (waiting on another fleet change) link our own issue.
+- A comment that only mentions a workaround says `no-link: <why>`.
+- Check with `nix-check-workarounds` (kleinbem/nix-toolbox; the workspace devshell puts the
+  checkout's `bin/` on PATH): `--base main@origin` before a PR (CodeRabbit flags it too);
+  `nix-check-workarounds --states <repo>` lists linked fixes that are merged or closed, so the
+  workaround can go. Run it when a flake or package update comes in.
+
 ## nix-config specifics
 
 - Auto-generated ground-truth, refreshed by `just maintenance::sync-agent`:
