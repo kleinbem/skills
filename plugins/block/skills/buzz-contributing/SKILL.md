@@ -10,7 +10,7 @@ Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.
 This skill holds only what is specific to block/buzz and wins where they differ.
 
 Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
-repo, summarised here as of 2026-10-21. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
+repo, summarised here as of 2026-11-01. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
 contract, the ready-for-review checklist and upstream's own "Review-Proven Rules".
 
 ## 0. Before writing code
@@ -24,6 +24,7 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 - Changes to `migrations/`, `schema/` or schema-dependent `buzz-db` queries: read
   `docs/database.md` first. No new triggers, functions or foreign keys, no data backfills in
   migrations, update every schema location, and stay compatible with the deployed relay (#8273).
+  Run `./bin/pgschema apply` from the repo root, or a re-apply drops runtime partitions (#8487).
 - Apply `AGENTS.md`'s **Review-Proven Rules** before writing code; upstream mined them from its
   own review threads, and authors fix 70–100% of these findings once flagged:
   1. every caught failure leaves a durable retry record or propagates (no catch-log-succeed);
@@ -34,6 +35,8 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
   6. a guard must not hide the only recovery affordance;
   7. new UI: audit assistive semantics (one owner per label, no duplicate screen-reader stops);
   8. every input modality (keyboard, pointer, hotkey) is a first-class seam.
+- `desktop/` is legacy, being replaced by block/buzz-app: never use it as a reference for
+  `mobile/`, but keep mobile's event payloads wire-compatible with the other clients (#8868).
 - Architecture conventions (`AGENTS.md`, "Key Patterns"): prefer a new Nostr event kind
   (`buzz-core/src/kind.rs`, handler in `buzz-relay`) over a new HTTP endpoint; channels scope by
   `h` tag; agent-facing operations go into `buzz-cli` first.
@@ -68,7 +71,7 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 1. `cargo fmt -p <crate> -- --check` for every touched crate. Run it on the crate, not on single
    files: standalone `rustfmt` fails on files with `mod …;` and reports false alarms.
 2. `cargo clippy -p <crate> --all-targets --no-deps -- -D warnings`. The repo pins Rust in
-   `rust-toolchain.toml` (1.95 at the time of writing); a newer clippy flags existing code. Before
+   `rust-toolchain.toml` (1.98.1 as of 2026-11-01, #8598); a newer clippy flags existing code. Before
    blaming the change, check whether the warning is in files the PR touches, and say so in the PR.
 3. The touched crates' tests, including the regression test (see 2).
 4. `just ci` is the full gate ("PRs that fail `just ci` will not be merged"). If it can't run
@@ -115,6 +118,9 @@ it (a PR against their branch, or a review comment), keep their authorship, and 
 Downstream (nixpkgs) can carry their commits with `fetchpatch2` meanwhile.
 
 ## 7. After opening
+- Advisory `Flake check (…)` lanes rerun the tests a PR changed ten times with retries off
+  (`CONTRIBUTING.md`, #8613). Not required to merge, but a failing repetition is usually a race
+  worth fixing before review.
 - Outside PRs only get the DCO, Semgrep, zizmor and security-authorisation checks. The main CI
   (builds, tests, desktop E2E) starts when a maintainer authorises it, often by closing and
   reopening the PR (#5997, #7216). That is normal, not a failure.

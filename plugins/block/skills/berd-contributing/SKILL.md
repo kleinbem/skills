@@ -12,7 +12,7 @@ This skill holds only what is specific to block/berd and wins where they differ.
 Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (also `CLAUDE.md`), `LAWS/`, `DESIGN.md`,
 `.github/ISSUE_TEMPLATE/{bug-report,feature-request}.yml`, `.github/PULL_REQUEST_TEMPLATE.md`,
 `.github/workflows/{ci,close-external-prs,close-needs-info,release}.yml`, `docs/release-and-updates.md`. Read them before
-acting; this skill summarises them as of 2026-10-28 and adds what applies to our setup.
+acting; this skill summarises them as of 2026-11-01 and adds what applies to our setup.
 
 Berd is Apache-2.0, built by a small Block team, Tauri 2 + React 19, talking to a `goose serve` sidecar over ACP
 (`goose-backend.lock.json` pins a goose **main commit**, not a release). Latest release v0.6.4 (2026-09-10); `main`
@@ -99,8 +99,10 @@ workaround, and name the non-goal (we don't ask upstream to maintain a Nix packa
   Node/npm downloads. Reproduce bugs in that build before reporting.
 - Next release, check first: `main` renamed the voice crate `berd-voice` to `berd-call` (#338), so the package's
   sherpa-onnx `substituteInPlace` lines fail; `berd-call` keeps `default = ["static"]` and a `shared` feature (sherpa-onnx-sys refuses
-  `static` and `shared` together, so an added feature can't replace the patch). #438 (closed unmerged) tried to
-  ship berd-call as standalone releases.
+  `static` and `shared` together, so an added feature can't replace the patch). Since #435, each release also
+  attaches a standalone `berd-call_X.Y.Z_darwin-aarch64.tar.gz` (macOS only; #438 had tried it and was closed).
+- The goose pin moved to a personal fork in #446 and back to upstream aaif-goose in #459; check the lock's `repo`
+  before building `main`.
 
 ## 3. Reading the codebase (for a precise report)
 

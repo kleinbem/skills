@@ -16,10 +16,11 @@ Sources of truth in the repo: `CONTRIBUTING.md`, `AGENTS.md` (`CLAUDE.md` only p
 `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/` (six forms), the repo-local skills in
 `skills/` (`code-review`, `add-new-model`, `slice-model`, `update-fusion-table`), `docs/build.md`,
 `ci/README.md`, `CODEOWNERS`, `SECURITY.md`. Read `AGENTS.md` and `CONTRIBUTING.md` in full before
-anything else; this skill summarises them as of 2026-10-25 and adds what applies to our setup.
+anything else; this skill summarises them as of 2026-11-01 and adds what applies to our setup.
 
 The project moves fast (about 100 merges a week in October 2026) and is maintained by a small
-team (see the `ggml-org/*` groups at the top of `CODEOWNERS`: ggerganov, ngxson, CISC,
+team (see the `ggml-org/*` groups at the top of `CODEOWNERS`, which since #31316 also own
+`examples/`, `src/` and `src/models/`: ggerganov, ngxson, CISC,
 JohannesGaessler, am17an, 0cc4m, danbev and others). The README links no chat channel;
 discussion happens in issues, PRs and GitHub Discussions.
 
@@ -122,7 +123,10 @@ cite most:
   `docs/ops/*.csv`. New kernels come with throughput numbers.
 - Minja does not exist here; the Jinja engine is `common/jinja`.
 - Security pass on every diff: GGUF metadata, tensor shapes, tokenizer input, server and RPC fields
-  are attacker-controlled; bound them before use (the skill lists the patterns).
+  are attacker-controlled; bound them before use (the skill lists the patterns). Recursion over
+  request JSON, grammars, templates or regexes needs its own depth bound in the function itself
+  (`COMMON_RECURSIVE_LIMIT`, `JINJA_RECURSIVE_LIMIT`, `GRAMMAR_RECURSIVE_LIMIT`), a blocking
+  finding since #31153.
 
 ## 3. Building and testing on NixOS
 
