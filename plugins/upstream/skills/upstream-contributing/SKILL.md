@@ -123,7 +123,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 
 - **Voice:** Martin contributes alone. Everything posted in his name says "I", never "we", "us" or
   "our"; grep drafts for these words before showing them.
-- Short and natural: result first, a few plain sentences, no work log or file inventory. No
+- Natural, short, WhatsApp style: write it like a message to a colleague, result first, a
+  couple of plain sentences, no headings, no work log or file inventory. No
   commit hashes in comments or replies ("fixed in a85ded92"): say what changed instead.
   Comments aren't small talk and don't hand decisions back ("should I push it here or as a
   follow-up?"): decide, and say what happens.
