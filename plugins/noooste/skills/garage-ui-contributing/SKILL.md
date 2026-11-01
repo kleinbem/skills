@@ -125,6 +125,12 @@ Measured 2026-11-01 (`upstream-contributing` / `contribution-skill-authoring` se
     config file's `server.frontend_path`. Asked for a runtime fallback to
     `<exe dir>/../share/garage-ui`: Noooste/garage-ui#145.
   - No `versionCheckHook`, because the binary has no `--version` flag: Noooste/garage-ui#146.
+- Workarounds in the fleet container (nix-presets `containers/garage-ui.nix`, 2026-11-01):
+  - Token login stays off because it is always full admin: Noooste/garage-ui#148.
+  - The read-only admin token needs `GetKeyInfo`, which also reads every key's secret:
+    Noooste/garage-ui#149.
+  - An assertion refuses to run without a login method. no-link: private security report
+    (details stay out of public files until upstream discloses).
 
 ## Review checklist
 
