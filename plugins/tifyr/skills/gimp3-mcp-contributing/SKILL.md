@@ -106,7 +106,8 @@ The maintainer lands work as merge commits of his own branches (11 of the last 1
   `origin` upstream, `fork` ours).
 - Downstream: kleinbem/nix-packages carries `pkgs/gimp3-mcp/mcp-2.patch` (mcp 2: `FastMCP` is
   `MCPServer`, tool errors re-raised as `ToolError` so their messages reach the client),
-  kleinbem/nix-packages#232. Upstream PR: support mcp 2 next to mcp 1 (planned 2026-11-01).
+  kleinbem/nix-packages#232. no-link: upstream support for mcp 2 next to mcp 1 is prepared
+  (2026-11-01) but no issue or PR exists yet; replace this with the PR once it is open.
 
 ## Review checklist
 

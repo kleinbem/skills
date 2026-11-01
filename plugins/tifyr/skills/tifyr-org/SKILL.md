@@ -19,9 +19,12 @@ everything.
 
 ## 1. Org-wide facts
 
-- **Security:** no `SECURITY.md`, and private vulnerability reporting is off
+- **Security:** no `SECURITY.md`, no contact in the README or the maintainer's profile, and
+  private vulnerability reporting is off
   (`gh api repos/tifyr/gimp3-mcp/private-vulnerability-reporting --jq .enabled` → `false`).
-  Don't open a public issue for a security bug; Martin contacts the maintainer first.
+  The only private route is the address on the maintainer's commits
+  (`git log --author=Kaj -1 --format=%ae` in the clone); Martin writes to it. If that gets no
+  answer, a public issue only asks for a private contact, without details.
 - **Channels:** GitHub issues only (no Discussions, no wiki, no chat).
 
 ## 2. Repositories
