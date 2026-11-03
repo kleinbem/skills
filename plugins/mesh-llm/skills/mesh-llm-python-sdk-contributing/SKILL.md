@@ -24,7 +24,7 @@ preparation"). As of 2026-11-03: repo created 2026-10-08, 5 PRs, all from org me
   file updates its entry in the same commit; #3 and #5 did. mesh-llm's admission
   (`python_sdk_source.rs`) refuses changed bytes, unexpected tracked files and symlinks, so a
   stale manifest breaks mesh-llm CI the day it bumps its pin. Check: `sha256sum <file>` against
-  the entry, for every touched file.
+  the entry, for every other touched file.
 - The manifest itself is pinned on the mesh-llm side (`manifest_sha256` in
   `ci/required-sdk-python/sdk-source.json`, with the revision). Moving that pin is a separate
   mesh-llm PR (section 7), not part of an SDK PR.
@@ -106,7 +106,7 @@ gh pr list -R Mesh-LLM/mesh-llm-python-sdk --state all --limit 40 \
 
 ## Review checklist
 
-- `sdk-inputs.json` has the new SHA-256 of every touched file, nothing else changed (section 0).
+- `sdk-inputs.json` has the new SHA-256 of every other touched file, nothing else changed (section 0).
 - No hand edits under `sdk/src/meshllm/_generated/`; `mesh_source`/`generator` untouched unless
   bindings were regenerated.
 - `python3 -I sdk/tests/test_client.py` passes on 3.11 to 3.14 at the head, and a regression test
