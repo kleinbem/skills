@@ -96,6 +96,10 @@ workaround gets dropped when the fix arrives.
   first gets its contribution skill; the skill decides issue, PR or both). Martin files or
   approves it. Until it exists, open an issue in our repo ("report upstream: …") and link that.
 - Our own workarounds (waiting on another fleet change) link our own issue.
+- Never use closing keywords before external links: never write `fix: owner/repo#123`, `closes: ...`,
+  or `resolves: ...` in code comments, commit messages, or PR bodies. GitHub parses these as closing
+  directives when merged to default and will close the upstream issue/PR. Always write
+  `upstream: owner/repo#123` or `tracking: owner/repo#123`.
 - A comment that only mentions a workaround says `no-link: <why>`.
 - Check with `nix-check-workarounds` (kleinbem/nix-toolbox; the workspace devshell puts the
   checkout's `bin/` on PATH): `--base main@origin` before a PR (CodeRabbit flags it too);
