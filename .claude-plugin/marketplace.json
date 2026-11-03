@@ -33,7 +33,7 @@
     {
       "name": "mesh-llm",
       "source": "./plugins/mesh-llm",
-      "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing"
+      "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing, mesh-llm-python-sdk-contributing"
     },
     {
       "name": "archlinux",

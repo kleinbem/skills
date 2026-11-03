@@ -22,6 +22,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `aaif-goose` | `goose-contributing` | aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
 | `mesh-llm` | `mesh-llm-org` | Mesh-LLM organization: attribution, security, how the repos relate |
 | `mesh-llm` | `mesh-llm-contributing` | Mesh-LLM/mesh-llm: builds, validation, commit and PR rules, pre-flight CI |
+| `mesh-llm` | `mesh-llm-python-sdk-contributing` | Mesh-LLM/mesh-llm-python-sdk: checksum manifest, tests per Python version, commit and PR rules |
 | `archlinux` | `archlinux-org` | Arch Linux: no AI policy (our rule instead), governance, channels, 0BSD package sources, repo table |
 | `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
 | `noooste` | `noooste-org` | Noooste (personal account): security reports, repo table |
