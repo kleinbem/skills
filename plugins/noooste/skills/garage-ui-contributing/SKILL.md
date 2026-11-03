@@ -115,10 +115,14 @@ Measured 2026-11-01 (`upstream-contributing` / `contribution-skill-authoring` se
 
 ## 8. Our setup and current threads
 
-- Downstream: nixpkgs `garage-ui` (NixOS/nixpkgs#580190, draft); the fleet runs it as a container
+- Downstream: nixpkgs `garage-ui` (NixOS/nixpkgs#580190, ready since 2026-11-01); the fleet runs it as a container
   on nixos-nvme (nix-presets `containers/garage-ui.nix`).
-- No fork or clone yet; when needed: fork `Noooste/garage-ui` to `kleinbem/garage-ui`, clone to
-  `~/Develop/github.com/Noooste/garage-ui` (jj, `origin` upstream, `fork` ours).
+- Clone at `~/Develop/github.com/Noooste/garage-ui` (jj, `origin` upstream); no fork yet. Fork
+  to `kleinbem/garage-ui` (remote `fork`) when the first PR opens.
+- PRs for Noooste/garage-ui#145 (runtime frontend fallback) and Noooste/garage-ui#146
+  (`-version`) are ready locally in workspaces
+  `garage-ui.ws/frontend-fallback` and `garage-ui.ws/version-flag` (2026-11-03). They wait for the
+  maintainer to answer the issues: features need an acknowledged approach (section 0).
 - Workarounds in the nixpkgs package that want upstream changes (2026-11-01):
   - The wrapper sets `GARAGE_UI_SERVER_FRONTEND_PATH`, because the frontend default is the
     CWD-relative `./frontend/dist` (`internal/routes/routes.go`), and that env var outranks a
