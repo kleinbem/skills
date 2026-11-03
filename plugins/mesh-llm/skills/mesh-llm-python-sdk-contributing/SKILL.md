@@ -27,7 +27,7 @@ preparation"). As of 2026-11-03: repo created 2026-10-08, 5 PRs, all from org me
   the entry, for every other touched file.
 - The manifest itself is pinned on the mesh-llm side (`manifest_sha256` in
   `ci/required-sdk-python/sdk-source.json`, with the revision). Moving that pin is a separate
-  mesh-llm PR (section 7), not part of an SDK PR.
+  mesh-llm PR, not part of an SDK PR.
 - `mesh_source` and `generator` in `sdk-inputs.json` record which mesh-llm commit the generated
   bindings came from. Don't touch them unless you regenerate bindings; never hand-edit
   `sdk/src/meshllm/_generated/` (mesh-llm `AGENTS.md`: generate from the exact native library

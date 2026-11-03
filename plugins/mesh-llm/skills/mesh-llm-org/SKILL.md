@@ -47,7 +47,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 |---|---|---|
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
 | Mesh-LLM/mesh-packaging | none yet | install paths, distro packages; our nixpkgs/AUR work touches it |
-| Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
+| Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every other tracked file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
 | Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork | none yet | |
 
 A repo with "none yet" gets its repository skill before our first contribution
