@@ -19,11 +19,15 @@ preparation"). As of 2026-11-03: repo created 2026-10-08, 5 PRs, all from org me
 
 ## 0. Hard rules
 
-- **Every tracked file is pinned in `sdk-inputs.json`** (`files`: path → plain SHA-256 of the
-  bytes). A PR that changes, adds or removes a tracked file updates its entry in the same
-  commit; #3 and #5 did. mesh-llm's admission (`python_sdk_source.rs`) refuses changed bytes,
-  unexpected tracked files and symlinks, so a stale manifest breaks mesh-llm CI the day it bumps
-  its pin. Check: `sha256sum <file>` against the entry, for every touched file.
+- **Every other tracked file is pinned in `sdk-inputs.json`** (`files`: path → plain SHA-256 of
+  the bytes; the manifest doesn't list itself). A PR that changes, adds or removes a tracked
+  file updates its entry in the same commit; #3 and #5 did. mesh-llm's admission
+  (`python_sdk_source.rs`) refuses changed bytes, unexpected tracked files and symlinks, so a
+  stale manifest breaks mesh-llm CI the day it bumps its pin. Check: `sha256sum <file>` against
+  the entry, for every touched file.
+- The manifest itself is pinned on the mesh-llm side (`manifest_sha256` in
+  `ci/required-sdk-python/sdk-source.json`, with the revision). Moving that pin is a separate
+  mesh-llm PR (section 7), not part of an SDK PR.
 - `mesh_source` and `generator` in `sdk-inputs.json` record which mesh-llm commit the generated
   bindings came from. Don't touch them unless you regenerate bindings; never hand-edit
   `sdk/src/meshllm/_generated/` (mesh-llm `AGENTS.md`: generate from the exact native library
