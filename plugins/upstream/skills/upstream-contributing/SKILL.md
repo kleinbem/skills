@@ -25,7 +25,7 @@ model invocation of manual skills.
 | block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing`, `catch-contributing` |
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
-| Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing` |
+| Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing`, `mesh-llm-python-sdk-contributing` |
 | Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
 | Noooste (personal account) | `noooste-org` | `garage-ui-contributing` |
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
@@ -58,6 +58,7 @@ is authoritative; update this table when one changes):
 | block/buzz-app | yes, rarely merged; fork CI needs approval | no; scope checkpoint in the PR | agent drafts, Martin reviews | `Co-authored-by:` trailer for the agent | DCO, only after Martin reviewed | free-form (Conventional Commits common), squash |
 | aaif-goose/goose | only for a **Ready** issue | always | Martin writes the issue | `Co-Authored-By` accepted, no disclosure needed | no | Conventional Commits |
 | Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits |
+| Mesh-LLM/mesh-llm-python-sdk | yes (none from outside yet) | no | agent drafts, Martin reviews | no agent trailers (org rule) | no | Conventional Commits, `(sdk)` scope, squash |
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
 | block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
