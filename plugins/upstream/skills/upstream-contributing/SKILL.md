@@ -138,9 +138,7 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the
   repo the text is posted in (a nixpkgs body's `#2492` pointed at nixpkgs, not Mesh-LLM).
 - Never use closing keywords before external links: in fleet repos, PR descriptions or commit
-  messages, never write `fix: Owner/repo#123`, `closes Owner/repo#123`, or `resolves Owner/repo#123`.
-  When merged to the default branch, GitHub automatically marks the external issue or PR as closed!
-  Always use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
+  messages, never write any closing keyword variant (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, with or without colon) before external repository references (e.g. `Owner/repo#123` or full GitHub URLs). When merged to the default branch, GitHub automatically marks the external issue or PR as closed! Always use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
 - Never claim review or testing in Martin's name that he didn't do.
 - Show the real test results, most of the time: the PR body's validation and replies to review
