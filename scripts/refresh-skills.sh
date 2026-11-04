@@ -4,9 +4,8 @@
 #   scripts/refresh-skills.sh [scope]     scope = substring of skill directory names
 #   AGENT=goose scripts/refresh-skills.sh
 #
-# The agent works in a throwaway clone of main, never in this checkout, and
-# only gets this repo plus read access to GitHub through gh. It merges its
-# own PR (see the prompt); the clone is deleted when the run ends.
+# The agent works in a throwaway clone of main (deleted afterwards), never in
+# this checkout, and opens its own auto-merging PR as the prompt says.
 set -euo pipefail
 
 here=$(cd "$(dirname "$0")/.." && pwd)
