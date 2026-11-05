@@ -45,8 +45,10 @@ The main ones; `kleinbem/repos.nix` lists every repo.
 
 ## Fleet-wide commands
 
-Every conductor and the root expose these; `filter` substring-matches repo names fleet-wide
-(`just status-all nix` hits every `nix*` repo from anywhere). No filter = every repo.
+Run from the workspace root, every recipe below works as written. `nix/` and `openwrt/` expose
+only some at the top level (status-all, save-all, pull-all, push-all, ship-all, in);
+use `just jj::<recipe>` there for the rest. `filter` substring-matches repo names fleet-wide
+(`just status-all nix` hits every `nix*` repo). No filter = every repo.
 
 ```bash
 just                              # interactive hub (fzf/gum)
@@ -116,7 +118,7 @@ workaround gets dropped when the fix arrives.
 
 ## nix-config specifics
 
-- Auto-generated ground truth, refreshed by `just maintenance::sync-agent`:
+- Auto-generated ground truth, refreshed by `just dev::sync-agent` (in nix-config):
   `docs/INFRASTRUCTURE.yaml` (whole fleet, symlinked at the workspace root),
   `docs/OPTIONS.md` (every `my.*`/`modules.*` option, declaration site, opted-in hosts),
   `docs/IMPORTS.md` (per-host import map), `docs/SYSTEM_REFERENCE.md` (nixpkgs revs, hosts,
