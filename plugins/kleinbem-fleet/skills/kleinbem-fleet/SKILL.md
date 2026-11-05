@@ -1,90 +1,97 @@
 ---
 name: kleinbem-fleet
 description: >-
-  Orientation for the kleinbem NixOS + OpenWrt fleet: the workspace root is
-  not a repo, the three conductors, fleet-wide `just` fan-out, jj-first VCS,
+  Orientation for the kleinbem NixOS + OpenWrt fleet: the three conductors,
+  what every repo is for, the fleet-wide `just` fan-out, where new IaC goes,
   the master inventory, and the standalone-container model. Load before
   working anywhere under ~/Develop/github.com/kleinbem.
 ---
 # kleinbem fleet
 
-## The workspace root is not a repo
-
-`~/Develop/github.com/kleinbem/` is a flat directory of ~15 independent
-sibling git+jj repos (no submodules). `cd` into the specific repo before
-doing real work — each has its own `AGENTS.md`/`CLAUDE.md` with the detail
-that matters. The root is only for orientation and fleet-wide fan-out.
+The workspace root's `AGENTS.md` (always loaded) has the rules every session follows: own jj
+workspace, auto-merging PRs, comments, secrets. This skill is the map.
 
 ## The three conductors
 
-Tooling-only orchestrators, no `flake.nix` of their own (except `kleinbem/`):
+Orchestrators with no `flake.nix` of their own (except `kleinbem/`, which packages the
+dashboard):
 
-- **`kleinbem/`** — fleet hub. Owns `repos.nix` (every repo + its GitHub
-  URL), the canonical `.just/common.just` + `.just/jj.just`, and
-  `tools/jj-fleet.sh` (dashboard).
-- **`nix/`** — conductor for the Nix side. Real work: `nix-config` (hosts,
-  modules, inventory — start here for NixOS questions), `nix-presets`
-  (shared service/desktop bundles), `nix-hardware`, `nix-devshells`,
-  `nix-packages`, `nix-templates`.
-- **`openwrt/`** — conductor for the router side. Real work:
-  `openwrt-builder` (firmware images, profile `bpi-r4`) and
-  `openwrt-config` (Ansible runtime config).
+- **`kleinbem/`**: fleet hub. Owns `repos.nix` (every repo + its GitHub URL, the single source of
+  truth), the canonical `.just/common.just` + `.just/jj.just` (symlinked into `nix/` and
+  `openwrt/`), the workspace root's own files in `root/`, and `tools/jj-fleet.sh` (the
+  dashboard, which fans out to `jj-toolbox` scripts instead of reimplementing them).
+- **`nix/`**: conductor for the Nix side. Real work: `nix-config` (hosts, modules, inventory;
+  start here for NixOS questions), `nix-presets` (shared service/desktop bundles),
+  `nix-hardware`, `nix-devshells`, `nix-packages`, `nix-templates`. Also owns `nix/infra/`, the
+  live OpenTofu for Cloudflare, GitHub secrets, Google, NetBird and Garage.
+- **`openwrt/`**: conductor for the router side. Real work: `openwrt-builder` (firmware images,
+  profile `bpi-r4`) and `openwrt-config` (Ansible runtime config).
 
-Other repos: `github-config` (Terraform-managed GitHub org settings),
-`kleinbem-secrets` (current sops+age secrets store — replaces the legacy
-`nix-secrets`/`openwrt-secrets`), `kleinbem-site` (kleinbem.dev).
+## Other repos
 
-## Work in your own jj workspace, always
+The main ones; `kleinbem/repos.nix` lists every repo.
 
-Every agent session that edits a repo claims its own jj workspace first;
-the primary checkout (`<repo>/`) is Martin's. Sessions sharing one working
-copy destroy each other's edits (jj snapshots `@` on every command), and
-sessions that finish in the primary checkout leave commits, bookmarks and
-half-edits behind — a clean-up on 2026-10-24 found 71 of those.
+| Repo | What it is |
+|---|---|
+| `github-config` | Terraform for GitHub account/repo settings, rulesets, labels |
+| `kleinbem-secrets` | sops + age secrets for the whole fleet, per-path recipients (see its README) |
+| `jj-toolbox` | Single-repo jj helpers (`jj-save`, `jj-push`, `jj-pull`, `jj-abandon-merged`, `jj-sign-unsigned`, `jj-check-signatures`, `jj-sweep-merged`, `jj-ahead`, `jj-ws-*`); run in whatever repo you're in |
+| `nix-toolbox` | Generic flake tools (`nix-check-versions`, `nix-audit-deps`, `nix-audit-locks`, `nix-verify-devshells`, `nix-check-lock`, `nix-check-workarounds`, `bash-test-lib.sh`) |
+| `actions` | Shared composite GitHub Actions; `nix-setup` installs Determinate Nix and, with the secrets, joins NetBird for the mesh-only Attic cache. Pinned by sha, Dependabot bumps it |
+| `skills` | These agent skills (Claude Code plugin marketplace) |
+| `kleinbem-site` | kleinbem.dev |
 
-```
-just jj::ws-new <repo> [name]              # <repo>.ws/<name>/ on main — cd there, then work
-just jj::ws-new <repo> <name> -r <change>  # start on an existing change (move work out of the primary)
-just jj::ws-list [filter]                  # open workspaces and their @ state
-just jj::ws-gc [filter]                    # reap empty/undescribed ones older than 4h
-```
-
-Inside a workspace use `jj`, never raw `git` (no `.git` there); `jj git
-push` and `gh pr create` work from it. Finish from the workspace: describe,
-push, open the PR. After the merge, `ws-gc` reaps the workspace and
-`just pull-all` / `just abandon-merged` drops the local copy of the merged
-change. If "working copy is stale" appears, `jj workspace update-stale`.
+`nix-secrets` and `openwrt-secrets` are retired (not in `repos.nix`, not on disk).
 
 ## Fleet-wide commands
 
-Run from anywhere in the workspace; `filter` substring-matches repo names:
+Every conductor and the root expose these; `filter` substring-matches repo names fleet-wide
+(`just status-all nix` hits every `nix*` repo from anywhere). No filter = every repo.
 
+```bash
+just                              # interactive hub (fzf/gum)
+just status-all [filter]          # repo state + ahead-of-origin counts
+just clean [filter] [--local] [--strict]  # dirty / unpushed / conflicts / workspaces / PRs / issues / branches / Claude rule files
+just abandon-merged [filter] [--dry-run]  # drop local copies of changes already on main
+just diff-all [filter]            # uncommitted changes
+just remote-status [filter]       # CI, PRs, issues (gh API, ~6s)
+just remote-prs [filter]          # open PRs
+just remote-ci [n] [filter]       # recent CI runs per repo
+just check-signatures [filter]    # signatures ahead of origin
+just save-all "msg" [filter]      # jj describe in every dirty repo
+just push-all [filter]            # push every repo
+just pull-all [filter]            # fetch + rebase every repo, then abandon-merged
+just sign-unsigned [filter]       # sign unsigned commits ahead of origin (YubiKey)
+just ship-all "msg" [filter]      # save-all + sign-unsigned + push-all (alias: ship)
+just bootstrap [filter]           # clone missing repos from repos.nix, link the root files
+just init-bookmarks [filter]      # point local main at main@origin (once per repo)
+just in <repo> <recipe>           # run a repo's own recipe, e.g. just in nix-config nixos::switch
 ```
-just status-all [filter]        # repo state + ahead-of-origin counts
-just clean [filter]             # all-clean check: dirty / not in main / conflicts / workspaces / PRs / branches
-just abandon-merged [--dry-run] # drop local copies of changes already on main (proven only)
-just diff-all [filter]          # uncommitted changes fleet-wide
-just remote-status [filter]     # CI / PRs / issues (hits gh API)
-just ship-all "msg" [filter]    # save-all + sign-unsigned + push-all
-just in <repo> <recipe>         # pass through to one repo's justfile
-                                #   e.g. just in nix-config nixos::switch
-```
 
-## VCS is jj-first
+- Fresh machine: `just bootstrap`. From a fresh clone of only `nix/` or `openwrt/`, run
+  `bash tools/bootstrap.sh` there first: `just` can't parse until `kleinbem/` exists.
+- Tests for the fan-out tooling (`kleinbem/tools/resolve-targets.sh` and friends):
+  `cd kleinbem && just test`.
 
-Jujutsu is the primary interface (colocated with git). Use raw `git` only
-for rescue / destructive resets not wrapped by the `jj::*` recipes. A bare
-`jj git push` no-ops here — push via `just jj::push-all <filter>` from a
-conductor. When no YubiKey is attached, avoid `jj` entirely: it
-auto-snapshots the working copy into a *signed* commit on nearly every
-command. Use plain `git` edits instead.
+## Pull request policy details
 
-## Code comments
+- Required checks are non-strict (github-config), so a PR that fell behind main still merges.
+- Private repos (kleinbem-secrets, mesh-llm-gpu) auto-merge too but don't require CodeRabbit.
+- `skills` requires its `check` job (skill structure + `claude plugin validate`; `just check`
+  locally).
+- jj pushing, bookmarks and rebasing PR branches: `jj-workflow`.
 
-A comment says why the code is this way, in 1–3 lines. History ("was X,
-replaced with Y"), dates, debugging stories and alternatives tried go in
-the commit message or PR body, not the file. Keep real gotchas, short.
-When you edit near a long comment, shorten it too.
+## Where new IaC goes
+
+- **Self-contained** (no dependency on another repo's generated data): its own repo, like
+  `github-config`.
+- **Data-bridge-coupled** (consumes files generated from another repo's source of truth): next to
+  that source, so the bridge is an in-repo path. `nix/infra/` is the example:
+  `nix-config/iac/data.nix` generates `infra/personas.json` + `infra/inventory.json` from
+  `inventory.nix`/`personas.nix`, and the `.tf` roots read them by path.
+
+Don't give every IaC root its own repo by default: splitting a coupled root turns a same-repo
+file dependency into a cross-repo one that drifts silently.
 
 ## Workarounds link their report
 
@@ -96,45 +103,34 @@ workaround gets dropped when the fix arrives.
   first gets its contribution skill; the skill decides issue, PR or both). Martin files or
   approves it. Until it exists, open an issue in our repo ("report upstream: …") and link that.
 - Our own workarounds (waiting on another fleet change) link our own issue.
-- Never use closing keywords before external links: never write any closing keyword variant (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, with or without colon) before external repository references (e.g. `owner/repo#123` or full GitHub URLs) in code comments, commit messages, or PR bodies. GitHub parses these as closing directives when merged to the default branch and will close the upstream issue/PR. Always use `upstream: owner/repo#123` or `tracking: owner/repo#123`.
 - A comment that only mentions a workaround says `no-link: <why>`.
 - Check with `nix-check-workarounds` (kleinbem/nix-toolbox; the workspace devshell puts the
   checkout's `bin/` on PATH): `--base main@origin` before a PR (CodeRabbit flags it too);
   `nix-check-workarounds --states <repo>` lists linked fixes that are merged or closed, so the
   workaround can go. Run it when a flake or package update comes in.
+- Never use closing keywords before external links: never write any closing keyword variant
+  (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`,
+  with or without colon) before external repository references (`owner/repo#123` or full
+  GitHub URLs) in code comments, commit messages, or PR bodies. GitHub closes the upstream
+  issue/PR on merge. Write `upstream: owner/repo#123` or `tracking: owner/repo#123`.
 
 ## nix-config specifics
 
-- Auto-generated ground-truth, refreshed by `just maintenance::sync-agent`:
-  `docs/OPTIONS.md` (every `my.*`/`modules.*` option + declaration site +
-  opted-in hosts), `docs/IMPORTS.md` (per-host import map),
-  `docs/SYSTEM_REFERENCE.md` (nixpkgs revs, hosts, services). Grep these
-  first to see blast radius.
-- Every option lives under `my.*` (system) or `modules.*` (home-manager).
-  Hosts default to `enable = false` and must explicitly opt in.
+- Auto-generated ground truth, refreshed by `just maintenance::sync-agent`:
+  `docs/INFRASTRUCTURE.yaml` (whole fleet, symlinked at the workspace root),
+  `docs/OPTIONS.md` (every `my.*`/`modules.*` option, declaration site, opted-in hosts),
+  `docs/IMPORTS.md` (per-host import map), `docs/SYSTEM_REFERENCE.md` (nixpkgs revs, hosts,
+  services). Grep these first to see blast radius.
+- Every option lives under `my.*` (system) or `modules.*` (home-manager). Hosts default to
+  `enable = false` and must opt in.
 - `inventory.nix` is the master source for **both** NixOS and OpenWrt;
-  `openwrt-config/ansible/inventory.ini` is generated from it — never
-  hand-edited.
+  `openwrt-config/ansible/inventory.ini` is generated from it, never hand-edited.
 
 ## Standalone containers (ADR-002)
 
-No host evals its own container closures. `container-factory` builds them
-centrally; hosts pull to `/var/lib/machines/<name>/current`. Adding a
-deployed container = 3 edits: preset in `nix-presets`, host
-`containers.nix` opt-in, `container-factory` import + catalogue entry.
-
-## Secrets
-
-`kleinbem-secrets` = sops + age, per-path scoped recipients. Never assume a
-plaintext file in a `*-secrets` repo is safe to read/edit/reference just
-because the repo is "the encrypted one" — verify first.
-
-## Environment
-
-Each repo's `.envrc` loads a Nix devshell via direnv, ultimately
-`nix-devshells#workspace` (or `#openwrt`), providing `just`, `jj`, `gh`,
-`gum`, `sops`, `age`. If a tool seems missing from PATH, the devshell
-probably isn't loaded — check `direnv status` / `direnv allow`.
+No host evals its own container closures. `container-factory` builds them centrally; hosts pull
+to `/var/lib/machines/<name>/current`. Adding a deployed container = 3 edits: preset in
+`nix-presets`, host `containers.nix` opt-in, `container-factory` import + catalogue entry.
 
 ## Device skills
 
