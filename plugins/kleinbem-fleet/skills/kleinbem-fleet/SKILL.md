@@ -127,11 +127,13 @@ workaround gets dropped when the fix arrives.
   `enable = false` and must opt in.
 - `inventory.nix` is the master source for **both** NixOS and OpenWrt;
   `openwrt-config/ansible/inventory.ini` is generated from it, never hand-edited.
-- Hosts only see a merged kleinbem-secrets change after nix-config's lock moves, and that is
+- NixOS hosts only see a merged kleinbem-secrets change after nix-config's lock moves, and that is
   always a hand bump: Maintain Flake skips the input (private, CI has no token) and refuses it
   when asked. In a nix-config workspace run
   `NIX_CONFIG="access-tokens = github.com=$(gh auth token)" nix flake update kleinbem-secrets`,
-  build `system.build.sops-nix-manifest` for the hosts it touches, then open the PR.
+  build `system.build.sops-nix-manifest` for the hosts it touches, then open the PR. Routers
+  read the local kleinbem-secrets checkout instead: `just pull-all kleinbem-secrets`, then
+  `just configure <target>` in openwrt-config.
 
 ## Standalone containers (ADR-002)
 
