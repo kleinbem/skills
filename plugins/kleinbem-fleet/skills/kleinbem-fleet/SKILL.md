@@ -136,7 +136,7 @@ workaround gets dropped when the fix arrives.
   resolves from the primary `openwrt-config/`, not a `.ws` workspace. `just configure` there
   deploys whatever that checkout holds, so from the workspace root run `just pull-all
   kleinbem-secrets` and `just pull-all openwrt-config`, check `jj st` shows no unfinished edits
-  in either checkout, then `just configure <target>`.
+  in either checkout, then `just in openwrt-config configure <target>`.
 
 ## Standalone containers (ADR-002)
 
