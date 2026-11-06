@@ -139,7 +139,8 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
 - Eval isn't verification: build the narrowest derivation that runs the check (for sops-nix,
   `config.system.build.sops-nix-manifest`; for module docs, the NixOS manual; for packages, their
   tests).
-- `builtins.getFlake` inside `--expr` ignores `--override-input` and reads the committed lock. Test
+- `builtins.getFlake` inside `--expr` ignores `--override-input` and reads the committed lock
+  (upstream: NixOS/nix#9154). Test
   uncommitted cross-repo changes with a `.#` installable plus `--override-input <input> path:../<repo>`:
   `path:` takes the directory as it is, while a plain path or `git+file:` leaves out untracked files.
 - When CI says "1 dependency failed" and the log buffer hides which: instantiate the package at
