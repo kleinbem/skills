@@ -21,13 +21,15 @@ if [ -n "$scope" ]; then
 fi
 
 token_file=${SKILLS_REFRESH_TOKEN_FILE:-/run/secrets/skills_refresh_token}
-if [ ! -r "$token_file" ]; then
+token=$( { tr -d '[:space:]' <"$token_file"; } 2>/dev/null || true)
+if [ -z "$token" ]; then
   echo "refresh-skills: no token at $token_file (fine-grained PAT for kleinbem/skills," >&2
   echo "contents + pull requests write). Not falling back to the gh login." >&2
   exit 1
 fi
-GH_TOKEN=$(<"$token_file")
-export GH_TOKEN
+# gh prefers GH_TOKEN, then falls back to GITHUB_TOKEN: drop any inherited one.
+unset GITHUB_TOKEN GH_ENTERPRISE_TOKEN GITHUB_ENTERPRISE_TOKEN
+export GH_TOKEN=$token
 
 tmp=$(mktemp -d -t skills-refresh.XXXXXX)
 trap 'rm -rf "$tmp"' EXIT
