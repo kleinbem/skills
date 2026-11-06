@@ -1,0 +1,64 @@
+{
+  "name": "kleinbem",
+  "description": "Agent skills from the kleinbem workspace",
+  "owner": {
+    "name": "Martin Kleinberger"
+  },
+  "plugins": [
+    {
+      "name": "upstream",
+      "source": "./plugins/upstream",
+      "description": "Upstream contribution router and shared workflow (always loaded), plus the procedure for writing and refreshing organization and repository skills"
+    },
+    {
+      "name": "nixos",
+      "source": "./plugins/nixos",
+      "description": "NixOS organization: nixos-org (two AI policies, security, RFCs, repo table), nixpkgs-contributing, nixpkgs-maintaining, nixpkgs-packaging (bringing an app into nixpkgs end to end)"
+    },
+    {
+      "name": "block",
+      "source": "./plugins/block",
+      "description": "Block organization (block/*): block-org (DCO and org checks, security, governance, repo table), buzz-contributing, buzz-app-contributing, berd-contributing"
+    },
+    {
+      "name": "ggml-org",
+      "source": "./plugins/ggml-org",
+      "description": "ggml-org organization: ggml-org (AI usage policies, where ggml changes go, repo table), llama-cpp-contributing"
+    },
+    {
+      "name": "aaif-goose",
+      "source": "./plugins/aaif-goose",
+      "description": "aaif-goose organization (Agentic AI Foundation): aaif-goose-org (governance, security, the move from Block), goose-contributing"
+    },
+    {
+      "name": "mesh-llm",
+      "source": "./plugins/mesh-llm",
+      "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing, mesh-llm-python-sdk-contributing"
+    },
+    {
+      "name": "archlinux",
+      "source": "./plugins/archlinux",
+      "description": "Arch Linux: archlinux-org (no AI policy and our rule, governance, channels, 0BSD package sources, repo table), aur-contributing"
+    },
+    {
+      "name": "kleinbem-fleet",
+      "source": "./plugins/kleinbem-fleet",
+      "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits)"
+    },
+    {
+      "name": "matepad-pro",
+      "source": "./plugins/matepad-pro",
+      "description": "Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09) fleet tablet: headless APK installation, GBox sandboxing, Shizuku privilege escalation, ADB reverse tunnels, battery preservation, and diagnostic telemetry"
+    },
+    {
+      "name": "noooste",
+      "source": "./plugins/noooste",
+      "description": "Noooste (personal GitHub account): noooste-org (security reports, repo table), garage-ui-contributing"
+    },
+    {
+      "name": "tifyr",
+      "source": "./plugins/tifyr",
+      "description": "tifyr organization (tifyr/gimp3-mcp): tifyr-org (security, repo table), gimp3-mcp-contributing"
+    }
+  ]
+}

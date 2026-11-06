@@ -1,0 +1,7 @@
+{
+  "name": "matepad-pro",
+  "description": "Operations, diagnostics, and app lifecycle management for the Huawei MatePad Pro (MRX-W09) fleet tablet",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

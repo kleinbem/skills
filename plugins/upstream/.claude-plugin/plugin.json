@@ -1,0 +1,7 @@
+{
+  "name": "upstream",
+  "description": "Upstream contribution router and shared workflow (always loaded), plus the procedure for writing and refreshing organization and repository skills",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

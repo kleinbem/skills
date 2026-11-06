@@ -1,0 +1,7 @@
+{
+  "name": "kleinbem-fleet",
+  "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits)",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}
