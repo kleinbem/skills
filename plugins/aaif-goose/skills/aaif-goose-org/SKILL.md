@@ -19,7 +19,7 @@ skill wins where they differ. Sources: `aaif-goose/goose` `GOVERNANCE.md`, `MAIN
 - The move isn't finished everywhere: `vscode-goose`'s `GOVERNANCE.md` still links Block's
   governance page, and goose's `SECURITY.md` escalation address is still
   `open-source-governance@block.xyz` under the AAIF name. Treat the goose repo's own files as
-  current and don't cite Block policy for aaif-goose repos.
+  current and don't cite Block policy for aaif-goose repos. (tracking: kleinbem/skills#130)
 
 ## 1. Org-wide facts
 
