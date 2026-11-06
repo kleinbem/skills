@@ -22,7 +22,8 @@ DCO check, no AI policy anywhere.
 - **Security:** use the repo's Security tab → "Report a vulnerability" (private vulnerability
   reporting is on for garage-ui:
   `gh api repos/Noooste/<repo>/private-vulnerability-reporting --jq .enabled`). garage-ui's
-  `CONTRIBUTING.md` says to email security bugs, but its address is blank (template leftover).
+  `CONTRIBUTING.md` says to email security bugs, but its address is blank (template leftover;
+  tracking: kleinbem/skills#131).
   Martin files security reports.
 - **Channels:** GitHub issues only (no Discussions, no chat).
 
