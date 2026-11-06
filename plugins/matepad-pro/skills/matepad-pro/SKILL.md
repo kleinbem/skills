@@ -22,21 +22,20 @@ disable-model-invocation: true
 
 ---
 
-## 2. Fleet Roles & Declarative Conductor Recipes
+## 2. Fleet Roles & Tunnels
 
-The tablet serves four primary roles in the `kleinbem` workstation setup:
+The tablet serves three roles in the `kleinbem` workstation setup, each over one ADB tunnel:
 
-1. **Secondary Display & Stylus Digitizer (Weylus)**:
-   - Connects to host Weylus server via ADB reverse tunnel on port `1701`.
-   - Launch declaratively via `just android::tablet-screen` in `nix-config`.
-2. **Remote Desktop / RDP Extended Display**:
-   - Reverse tunnel on port `3389` via GNOME Remote Desktop.
-   - Launch declaratively via `just android::tablet-rdp` in `nix-config`.
-3. **Webcam & Microphone (DroidCam)**:
-   - Forward tunnel on port `4747` feeding `/dev/video10` (v4l2loopback).
-   - Launch declaratively via `just android::tablet-cam` in `nix-config`.
-4. **All-in-One Desk Companion Mode**:
-   - `just android::tablet-desk` (establishes all tunnels, caps battery charge at 80% to protect Li-poly cell, disables idle sleep, and starts Shizuku while preserving EMUI gesture navigation).
+1. **Secondary Display & Stylus Digitizer (Weylus)**: reverse tunnel on port `1701`
+   (`adb -s QBK6R20825000010 reverse tcp:1701 tcp:1701`).
+2. **Remote Desktop / RDP Extended Display**: reverse tunnel on port `3389` via GNOME Remote
+   Desktop (`adb -s QBK6R20825000010 reverse tcp:3389 tcp:3389`).
+3. **Webcam & Microphone (DroidCam)**: forward tunnel on port `4747` feeding `/dev/video10`
+   (v4l2loopback) (`adb -s QBK6R20825000010 forward tcp:4747 tcp:4747`).
+
+`matepad tunnels` sets up all three. **Desk Companion Mode**, `just android::tablet-desk` in
+`nix-config` (runs `android-config`'s recipe), sets up all three, keeps the screen on while
+plugged in and starts Shizuku.
 
 ---
 
@@ -85,7 +84,8 @@ Download and install directly from CLI:
 # Using the declarative helper:
 matepad install <package_id_or_path.apk>
 
-# Manual CLI download & install:
+# Manual CLI download & install (apkeep needs an existing output directory):
+mkdir -p /tmp/apks
 apkeep -d f-droid -a <package_id> /tmp/apks/
 # OR for APKPure:
 apkeep -d apk-pure -a <package_id> -o 'acknowledge_dangers=true' /tmp/apks/
@@ -110,17 +110,18 @@ adb -s QBK6R20825000010 shell cmd appops set <package> <op_name> allow
 > [!CAUTION]
 > **DO NOT ENABLE `com.google.android.googlequicksearchbox`!**
 > On EMUI 10 without Google framework, Google Search enters a runaway 100% CPU thread spinloop that rapidly overheats the Kirin 990 and drains the battery even while plugged in. Keep it disabled:
-> `adb shell pm disable-user --user 0 com.google.android.googlequicksearchbox`
+> `adb -s QBK6R20825000010 shell pm disable-user --user 0 com.google.android.googlequicksearchbox`
+> (no-link: Google doesn't support the app without Google Play Services, so there is no upstream to report to.)
 
 - **Do NOT install Huawei Health (`com.huawei.health`)**: Kept intentionally off the tablet. Google Health Connect and Google Fit are used inside GBox instead.
 - **Battery Health Query**:
   ```bash
-  adb shell dumpsys battery
+  adb -s QBK6R20825000010 shell dumpsys battery
   # Check status: 5 (Full), 2 (Charging); temperature (div by 10 for °C)
   ```
 - **CPU & Process Load**:
   ```bash
-  adb shell "top -b -n 1 -m 5"
+  adb -s QBK6R20825000010 shell "top -b -n 1 -m 5"
   ```
 
 ---
@@ -133,7 +134,7 @@ Shizuku provides elevated Android API access via `adb` permission delegation.
   Configured in `nix-config/modules/nixos/android.nix` via udev rule and `shizuku-auto.service`. Whenever the tablet or phone is connected or reboots over USB, Shizuku is automatically booted in the background.
 - **Check if running**:
   ```bash
-  adb shell ps -ef | grep shizuku_server
+  adb -s QBK6R20825000010 shell ps -ef | grep shizuku_server
   ```
 - **Manual Start over ADB**:
   ```bash
