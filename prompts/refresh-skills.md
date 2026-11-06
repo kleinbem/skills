@@ -12,9 +12,9 @@ issues, PRs, comments, reviews). Upstream repos are read-only sources.
    (plugins/*/skills/*-contributing/SKILL.md except upstream-contributing). If a SCOPE line
    follows this prompt, refresh only the skills whose directory name contains it.
 2. For each: reread the upstream sources the skill names (CONTRIBUTING.md, AGENTS.md, PR
-   templates, workflows, SECURITY.md, the org .github repo) via `gh api` or the GitHub REST API
-   with curl, compare with what the skill states, and rerun the measurement commands for PRs
-   since the skill's 'as of' date.
+   templates, workflows, SECURITY.md, the org .github repo) via `gh api` or WebFetch, compare
+   with what the skill states, and rerun the measurement commands for PRs since the skill's
+   'as of' date.
 3. Edit only what changed: rules that changed upstream, new reviewer patterns that appear in at
    least two PRs (cite PR numbers), updated numbers in 'What the history shows', the 'as of'
    date. Keep each skill's style, section order and length; don't rewrite unchanged text; keep

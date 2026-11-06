@@ -70,5 +70,7 @@ same checks CI runs on every PR.
 
 `prompts/refresh-skills.md` is the refresh job for the organization and repository skills.
 `just refresh-skills [scope]` runs it with a local agent in a throwaway clone that is deleted afterwards
-(`AGENT=claude`, the default, or `AGENT=goose`). It opens at most one PR, which merges by itself once CI is green. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
+(`AGENT=claude`, the default, or `AGENT=goose`). The agent gets only a fine-grained token for
+this repo (contents and pull requests write), read from `/run/secrets/skills_refresh_token`
+(nix-config sops) or `SKILLS_REFRESH_TOKEN_FILE`; without it the run stops. It opens at most one PR, which merges by itself once CI is green. Until it runs on our own stack (#30), a Claude Code cloud routine runs the same prompt on
 the 1st of each month.
