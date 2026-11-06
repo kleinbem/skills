@@ -132,8 +132,10 @@ workaround gets dropped when the fix arrives.
   when asked. In a nix-config workspace run
   `NIX_CONFIG="access-tokens = github.com=$(gh auth token)" nix flake update kleinbem-secrets`,
   build `system.build.sops-nix-manifest` for the hosts it touches, then open the PR. Routers
-  read the local kleinbem-secrets checkout instead: `just pull-all kleinbem-secrets`, then
-  `just configure <target>` in openwrt-config.
+  read the sibling `kleinbem-secrets/` checkout instead (`playbook_dir/../../`), which only
+  resolves from the primary `openwrt-config/`, not a `.ws` workspace: run
+  `just pull-all kleinbem-secrets` from the workspace root, then `just configure <target>` in
+  `openwrt-config/`.
 
 ## Standalone containers (ADR-002)
 
