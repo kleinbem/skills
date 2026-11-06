@@ -123,7 +123,8 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
 - Also read the review body. Findings outside the diff land there, not in a thread, so the gate
   doesn't see them: handle them the same way and answer in a PR comment.
 - A Major finding you can't settle with evidence goes to Martin. Don't resolve it to get the merge.
-- List open threads: `gh api graphql -f query='{repository(owner:"kleinbem",name:"<repo>"){pullRequest(number:<n>){reviewThreads(first:50){nodes{id isResolved comments(first:1){nodes{path body}}}}}}}'`.
+- List open threads: `gh api graphql -f query='{repository(owner:"kleinbem",name:"<repo>"){pullRequest(number:<n>){reviewThreads(first:100){pageInfo{hasNextPage endCursor} nodes{id isResolved comments(first:1){nodes{path body}}}}}}}'`.
+  If `hasNextPage` is true, ask again with `after:"<endCursor>"`: the gate counts every thread.
   Resolve one: `gh api graphql -f query='mutation{resolveReviewThread(input:{threadId:"<id>"}){thread{isResolved}}}'`.
 - A new push triggers a fresh review with new threads, so answer them all again before walking away.
 - Bot PRs and bot pushes report `skipped`. A rate-limited review reports a passing check plus a
@@ -139,10 +140,11 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
   `config.system.build.sops-nix-manifest`; for module docs, the NixOS manual; for packages, their
   tests).
 - `builtins.getFlake` inside `--expr` ignores `--override-input` and reads the committed lock. Test
-  uncommitted cross-repo changes with `.#` refs; `path:` on a git worktree ignores uncommitted files.
+  uncommitted cross-repo changes with a `.#` installable plus `--override-input <input> path:../<repo>`:
+  `path:` takes the directory as it is, while a plain path or `git+file:` leaves out untracked files.
 - When CI says "1 dependency failed" and the log buffer hides which: instantiate the package at
   the toplevel's nixpkgs rev, walk its inputs and check `https://cache.nixos.org/<hash>.narinfo`
   (404 = Hydra never built it), confirm on Hydra (`/jobset/nixos/unstable/evals`, then
   `/eval/<id>/job/nixpkgs.<attr>.<system>`). Or rebuild on the device:
   `nix copy --derivation --to ssh-ng://<host> <drv>`, `nix build --dry-run '<drv>^*'`, then
-  `nix build --keep-going -L --max-jobs 1`.
+  `nix build --keep-going -L --max-jobs 1 '<drv>^*'`.
