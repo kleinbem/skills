@@ -14,6 +14,7 @@
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -62,7 +63,7 @@ for d in sorted((root / "plugins").iterdir()):
 
 readme = (root / "README.md").read_text()
 for name, d in skills.items():
-    if f"`{name}`" not in readme:
+    if not re.search(rf"^\|[^|]*\|\s*`{re.escape(name)}`\s*\|", readme, re.M):
         err(d / "SKILL.md", "no row in the README table")
 
 for md in sorted(root.glob("plugins/*/skills/*/*.md")):
@@ -75,6 +76,6 @@ for md in sorted(root.glob("plugins/*/skills/*/*.md")):
             err(md, f"~/.agents/skills/{skill}/{f} does not exist in this repo")
 
 for e in errors:
-    print(f"::error::{e}" if "GITHUB_ACTIONS" in __import__("os").environ else e)
+    print(f"::error::{e}" if "GITHUB_ACTIONS" in os.environ else e)
 print(f"{len(skills)} skills, {len(errors)} problems")
 sys.exit(1 if errors else 0)

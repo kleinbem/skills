@@ -13,7 +13,9 @@ scope=${1:-}
 agent=${AGENT:-claude}
 
 prompt=$(cat "$here/prompts/refresh-skills.md")
-[ -n "$scope" ] && prompt+=$'\n\nSCOPE: '"$scope"
+if [ -n "$scope" ]; then
+  prompt+=$'\n\nSCOPE: '"$scope"
+fi
 
 tmp=$(mktemp -d -t skills-refresh.XXXXXX)
 trap 'rm -rf "$tmp"' EXIT
