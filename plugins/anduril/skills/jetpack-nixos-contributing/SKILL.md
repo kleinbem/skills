@@ -50,7 +50,7 @@ reviews.
 ## 3. Building and validating on NixOS
 
 - CI (`ci.yaml`, plus `ci-25.11` and nightly `ci-unstable`, x86_64 runners) evaluates every
-  `nixosConfigurations.*.toplevel` and `packages.x86_64-linux` through `nix-eval-jobs`, then
+  `nixosConfigurations.*.config.system.build.toplevel` and `packages.x86_64-linux` through `nix-eval-jobs`, then
   builds `checks.x86_64-linux` (`.github/nix-flake-check-ci.sh`). `packages.aarch64-linux` is
   neither evaluated nor built, so check those yourself. Run it locally:
   `nix shell nixpkgs#nix-eval-jobs nixpkgs#jq --command ./.github/nix-flake-check-ci.sh`.
