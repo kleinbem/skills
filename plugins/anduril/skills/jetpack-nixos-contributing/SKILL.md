@@ -1,6 +1,6 @@
 ---
 name: jetpack-nixos-contributing
-description: Use when preparing an issue or PR for anduril/jetpack-nixos (NixOS on NVIDIA Jetson, with kernels, firmware, flashing and CUDA), or when building it on NixOS; covers the missing contribution docs, the PR template, eval-only CI, commit prefixes and who merges.
+description: Use when preparing an issue or PR for anduril/jetpack-nixos (NixOS on NVIDIA Jetson, with kernels, firmware, flashing and CUDA), or when building it on NixOS; covers the missing contribution docs, the PR template, CI (eval plus checks), commit prefixes and who merges.
 disable-model-invocation: true
 ---
 
@@ -49,9 +49,9 @@ reviews.
 
 ## 3. Building and validating on NixOS
 
-- CI (`ci.yaml`, plus `ci-25.11` and nightly `ci-unstable`) only **evaluates**: every
-  `nixosConfigurations.*.toplevel`, packages and checks through `nix-eval-jobs`
-  (`.github/nix-flake-check-ci.sh`). Run it locally:
+- CI (`ci.yaml`, plus `ci-25.11` and nightly `ci-unstable`, x86_64 runners) evaluates every
+  `nixosConfigurations.*.toplevel` and package through `nix-eval-jobs`, then builds every
+  `checks.<system>` (`.github/nix-flake-check-ci.sh`). Nothing aarch64 gets built. Run it locally:
   `nix shell nixpkgs#nix-eval-jobs nixpkgs#jq --command ./.github/nix-flake-check-ci.sh`.
 - Builds are aarch64. Build on the Orin (or another aarch64 builder), not under emulation on the
   workstation, and test on hardware: the PR template asks which SoM and carrier board.
@@ -87,7 +87,7 @@ Measured 2026-11-07 (commands in `contribution-skill-authoring`, section 3):
 
 - No fork yet; clone at `~/Develop/github.com/anduril/jetpack-nixos`. kleinbem/nix-hardware pins
   it (`orin-nano.nix`, an Orin Nano Super on JetPack 6).
-- nix-hardware carries an `nftables-fleet` kernel patch (NFT_CT, NFT_FIB_*, NFT_REDIR …) for the
+- nix-hardware carries the `nftables-fleet` kernel patch (NFT_CT, NFT_FIB_*, NFT_REDIR …) for the
   NixOS nftables firewall; tracking: kleinbem/nix-hardware#107.
 
 ## Review checklist
