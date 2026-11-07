@@ -29,6 +29,7 @@ model invocation of manual skills.
 | Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
 | Noooste (personal account) | `noooste-org` | `garage-ui-contributing` |
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
+| anduril | `anduril-org` | `jetpack-nixos-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -64,6 +65,7 @@ is authoritative; update this table when one changes):
 | block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
 | Noooste/garage-ui | yes; features issue first | features | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (PR title only, squash) |
 | tifyr/gimp3-mcp | yes | no | agent drafts, Martin reviews | no policy; repo itself uses `Co-Authored-By: Claude …`; one disclosure line in the PR | no | plain sentence, no prefix |
+| anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; one disclosure line in the PR | no | `<component>: …`, merge commits |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which

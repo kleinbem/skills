@@ -59,6 +59,11 @@
       "name": "tifyr",
       "source": "./plugins/tifyr",
       "description": "tifyr organization (tifyr/gimp3-mcp): tifyr-org (security, repo table), gimp3-mcp-contributing"
+    },
+    {
+      "name": "anduril",
+      "source": "./plugins/anduril",
+      "description": "Anduril organization (anduril/jetpack-nixos): anduril-org (security, repo table), jetpack-nixos-contributing"
     }
   ]
 }
