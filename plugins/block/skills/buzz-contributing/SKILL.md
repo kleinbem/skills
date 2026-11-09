@@ -79,12 +79,26 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
 
 Environment notes (NixOS):
 - Hermit runs here (nix-ld): `. ./bin/activate-hermit`, or call `bin/cargo` (1.98.1), `bin/just`
-  (1.46.0), `bin/node`, `bin/pnpm`, `bin/lefthook` (2.1.3) directly (verified 2026-11-09). jj
-  doesn't run git hooks, so run `bin/lefthook run pre-commit` and the DCO check by hand.
+  (1.46.0), `bin/node`, `bin/pnpm`, `bin/lefthook` (2.1.3) directly (verified 2026-11-09).
   Fallback: `nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc nixpkgs#rustfmt nixpkgs#clippy`.
-- `just ci` (the full gate) builds everything: run it on a GitHub runner with
-  `run.yml` (`-f repo=kleinbem/buzz -f script='just ci'`), not on the PC, and say in the PR
-  which run it was.
+- jj doesn't run git hooks, and lefthook's pre-commit lanes act on staged files, which jj never
+  stages: `bin/lefthook run pre-commit` checks nothing. Run the recipes those lanes run for the
+  paths the change touches (Rust: `just fmt-check`, `just clippy`; `just file-size-check`
+  always), and the DCO check by hand.
+- Gates that build a lot go to a GitHub runner, not the PC. Proven script (buzz#8071,
+  2026-11-09: fmt-check 5 s, clippy 332 s, file-size-check 4 s, test-unit 25 min) in
+  `~/.cache/buzz-gates-runner.sh`; it needs the PR's base SHA in `BASE`:
+  ```bash
+  . ./bin/activate-hermit
+  rustup component add rustfmt clippy   # the runner's toolchain is minimal
+  git fetch --no-tags --depth=1 origin "$BASE"
+  export CHECK_FILE_SIZES_BASE=$BASE    # a shallow checkout has no merge base
+  just fmt-check && just clippy && just file-size-check && just test-unit
+  ```
+  Dispatch: `gh workflow run run.yml -R kleinbem/mesh-llm-ci -f repo=kleinbem/buzz
+  -f ref=<head SHA> -f platform=linux -f toolchain=1.98.1 -f script="$(cat <script>)"`.
+  The rest of `just ci` (desktop, web, Flutter mobile) needs pnpm dependencies and Flutter: run
+  it when the change touches those, and say in the PR which parts ran.
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
   environment of a Tauri app's Nix build (`nix-shell -A goose-desktop` in nixpkgs, then `pnpm build`).
 
