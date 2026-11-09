@@ -107,7 +107,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   service's user), validate each, and run at least one test through the real program, not only
   the parser. Where a rule depends on the host (permissions, mounts, kernel limits), check it at
   startup with a side-effect-free probe in the same context (buzz#8071 runs a one-line script
-  with the hook's `#!` line that only exits), never by running the configured operation itself. block/buzz#8071 checked only for line breaks; a reviewer found that a
+  with the hook's `#!` line that only exits), never by running the configured operation itself.
+  A value that only arrives later (per request, per message) is validated where it's received. block/buzz#8071 checked only for line breaks; a reviewer found that a
   path with a space passed and the kernel couldn't launch the hook.
 
 ## 3. Building and validating on NixOS
