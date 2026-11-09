@@ -108,7 +108,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   the parser. Where a rule depends on the host (permissions, mounts, kernel limits), check it at
   startup with a side-effect-free probe in the same context (buzz#8071 runs a one-line script
   with the hook's `#!` line that only exits), never by running the configured operation itself.
-  A value that only arrives later (per request, per message) is validated where it's received. block/buzz#8071 checked only for line breaks; a reviewer found that a
+  A value that only arrives later (per request, per message) gets its syntax checked where it's
+  received and its host-dependent rules where it's used (a worker on another host may differ). block/buzz#8071 checked only for line breaks; a reviewer found that a
   path with a space passed and the kernel couldn't launch the hook.
 
 ## 3. Building and validating on NixOS
