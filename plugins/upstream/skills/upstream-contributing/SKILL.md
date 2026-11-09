@@ -141,7 +141,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   headings of your own (a PR template's sections stay), no filler, no work log or file inventory. No
   commit hashes in comments or replies ("fixed in a85ded92"): say what changed instead.
   Comments aren't small talk and don't hand decisions back ("should I push it here or as a
-  follow-up?"): decide, and say what happens.
+  follow-up?"): decide, and say what happens. No stock openers such as "good catch" (Martin
+  doesn't use the phrase): start with what changed.
   That holds for hidden HTML comments in a body too: anyone can read them in the raw text or
   the API. Test evidence for the reviewer goes into the review handoff.
 - Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the
