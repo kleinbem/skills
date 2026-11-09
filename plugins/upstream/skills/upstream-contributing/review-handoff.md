@@ -48,6 +48,9 @@ Review only: don't edit, commit, push or comment anywhere. Read `upstream-contri
   cover (behaviour on restart and upgrade, runtime dependencies, closure size, platforms, update
   scripts, what a maintainer asks on first read)
 - On a first round: the repo skill's "Review checklist", plus anything specific to this change
+- Every value the change writes into another program's input (a `#!` line, a shell command, a
+  URL, a unit or config file): which inputs does the validation accept that the program would
+  reject or read differently?
 
 **Output**
 Findings ranked by severity (blocker, should fix, nit), each with file:line, the rule or source it

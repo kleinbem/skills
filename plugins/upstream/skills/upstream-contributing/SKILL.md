@@ -99,6 +99,18 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Stay inside the agreed scope. Every new flag or option is an interface upstream maintains; leave
   to the downstream what it can do robustly itself.
 - Title and body claim no more than the code does.
+- A value written into another program's input (a `#!` line, a shell command, a URL, a systemd
+  unit, a config file) is validated against that program's rules, not only against injection.
+  List them from its source or docs first (the interpreter path of a `#!` line: no space or
+  tab, since the kernel splits there and passes the rest as one argument; the whole line,
+  argument included, within the 255 bytes Linux 5.1+ reads before the newline; runnable by the
+  service's user), validate each, and run at least one test through the real program, not only
+  the parser. Where a rule depends on the host (permissions, mounts, kernel limits), check it at
+  startup with a side-effect-free probe in the same context (buzz#8071 runs a one-line script
+  with the hook's `#!` line that only exits), never by running the configured operation itself.
+  A value that only arrives later (per request, per message) gets its syntax checked where it's
+  received and its host-dependent rules where it's used (a worker on another host may differ). block/buzz#8071 checked only for line breaks; a reviewer found that a
+  path with a space passed and the kernel couldn't launch the hook.
 
 ## 3. Building and validating on NixOS
 
@@ -135,7 +147,8 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   headings of your own (a PR template's sections stay), no filler, no work log or file inventory. No
   commit hashes in comments or replies ("fixed in a85ded92"): say what changed instead.
   Comments aren't small talk and don't hand decisions back ("should I push it here or as a
-  follow-up?"): decide, and say what happens.
+  follow-up?"): decide, and say what happens. No stock openers such as "good catch" (Martin
+  doesn't use the phrase): start with what changed.
   That holds for hidden HTML comments in a body too: anyone can read them in the raw text or
   the API. Test evidence for the reviewer goes into the review handoff.
 - Write references to other repos in full (`Owner/repo#123`): a bare `#123` links into the

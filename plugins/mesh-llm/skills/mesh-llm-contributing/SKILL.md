@@ -348,6 +348,8 @@ merged PRs; numbers are examples):
     an early return) fails the test instead of satisfying it (#2720).
   - **Path and environment predicates:** before opening, write down the directory, symlink,
     empty, relative, non-executable and non-UTF-8 cases (#2494, #2648, #2712, #2863, #2939).
+    A value passed on to another program follows that program's rules (`upstream-contributing`,
+    section 2).
   - **Invariants hold in tests:** a fixture doesn't loosen what the code guarantees (a child's
     cleared environment, no silent defaults) to make itself pass (#2939).
   - **Repo-wide rules** (AGENTS.md, docs): grep for code that legitimately breaks the rule and
@@ -442,6 +444,7 @@ For the review before ready (`upstream-contributing`, section 6):
   Validation with only run boxes ticked); no `TODO` left.
 - The "right before opening" list in section 4, and the pre-flight on the exact head.
 - The independent reviewer's brief asks about sibling sites, `cfg` gating per platform, the
-  code's invariants and the repo's own rules, not only whether the change works.
+  code's invariants, the repo's own rules and the rules of any program a value is passed on to,
+  not only whether the change works.
 - `ci/slices.yml` and `ci/ownership.yml` identical to main's (section 5).
 - New or changed tests pass the clean-build-environment list (section 1).

@@ -145,6 +145,10 @@ For the review before ready (`upstream-contributing`, section 6; `AGENTS.md` req
 - `AGENTS.md`'s Review-Proven Rules (section 0), one by one against the diff.
 - Regression test fails on `main` and passes on the branch, through the production seam
   (section 2); `TESTING.md` followed.
+- A value written into another program's input (the git hook's `#!` line, a shell command, a
+  URL) is validated against that program's rules, with a test through the real program
+  (`upstream-contributing`, section 2; #8071: a path with a space passed config and broke the
+  hook).
 - Docs: new config variables in `README.md` or `.env.example`; event kinds, MCP tools, APIs per
   the CONTRIBUTING how-tos.
 - Migrations and schema: `docs/database.md` rules, every schema location updated.
