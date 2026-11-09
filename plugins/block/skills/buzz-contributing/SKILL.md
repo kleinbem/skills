@@ -88,8 +88,9 @@ Environment notes (NixOS):
 - Gates that build a lot go to a GitHub runner, not the PC. Proven script (buzz#8071,
   2026-11-09: fmt-check 5 s, clippy 332 s, file-size-check 4 s, test-unit 25 min) in
   `~/.cache/buzz-gates-runner.sh`. The runner inherits nothing from your shell, so the script
-  starts with the merge base written in (`jj log -r 'heads(::main@upstream & ::<head>)'`; not
-  the PR's base SHA, which differs once main moves):
+  starts with the merge base written in, in full (`git fetch` needs the whole SHA:
+  `jj log --no-graph -r 'heads(::main@upstream & ::<head>)' -T 'commit_id ++ "\n"'`; not the
+  PR's base SHA, which differs once main moves):
   ```bash
   BASE=<merge-base SHA>
   . ./bin/activate-hermit
@@ -103,7 +104,8 @@ Environment notes (NixOS):
   The rest of `just ci` (desktop, web, Flutter mobile) needs pnpm dependencies and Flutter: run
   it when the change touches those, and say in the PR which parts ran. The desktop crate isn't in
   the root workspace, so `just clippy` misses it: when a change touches a crate it depends on
-  (the path dependencies in `desktop/src-tauri/Cargo.toml`), also run `just desktop-tauri-clippy`
+  (the path dependencies in `desktop/src-tauri/Cargo.toml`) or the root `Cargo.toml`,
+  `Cargo.lock` or `rust-toolchain.toml` (lefthook's desktop lane selects these too), also run `just desktop-tauri-clippy`
   and `just desktop-tauri-test` (not yet tried on a runner; they need GTK/WebKitGTK).
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
   environment of a Tauri app's Nix build (`nix-shell -A goose-desktop` in nixpkgs, then `pnpm build`).
