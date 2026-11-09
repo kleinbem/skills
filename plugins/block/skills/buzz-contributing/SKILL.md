@@ -103,10 +103,12 @@ Environment notes (NixOS):
   -f ref=<head SHA> -f platform=linux -f toolchain=1.98.1 -f script="$(cat <script>)"`.
   The rest of `just ci` (desktop, web, Flutter mobile) needs pnpm dependencies and Flutter: run
   it when the change touches those, and say in the PR which parts ran. The desktop crate isn't in
-  the root workspace, so `just clippy` misses it: when a change touches a crate it depends on
-  (the path dependencies in `desktop/src-tauri/Cargo.toml`) or the root `Cargo.toml`,
-  `Cargo.lock` or `rust-toolchain.toml` (lefthook's desktop lane selects these too), also run `just desktop-tauri-clippy`
-  and `just desktop-tauri-test` (not yet tried on a runner; they need GTK/WebKitGTK).
+  the root workspace, so `just clippy` misses it. lefthook's pre-push `desktop-tauri-checks` lane
+  runs `just desktop-tauri-clippy && just desktop-tauri-test` for any change under
+  `desktop/src-tauri/**`, `crates/**`, `migrations/**`, `schema/**`, or to `Cargo.toml`,
+  `Cargo.lock`, `rust-toolchain.toml`, `deny.toml`, `scripts/run-tests.sh` or `Justfile`, whether
+  or not the desktop depends on the changed crate: run them for those changes too (they need
+  GTK/WebKitGTK).
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
   environment of a Tauri app's Nix build (`nix-shell -A goose-desktop` in nixpkgs, then `pnpm build`).
 
