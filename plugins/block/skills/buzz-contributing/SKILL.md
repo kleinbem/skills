@@ -78,9 +78,13 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
    locally, state precisely which parts did run.
 
 Environment notes (NixOS):
-- Hermit's `bin/cargo` doesn't run on NixOS; use nixpkgs' toolchain
-  (`nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc nixpkgs#rustfmt nixpkgs#clippy`,
-  plus `pkg-config openssl` for crates that need them).
+- Hermit runs here (nix-ld): `. ./bin/activate-hermit`, or call `bin/cargo` (1.98.1), `bin/just`
+  (1.46.0), `bin/node`, `bin/pnpm`, `bin/lefthook` (2.1.3) directly (verified 2026-11-09). jj
+  doesn't run git hooks, so run `bin/lefthook run pre-commit` and the DCO check by hand.
+  Fallback: `nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc nixpkgs#rustfmt nixpkgs#clippy`.
+- `just ci` (the full gate) builds everything: run it on a GitHub runner with
+  `run.yml` (`-f repo=kleinbem/buzz -f script='just ci'`), not on the PC, and say in the PR
+  which run it was.
 - The desktop crate needs GTK/WebKitGTK and the built frontend (`desktop/dist`); test it in the
   environment of a Tauri app's Nix build (`nix-shell -A goose-desktop` in nixpkgs, then `pnpm build`).
 

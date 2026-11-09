@@ -102,9 +102,15 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 
 ## 3. Building and validating on NixOS
 
-- Upstream's tool bootstrap (Hermit, prebuilt toolchains) usually doesn't run on NixOS. Use
-  `nix shell nixpkgs#…` with the inputs nixpkgs' package of the project uses; follow the repo's
-  `rust-toolchain.toml` with `nixpkgs#rustup` when nixpkgs' `rustc` is older.
+- Upstream's tool bootstrap (Hermit, prebuilt toolchains) runs on the fleet's NixOS hosts,
+  because nix-ld is enabled (nix-config `modules/nixos/core.nix`). Use it, so tool versions match
+  upstream exactly (verified 2026-11-09: buzz's and buzz-app's `bin/cargo` 1.98.1, `bin/just`,
+  `bin/node`, `bin/pnpm`, `bin/lefthook`); nixpkgs' versions differ (rustc 1.99 lints
+  differently, lefthook is below buzz-app's `min_version`). Hermit pins toolchains, not system
+  libraries: GUI crates still need GTK/WebKitGTK from a Nix build env. Fall back to
+  `nix shell nixpkgs#…` (the inputs nixpkgs' package of the project uses) only where a tool fails.
+- Heavy full gates (buzz's `just ci`, whole-workspace builds) go to GitHub runners, not the PC:
+  `run.yml` in kleinbem/mesh-llm-ci takes any repo, and Hermit runs there too.
 - A failing test or warning: compare against unmodified `main` on the same host before blaming the
   change. Say "suspected" until a cause is proven.
 - A regression test must fail on the old code: run it once without the fix.

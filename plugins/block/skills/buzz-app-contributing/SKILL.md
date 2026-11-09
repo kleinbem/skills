@@ -102,7 +102,8 @@ Upstream's gate is its Lefthook hooks plus CI; `just scan` is explicitly **not**
 - **jj doesn't run git hooks.** Run them by hand before pushing: `bin/lefthook run pre-commit
   --all-files` and the push checks (`bin/pnpm exec tsc --noEmit`, `bin/pnpm exec vitest run
   <paths>`, `bin/pnpm design:typecheck && bin/pnpm design:check`, `bin/cargo fmt --all -- --check`,
-  the clippy line above). On NixOS drop the `bin/` prefix and use the nix shells below.
+  the clippy line above). Hermit runs on the fleet's NixOS (nix-ld), so the `bin/` commands
+  work as written.
 - jj: `jj squash` into a described commit opens an editor; pass `--use-destination-message`.
 - Manual testing of shipped behaviour uses `BUZZ_DEV_VIEWER= just desktop` (native path);
   broker-backed `just web` runs "do not count as acceptance". Report host and mode exercised.
@@ -111,7 +112,9 @@ Upstream's gate is its Lefthook hooks plus CI; `just scan` is explicitly **not**
 NixOS notes (as of 2026-11-01):
 - Hermit pins just 1.58.0, Node 24.18.0, pnpm 11.8.0, CMake; Rust 1.98.1 now comes from
   `rust-toolchain.toml` through Hermit's `rustup` (#1871), stock Lefthook 2.2.2
-  (the patched `2.2.3-buzz.1` is gone since #1644). We use nixpkgs instead of Hermit.
+  (the patched `2.2.3-buzz.1` is gone since #1644). **Use Hermit:** it runs here since nix-ld
+  (verified 2026-11-09: `bin/cargo` 1.98.1, `bin/lefthook` 2.2.2, which satisfies `min_version`).
+  The nixpkgs notes below are the fallback.
 - Verified: `nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_11 -c pnpm install --frozen-lockfile
   --ignore-scripts`; in that shell `node --test tests/integration/<file>` and
   `pnpm exec biome check --error-on-warnings <files>` run.
