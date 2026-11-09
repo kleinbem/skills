@@ -99,6 +99,12 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Stay inside the agreed scope. Every new flag or option is an interface upstream maintains; leave
   to the downstream what it can do robustly itself.
 - Title and body claim no more than the code does.
+- A value written into another program's input (a `#!` line, a shell command, a URL, a systemd
+  unit, a config file) is validated against that program's rules, not only against injection.
+  List them from its source or docs first (a `#!` line: no space or tab, at most 253 bytes on
+  Linux, an executable file), validate each, and run at least one test through the real program,
+  not only the parser. block/buzz#8071 checked only for line breaks; a reviewer found that a
+  path with a space passed and the kernel couldn't launch the hook.
 
 ## 3. Building and validating on NixOS
 
