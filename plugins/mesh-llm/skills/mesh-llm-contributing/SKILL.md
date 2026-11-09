@@ -8,6 +8,9 @@ disable-model-invocation: true
 
 Layer 3 of 3: read `upstream-contributing` and `mesh-llm-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to Mesh-LLM/mesh-llm and wins where they differ.
+PR and issue numbers (`#2577`) refer to Mesh-LLM/mesh-llm unless another repository is named:
+open them as `https://github.com/Mesh-LLM/mesh-llm/issues/<N>` (GitHub redirects a PR number to the
+PR), or with `gh pr view <N> -R Mesh-LLM/mesh-llm` for a PR and `gh issue view <N> -R Mesh-LLM/mesh-llm` for an issue.
 
 Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGENTS.md`,
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
@@ -327,6 +330,35 @@ merged PRs; numbers are examples):
   - the pre-flight ran on the exact head commit, also after a message-only amend (an identical
     tree can be shown with `git rev-parse <old>^{tree} <new>^{tree}`, but run it anyway);
   - the body has no `TODO` left and all PR cross-links are filled in.
+- **Checks from review history** (2026-11-09 review of all our PRs; each line is a miss a
+  reviewer or bot had to point out):
+  - **Sibling sites:** grep the whole repo for the construct you replace (e.g. `Client::builder()`)
+    and for every producer and consumer of a changed format; list the sites and their count in
+    Fix, and why any stay (#2577 missed two local clients, #2755 the validator, #2303 three Bash
+    sites).
+  - **Platforms:** code behind `cfg` is gated exactly like its callers, and Clippy `-D warnings`
+    runs for the macOS and Windows targets of the touched crates, not only Linux (#2939:
+    `dead_code` on Windows). Shell arrays expand as `${a[@]+"${a[@]}"}`, and a changed script's
+    tests run under macOS `/bin/bash` 3.2 (#2303).
+  - **Loopback HTTP clients** trust no CA roots, follow no redirects and ignore proxies, with a
+    test for each property (#2491, #2492, #2577). Mesh code gets one from
+    `mesh_llm_system::local_http::local_http_client_builder()`; Skippy code, which can't depend
+    on Mesh (section 0), builds its own with the same properties.
+  - **No vacuous passes:** assert that the path under test ran, so a fallback (`None`, a skip,
+    an early return) fails the test instead of satisfying it (#2720).
+  - **Path and environment predicates:** before opening, write down the directory, symlink,
+    empty, relative, non-executable and non-UTF-8 cases (#2494, #2648, #2712, #2863, #2939).
+  - **Invariants hold in tests:** a fixture doesn't loosen what the code guarantees (a child's
+    cleared environment, no silent defaults) to make itself pass (#2939).
+  - **Repo-wide rules** (AGENTS.md, docs): grep for code that legitimately breaks the rule and
+    write the exception into it (#2754).
+  - **"This API is gone"** only after checking every SDK entry point and its known consumers
+    (#2564).
+  - **Distribution-driven changes** are tested in the build environment of the distribution that
+    drove them, with the patch applied; for our Nix-driven changes that is nixpkgs' package in the
+    sandbox on x86_64-linux, aarch64-linux and aarch64-darwin (#2939: the darwin sandbox refused
+    `/bin/sleep`, which runners never show). When more runs make a result more
+    certain (repeats under load, more platforms), run them.
 - The human submitter reviews the change before it is opened. Never claim review or testing in
   their name that they did not do.
 - PRs here open non-draft, so the independent review (`upstream-contributing`, section 6) runs
@@ -409,5 +441,7 @@ For the review before ready (`upstream-contributing`, section 6):
 - Template sections filled (Original problem, Diagnostics naming the introducing PR, Fix,
   Validation with only run boxes ticked); no `TODO` left.
 - The "right before opening" list in section 4, and the pre-flight on the exact head.
+- The independent reviewer's brief asks about sibling sites, `cfg` gating per platform, the
+  code's invariants and the repo's own rules, not only whether the change works.
 - `ci/slices.yml` and `ci/ownership.yml` identical to main's (section 5).
 - New or changed tests pass the clean-build-environment list (section 1).
