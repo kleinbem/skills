@@ -106,9 +106,9 @@ relevant section before acting on a rule from memory.
    In a shallow clone, nixpkgs-review's fetch of the base fails ("unrelated histories"): create a
    local base branch and pass `--remote file://<clone> --branch <base>`.
    When dispatching multi-platform CI (`nixpkgs-review-gha`):
-   - Include test derivations in the build matrix (e.g. `<attr>`, `<attr>.tests.<name>`), or use `--tests` with the review workflow.
+   - Include test derivations in the build matrix (e.g. `<attr>`, `<attr>.tests.<name>`).
    - Separate NixOS VM tests from the multi-platform matrix: run VM tests on a KVM-capable Linux builder, as fleet ARM runners lack KVM and fail on VM tests.
-   - Target active platforms only (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`); do not include deprecated tiers (e.g. `x86_64-darwin` dropped in 26.11).
+   - Target active platforms for the target branch (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`). For 26.05 changes specific to `x86_64-darwin`, include that platform; it was dropped in 26.11.
    Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
    run that comments) is a public action that needs the submitter's explicit OK.
    A nixpkgs-review-gha run shows "success" even when packages failed to build; judge it with
