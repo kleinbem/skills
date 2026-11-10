@@ -34,6 +34,11 @@ model invocation of manual skills.
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
 
+Martin maintains Nixpkgs packages (`kleinbem` in `meta.maintainers`). Read `nixpkgs-maintaining`
+too for any work on one of them: others' PRs and issues, r-ryantm updates, Hydra failures, review
+requests. Open items are posted daily in the open kleinbem/nix-packages issue "Watch: maintained
+nixpkgs packages"; check it before starting.
+
 ## First contact: a repo or organization without a skill
 
 **No issue, PR or comment goes to a repo before it has a repository skill.** Follow
