@@ -137,6 +137,11 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 - Checks and test suites go to GitHub runners where we have them (`kleinbem/mesh-llm-ci`,
   nixpkgs-review-gha); the workstation is for builds and behaviour tests. Run heavy local builds
   one at a time (parallel Rust/CUDA/VM builds fail on memory).
+- When upstream skips a lint on a platform (Mesh-LLM: Clippy on Linux only; buzz-app: Windows
+  Clippy on manual dispatch), its main carries findings there, so a plain `-D warnings` run fails
+  every change. Compare with the merge base instead: `clippy-diff.yml` in kleinbem/mesh-llm-ci
+  fails only on findings the head adds (works for any Rust repo; inputs in its README). Our change
+  adds none; old findings get fixed only when in scope.
 
 ## 4. Texts: commits, PR body, comments
 

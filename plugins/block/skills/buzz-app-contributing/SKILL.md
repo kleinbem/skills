@@ -159,7 +159,12 @@ Marking ready also triggers the Codex review (section 6).
   `action_required` until a maintainer approves the run (#1556, #1571, #1576 on 2026-10-23).
   Normal, not a failure. An approval alone doesn't unblock it: #1556 and #881 were approved
   (10-25, 10-26) and still had no `CI` run on 10-28. Windows validation is manual dispatch only;
-  Linux CI is not Windows evidence (#1247 fixed tests that failed there).
+  Linux CI is not Windows evidence (#1247 fixed tests that failed there). main fails that Windows
+  job (9 findings on 2026-11-09), so check a change with `clippy-diff.yml` in kleinbem/mesh-llm-ci:
+  `-f repo=kleinbem/buzz-app -f platform=windows -f toolchain=repo
+  -f packages='Buzz buzz-agent-controller buzz-credential-store buzz-mesh-compute'` plus the
+  merge base and head SHAs; it fails only on findings the change adds (#1778, #1779, #1780, #1961:
+  0 new each).
 - Advisory flake check reruns changed tests 10× per engine; a flaky new test shows up there.
 - **Reviewers are mostly agents** run through maintainers' accounts:
   `chatgpt-codex-connector[bot]` (on open, ready, or `@codex review`; P1–P3 badges; reviews
