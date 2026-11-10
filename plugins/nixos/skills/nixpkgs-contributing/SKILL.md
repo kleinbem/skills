@@ -99,14 +99,14 @@ relevant section before acting on a rule from memory.
    CI doesn't run it), variant `meta.position`, workaround links, and whether a derivation
    changed, so you know which tests must rerun. Not a git hook: worktrees come and go per PR.
 3. `nix-build -A <attr>` (sandbox enabled)
-4. `nix-build -A <attr>.passthru.tests` and any relevant `nixosTests.<name>`
-5. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`).
-6. **Empirical measurements**: If a change modifies dependencies or tags, measure exact closure size deltas with `nix path-info -Sh <new> <old>` and binary size deltas. Never guess or round numbers in the PR body.
+4. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`).
+5. `nix-build -A <attr>.tests.<name>` (or individual derivations in `passthru.tests`, as attrsets cannot be built directly) and any relevant `nixosTests.<name>`
+6. **Empirical measurements**: If a change modifies dependencies or tags, measure exact unrounded closure byte sizes with `nix path-info -S <new> <old>` (and `-Sh` for summary) and binary size deltas. Never guess or round numbers in the PR body.
 7. `nixpkgs-review wip` (pre-commit) or `nixpkgs-review pr <N>` (after push) to build dependents.
    In a shallow clone, nixpkgs-review's fetch of the base fails ("unrelated histories"): create a
    local base branch and pass `--remote file://<clone> --branch <base>`.
    When dispatching multi-platform CI (`nixpkgs-review-gha`):
-   - Include `passthru.tests` in the build matrix (`<attr>`, `<attr>.passthru.tests`).
+   - Include individual test derivations in the build matrix (e.g. `<attr>`, `<attr>.tests.<name>`), or use `--tests` if using the review workflow (`passthru.tests` is an attrset, not a derivation).
    - Target active platforms only (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`); do not include deprecated tiers (e.g. `x86_64-darwin` dropped in 26.11).
    Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
    run that comments) is a public action that needs the submitter's explicit OK.
