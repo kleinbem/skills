@@ -143,8 +143,9 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   fails only on findings the head adds (works for any Rust repo; inputs in its README). Our change
   adds none; old findings get fixed only when in scope. It compares per lint, file and message
   without line numbers (they shift with any edit), so a finding removed and an identical one added
-  in the same file cancel out: the summary lists the head's other findings in the touched files
-  (kleinbem/mesh-llm-ci#20), so check those lines by hand.
+  in the same file cancel out. The summary lists the head's other findings in the touched files
+  (kleinbem/mesh-llm-ci#20): check those lines by hand. A change to features, a macro or a shared
+  type can move findings into untouched files too; then go through the collapsed full list.
 
 ## 4. Texts: commits, PR body, comments
 
