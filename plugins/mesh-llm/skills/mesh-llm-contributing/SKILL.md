@@ -232,6 +232,14 @@ merged PRs; numbers are examples):
   (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
   the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log).
   What stays local: behaviour of a built binary and distribution-specific tests.
+  Upstream lints Clippy on Linux only, and main carries 44 Windows findings (2026-11-09, mostly
+  `tools/xtask` and tests; none on macOS). For a change to code that compiles on Windows, also run
+  `gh workflow run clippy-diff.yml -R kleinbem/mesh-llm-ci -f repo=kleinbem/mesh-llm
+  -f base=<merge-base SHA> -f head=<head SHA> -f platform=windows -f packages='<changed crates>'
+  -f features=mesh-llm-system/dynamic-native-runtime,mesh-llm-skippy-adapter/dynamic-native-runtime
+  -f toolchain=1.98.1`: it fails only on findings the change adds (#2969: base 1, head 1, 0 new).
+  Pass each feature only when its crate is selected or a selected package names it as a direct
+  dependency (Cargo's rule); omit both for e.g. `xtask` alone, where Cargo rejects them.
   The macOS and Windows rows run `--lib` only, as upstream's do; for integration tests
   (`tests/`) on those platforms add `-f targets=all` (kleinbem/mesh-llm-ci#3, until merged
   dispatch with `--ref macos-all-targets`). macOS code that spawns `ps` or `sysctl` passes on
