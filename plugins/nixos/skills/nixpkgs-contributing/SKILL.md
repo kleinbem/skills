@@ -87,20 +87,30 @@ relevant section before acting on a rule from memory.
   - `mainProgram`: hardcoded string, only if one main executable exists.
   - `platforms`: set. `sourceProvenance`: set if not built from source.
 - Add `passthru.updateScript = nix-update-script { };` where it works; link `passthru.tests` / `nixosTests`.
+- **Tests in `passthru.tests`**: use standard `runCommand`, NOT `testers.runCommand`. `testers.runCommand` is a fixed-output derivation with network access (designed to invalidate fetchers); hermetic package tests in nixpkgs must run offline.
+- **Package only what upstream ships**: do not handwrite shell completions in `postInstall` (`cat <<'EOF' > ...`); install completions, man pages and desktop files only when upstream provides them in `src` or generates them (`--generate-completion`).
+- **Minimal derivation interfaces**: do not invent bespoke package arguments (`databaseDrivers`, `features`) unless actively required by in-tree callers; use standard `tags` or `buildFeatures` lists.
 
 ## 3. Pre-push gate
-1. `nix fmt` (or `nix-shell --run treefmt`)
-2. `./ci/nixpkgs-vet.sh master`
-   and `nix-check-nixpkgs-pr --drvs-against <last pushed head>` (kleinbem/nix-toolbox, on `PATH`
-   in the workspace shell) in the PR worktree, before every push: deadnix on new files (nixpkgs
-   CI doesn't run it), variant `meta.position`, workaround links, and whether a derivation
-   changed, so you know which tests must rerun. Not a git hook: worktrees come and go per PR.
-3. `nix-build -A <attr>` (sandbox enabled)
-4. `nix-build -A <attr>.passthru.tests` and any relevant `nixosTests.<name>`
-5. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`)
+1. **Mechanical gate**: run `nix-check-nixpkgs-pr --pr-body <body-file> --drvs-against <last pushed head>` (kleinbem/nix-toolbox, on `PATH` in the workspace shell).
+   It executes the full mechanical verification in one pass:
+   - `nixfmt --check` on changed `.nix` files;
+   - `./ci/nixpkgs-vet.sh` structural check against the base revision;
+   - `nix-check-workarounds` links audit;
+   - derivation rules (`meta.position`, `deadnix`, `statix`, no `testers.runCommand`, no inline shell completions, `doCheck = false` reasons);
+   - PR body template preservation, AI policy checkbox, and disclosure verification.
+   **Never push or open a PR until this gate exits 0 with `✅ no failures`.**
+2. `nix-build -A <attr>` (sandbox enabled)
+3. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`).
+4. `nix-build -A <attr>.tests` for package test suites (selecting nested tests individually where needed) and any relevant `nixosTests.<name>`
+5. **Empirical measurements**: If a change modifies dependencies or tags, measure exact unrounded closure byte sizes with `nix path-info -S <new> <old>` (and `-Sh` for summary) and binary size deltas. Never guess or round numbers in the PR body.
 6. `nixpkgs-review wip` (pre-commit) or `nixpkgs-review pr <N>` (after push) to build dependents.
    In a shallow clone, nixpkgs-review's fetch of the base fails ("unrelated histories"): create a
    local base branch and pass `--remote file://<clone> --branch <base>`.
+   When dispatching multi-platform CI (`nixpkgs-review-gha`):
+   - Include test derivations in the build matrix (e.g. `<attr>`, `<attr>.tests.<name>`).
+   - Separate NixOS VM tests from the multi-platform matrix: run VM tests on a KVM-capable Linux builder, as fleet ARM runners lack KVM and fail on VM tests.
+   - Target active platforms for the target branch (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`). For 26.05 changes specific to `x86_64-darwin`, include that platform; it was dropped in 26.11.
    Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
    run that comments) is a public action that needs the submitter's explicit OK.
    A nixpkgs-review-gha run shows "success" even when packages failed to build; judge it with
@@ -110,14 +120,17 @@ relevant section before acting on a rule from memory.
    `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`. A major or breaking package change
    gets a Nixpkgs release note in `doc/release-notes`; a package removal gets a throwing alias
    instead of a note (`CONTRIBUTING.md`, "Release notes").
-8. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
-   Tick a box only once it is true for the exact commits being pushed.
+8. Fill in the PR template checkboxes honestly (`.github/PULL_REQUEST_TEMPLATE.md`).
+   Never remove section headings or replace checkboxes with custom bullets. Tick a box only
+   once it is true for the exact commits being pushed, and always include the mandatory
+   automation/AI policy disclosure.
 
 ## 4. What reviewers commonly ask for
 Recurring themes from committer reviews of comparable PRs (Tauri/Rust apps, services with
 modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148, #287923, #278454).
 - **Explain every non-obvious choice in a Nix comment**, including why a test is skipped or
   `doCheck = false` (e.g. "no tests", "skipped in upstream CI too" with a link).
+- **Justify closure growth**: If a change increases closure size (e.g. new source drivers, AWS/GCP SDKs), explain the trade-off immediately in the first paragraph of the PR body (upstream release parity, URLs/features enabled) to preempt "closure bloat" objections.
 - **Patches:** turn non-trivial inline `substituteInPlace` into patch files. For each hunk ask
   "does it need Nix-specific knowledge?"; if not, it belongs upstream (link the upstream PR).
   The reviewer checklist (`pkgs/README.md`, "Reviewing contributions") requires every patch to
