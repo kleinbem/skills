@@ -55,10 +55,12 @@ Follow `AGENTS.md`; reviewers and the AI reviewer check against it:
 
 ## 2. Building and testing on NixOS
 
-Upstream uses Hermit (`source bin/activate-hermit`), which downloads prebuilt tools that usually don't run on NixOS.
-Use Nix instead:
-- Rust: the repo pins a toolchain in `rust-toolchain.toml` (1.99.0 on 2026-10-18), newer than nixpkgs' `rustc`. Use
-  `nix shell nixpkgs#rustup` (nixpkgs' rustup patches the toolchains it downloads), which follows the pin.
+Upstream uses Hermit (`source bin/activate-hermit`). Its prebuilt tools run on the fleet's NixOS
+since nix-ld (verified for buzz and buzz-app 2026-11-09; check `bin/cargo --version` here first).
+- Rust: the repo pins a toolchain in `rust-toolchain.toml` (1.99.0 on 2026-10-18), newer than nixpkgs' `rustc`. If
+  Hermit's `bin/cargo` fails, use `nix shell nixpkgs#rustup` (nixpkgs' rustup patches the toolchains it downloads),
+  which follows the pin.
+Either way, Hermit pins tools, not system libraries or test settings:
 - Build inputs, as nixpkgs' `goose-cli` package uses them: `cmake pkg-config protobuf` and libclang for bindgen
   (`LIBCLANG_PATH`), plus `dbus openssl` and on Linux `libxcb`. The V8 dependency downloads a prebuilt archive at
   build time unless `RUSTY_V8_ARCHIVE` points at one (nixpkgs: `librusty_v8`).
