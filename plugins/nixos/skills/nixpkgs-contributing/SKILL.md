@@ -87,6 +87,9 @@ relevant section before acting on a rule from memory.
   - `mainProgram`: hardcoded string, only if one main executable exists.
   - `platforms`: set. `sourceProvenance`: set if not built from source.
 - Add `passthru.updateScript = nix-update-script { };` where it works; link `passthru.tests` / `nixosTests`.
+- **Tests in `passthru.tests`**: use standard `runCommand`, NOT `testers.runCommand`. `testers.runCommand` is a fixed-output derivation with network access (designed to invalidate fetchers); hermetic package tests in nixpkgs must run offline.
+- **Package only what upstream ships**: do not handwrite shell completions in `postInstall` (`cat <<'EOF' > ...`); install completions, man pages and desktop files only when upstream provides them in `src` or generates them (`--generate-completion`).
+- **Minimal derivation interfaces**: do not invent bespoke package arguments (`databaseDrivers`, `features`) unless actively required by in-tree callers; use standard `tags` or `buildFeatures` lists.
 
 ## 3. Pre-push gate
 1. `nix fmt` (or `nix-shell --run treefmt`)
@@ -97,27 +100,34 @@ relevant section before acting on a rule from memory.
    changed, so you know which tests must rerun. Not a git hook: worktrees come and go per PR.
 3. `nix-build -A <attr>` (sandbox enabled)
 4. `nix-build -A <attr>.passthru.tests` and any relevant `nixosTests.<name>`
-5. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`)
-6. `nixpkgs-review wip` (pre-commit) or `nixpkgs-review pr <N>` (after push) to build dependents.
+5. Run the binaries in `./result/bin` with a meaningful invocation (not just `--help`).
+6. **Empirical measurements**: If a change modifies dependencies or tags, measure exact closure size deltas with `nix path-info -Sh <new> <old>` and binary size deltas. Never guess or round numbers in the PR body.
+7. `nixpkgs-review wip` (pre-commit) or `nixpkgs-review pr <N>` (after push) to build dependents.
    In a shallow clone, nixpkgs-review's fetch of the base fails ("unrelated histories"): create a
    local base branch and pass `--remote file://<clone> --branch <base>`.
+   When dispatching multi-platform CI (`nixpkgs-review-gha`):
+   - Include `passthru.tests` in the build matrix (`<attr>`, `<attr>.passthru.tests`).
+   - Target active platforms only (`x86_64-linux`, `aarch64-linux`, `aarch64-darwin`); do not include deprecated tiers (e.g. `x86_64-darwin` dropped in 26.11).
    Read results with `--print-result`; posting them (`--post-result`, or a nixpkgs-review-gha
    run that comments) is a public action that needs the submitter's explicit OK.
    A nixpkgs-review-gha run shows "success" even when packages failed to build; judge it with
    `scripts/review-result <run-id>` (per-system built/failed from the report, non-zero exit on
    any failure, `--wait` to block until done), never by the run status.
-7. A new NixOS module gets an entry under "New Modules" in
+8. A new NixOS module gets an entry under "New Modules" in
    `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`. A major or breaking package change
    gets a Nixpkgs release note in `doc/release-notes`; a package removal gets a throwing alias
    instead of a note (`CONTRIBUTING.md`, "Release notes").
-8. Fill in the PR template checkboxes honestly (platforms tested, sandboxing, review run).
-   Tick a box only once it is true for the exact commits being pushed.
+9. Fill in the PR template checkboxes honestly (`.github/PULL_REQUEST_TEMPLATE.md`).
+   Never remove section headings or replace checkboxes with custom bullets. Tick a box only
+   once it is true for the exact commits being pushed, and always include the mandatory
+   automation/AI policy disclosure.
 
 ## 4. What reviewers commonly ask for
 Recurring themes from committer reviews of comparable PRs (Tauri/Rust apps, services with
 modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148, #287923, #278454).
 - **Explain every non-obvious choice in a Nix comment**, including why a test is skipped or
   `doCheck = false` (e.g. "no tests", "skipped in upstream CI too" with a link).
+- **Justify closure growth**: If a change increases closure size (e.g. new source drivers, AWS/GCP SDKs), explain the trade-off immediately in the first paragraph of the PR body (upstream release parity, URLs/features enabled) to preempt "closure bloat" objections.
 - **Patches:** turn non-trivial inline `substituteInPlace` into patch files. For each hunk ask
   "does it need Nix-specific knowledge?"; if not, it belongs upstream (link the upstream PR).
   The reviewer checklist (`pkgs/README.md`, "Reviewing contributions") requires every patch to
