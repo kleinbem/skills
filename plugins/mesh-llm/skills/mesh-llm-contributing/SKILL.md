@@ -238,6 +238,8 @@ merged PRs; numbers are examples):
   -f base=<merge-base SHA> -f head=<head SHA> -f platform=windows -f packages='<changed crates>'
   -f features=mesh-llm-system/dynamic-native-runtime,mesh-llm-skippy-adapter/dynamic-native-runtime
   -f toolchain=1.98.1`: it fails only on findings the change adds (#2969: base 1, head 1, 0 new).
+  Pass `features` only when a selected package depends on those two crates (Cargo rejects the
+  selection for e.g. `xtask` alone).
   The macOS and Windows rows run `--lib` only, as upstream's do; for integration tests
   (`tests/`) on those platforms add `-f targets=all` (kleinbem/mesh-llm-ci#3, until merged
   dispatch with `--ref macos-all-targets`). macOS code that spawns `ps` or `sysctl` passes on

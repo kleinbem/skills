@@ -163,7 +163,8 @@ Marking ready also triggers the Codex review (section 6).
   job (9 findings on 2026-11-09), so check a change with `clippy-diff.yml` in kleinbem/mesh-llm-ci:
   `-f repo=kleinbem/buzz-app -f platform=windows -f toolchain=repo
   -f packages='Buzz buzz-agent-controller buzz-credential-store buzz-mesh-compute'` plus the
-  merge base and head SHAs; it fails only on findings the change adds (#1778, #1779, #1780, #1961:
+  merge base and head SHAs, adding any changed crate the list doesn't reach (e.g.
+  `buzz-agent-command`); it fails only on findings the change adds (#1778, #1779, #1780, #1961:
   0 new each).
 - Advisory flake check reruns changed tests 10× per engine; a flaky new test shows up there.
 - **Reviewers are mostly agents** run through maintainers' accounts:

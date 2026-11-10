@@ -141,7 +141,10 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   Clippy on manual dispatch), its main carries findings there, so a plain `-D warnings` run fails
   every change. Compare with the merge base instead: `clippy-diff.yml` in kleinbem/mesh-llm-ci
   fails only on findings the head adds (works for any Rust repo; inputs in its README). Our change
-  adds none; old findings get fixed only when in scope.
+  adds none; old findings get fixed only when in scope. It compares per lint, file and message
+  without line numbers (they shift with any edit), so a finding removed and an identical one added
+  in the same file cancel out: where the change touches a file that already has findings, check
+  its lines by hand.
 
 ## 4. Texts: commits, PR body, comments
 
