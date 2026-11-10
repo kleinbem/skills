@@ -89,8 +89,9 @@ Environment notes (NixOS):
   2026-11-09: fmt-check 5 s, clippy 332 s, file-size-check 4 s, test-unit 25 min) in
   `~/.cache/buzz-gates-runner.sh`. The runner inherits nothing from your shell, so the script
   starts with the merge base written in, in full (`git fetch` needs the whole SHA:
-  `jj log --no-graph -r 'heads(::main@upstream & ::<head>)' -T 'commit_id ++ "\n"'`; not the
-  PR's base SHA, which differs once main moves):
+  `jj log --no-graph -r 'heads(::main@<remote> & ::<head>)' -T 'commit_id ++ "\n"'` with the
+  remote that points at block/buzz: `upstream` in Martin's buzz checkout, where `origin` is the
+  fork, unlike the usual convention; not the PR's base SHA, which differs once main moves):
   ```bash
   BASE=<merge-base SHA>
   . ./bin/activate-hermit
