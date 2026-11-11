@@ -26,6 +26,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `archlinux` | `archlinux-org` | Arch Linux: no AI policy (our rule instead), governance, channels, 0BSD package sources, repo table |
 | `archlinux` | `aur-contributing` | The AUR: submission rules, PKGBUILD and Rust guidelines, split packages, clean-container builds in kleinbem/aur-packages |
 | `noooste` | `noooste-org` | Noooste (personal account): security reports, repo table |
+| `tao12345666333` | `tao12345666333-org` | tao12345666333 (personal account): security reports, repo table |
+| `tao12345666333` | `amp-acp-contributing` | tao12345666333/amp-acp: AGENTS.md doc table, Bun CI, fake-CLI tests, racy steering test, nixpkgs angle |
 | `noooste` | `garage-ui-contributing` | Noooste/garage-ui: Conventional Commits PR titles, coverage gate, maintainer's review style, nixpkgs angle |
 | `tifyr` | `tifyr-org` | tifyr organization: security reports, repo table |
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
