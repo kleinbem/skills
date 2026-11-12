@@ -26,7 +26,9 @@ for the touched area before acting; the project moves fast (several merges a day
 3. Check open PRs that touch the same files (`gh pr view <N> --json files`): the project merges
    several PRs a day and is moving scripts into Rust automation.
 4. Branch from current `main`; packaged releases (e.g. in nixpkgs) lag behind, and paths move
-   (e.g. `scripts/` → `skippy/scripts/`).
+   (e.g. `scripts/` → `skippy/scripts/`). The PR branch lives in Mesh-LLM/mesh-llm itself as
+   `kleinbem/<topic>`, not on the fork: Martin has write access (section 5), so CI runs and can be
+   rerun without a maintainer.
 5. Read the design docs for the area (`mesh/docs/design/`: crate ownership, testing, message
    protocol) and the notes in `references/` (e.g. `references/config-lifecycle.md` for anything
    in `MeshConfig`). Trace where a value you add goes (load, snapshot, apply, save) before
@@ -337,7 +339,10 @@ merged PRs; numbers are examples):
     test, search its name: a test "from the Skippy split (#2099)" came with #1718;
   - the pre-flight ran on the exact head commit, also after a message-only amend (an identical
     tree can be shown with `git rev-parse <old>^{tree} <new>^{tree}`, but run it anyway);
-  - the body has no `TODO` left and all PR cross-links are filled in.
+  - the body has no `TODO` left and all PR cross-links are filled in;
+  - the head branch is `kleinbem/<topic>` in Mesh-LLM/mesh-llm, not on the fork (#3017 and #3018
+    went out from the fork on 2026-11-11 although write access existed; their CI then needed a
+    maintainer's approval).
 - **Checks from review history** (2026-11-09 review of all our PRs; each line is a miss a
   reviewer or bot had to point out):
   - **Sibling sites:** grep the whole repo for the construct you replace (e.g. `Client::builder()`)
@@ -394,6 +399,12 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
     scratch branches upstream: they clutter the branch list and can start CI.
   - Write access is trust, not a shortcut: never push to `main` or to someone else's branch, never
     merge (maintainers do), no force-push on a PR under review beyond the usual rebase.
+  - A red lane that the change doesn't cause (a known flaky test): rerun only the failed jobs,
+    `gh run rerun <run-id> -R Mesh-LLM/mesh-llm --failed`, after checking the failure (root
+    `AGENTS.md`). With write access this also works on runs of the old fork PRs (#3018, 2026-11-12).
+    A recurring flake gets an issue with the cause and the affected runs (#3028).
+  - The repository deletes merged head branches (`delete_branch_on_merge`); delete a
+    `kleinbem/<topic>` branch yourself only when its PR is closed without merging.
 - Fork PRs (the ones opened before write access) wait in `action_required` until a maintainer
   approves the run, and each new push can need approval again: push once the change is complete,
   not in small steps. Runs left unapproved are closed as "failed" (zero jobs) when the PR merges;
