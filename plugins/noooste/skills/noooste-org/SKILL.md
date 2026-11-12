@@ -23,7 +23,7 @@ DCO check, no AI policy anywhere.
   reporting is on for garage-ui:
   `gh api repos/Noooste/<repo>/private-vulnerability-reporting --jq .enabled`). garage-ui's
   `CONTRIBUTING.md` says to email security bugs, but its address is blank (template leftover;
-  tracking: kleinbem/skills#131).
+  upstream: Noooste/garage-ui#156 points it to private reporting).
   Martin files security reports.
 - **Channels:** GitHub issues only (no Discussions, no chat).
 
