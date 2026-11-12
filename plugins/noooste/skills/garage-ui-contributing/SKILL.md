@@ -117,8 +117,11 @@ Measured 2026-11-01 (`upstream-contributing` / `contribution-skill-authoring` se
 
 - Downstream: nixpkgs `garage-ui` (NixOS/nixpkgs#580190, ready since 2026-11-01); the fleet runs it as a container
   on nixos-nvme (nix-presets `containers/garage-ui.nix`).
-- Clone at `~/Develop/github.com/Noooste/garage-ui` (jj, `origin` upstream); no fork yet. Fork
-  to `kleinbem/garage-ui` (remote `fork`) when the first PR opens.
+- Clone at `~/Develop/github.com/Noooste/garage-ui` (jj, `origin` upstream); fork
+  `kleinbem/garage-ui` (remote `fork`). Fork PRs' CI waits for the maintainer's approval
+  (`action_required`) until the first one merges.
+- Noooste/garage-ui#156 (draft, 2026-11-12): `CONTRIBUTING.md`'s blank security email points
+  to private vulnerability reporting instead. Workspace `garage-ui.ws/security-contact`.
 - PRs for Noooste/garage-ui#145 (runtime frontend fallback) and Noooste/garage-ui#146
   (`-version`) are ready locally in workspaces
   `garage-ui.ws/frontend-fallback` and `garage-ui.ws/version-flag` (2026-11-03). They wait for the
