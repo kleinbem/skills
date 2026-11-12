@@ -21,6 +21,9 @@ Sources: org repos and workflow configurations via `gh api`. As of 2026-11-12.
 
 ## 1. Org-wide facts
 
+- **Security:** Report vulnerabilities privately, not in public GitHub Issues. For Omarchy
+  (`omacom/omarchy`), use security@omarchy.org or the HackerOne program at hackerone.com/omarchy.
+  See https://github.com/omacom/omarchy/security.
 - **Channels:** GitHub Issues and Pull Requests. Upstream CI triggers notify Basecamp chatbot channels (`BASECAMP_CHATBOT_URL`).
 - **Packaging:** Arch Linux PKGBUILD recipes hosted in `omacom/omarchy-pkgs` powering `pkgs.omarchy.org`.
 

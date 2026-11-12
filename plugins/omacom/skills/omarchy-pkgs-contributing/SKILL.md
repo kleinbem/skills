@@ -45,5 +45,7 @@ Sources of truth in the repo: `README.md`, `docs/builds.md`, `docs/upstream-sour
 
 ## 3. Verification & CI
 
-- GitHub Actions (`build-pr.yml`) automatically builds changed packages on `x86_64` and `aarch64` runner containers.
+- GitHub Actions (`build-pr.yml`) builds changed packages on `x86_64` and `aarch64` runner containers.
+  Builds from new/unvouched contributors (those not listed in `.github/VOUCHED.td`) wait for maintainer
+  approval (adding the `build-approved` label) before runner jobs trigger.
 - Local verification can be done with Podman/Docker or directly via Nix derivations in `nix-omarchy`.
