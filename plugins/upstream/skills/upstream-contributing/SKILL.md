@@ -31,6 +31,7 @@ model invocation of manual skills.
 | tao12345666333 (personal account) | `tao12345666333-org` | `amp-acp-contributing` |
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
 | anduril | `anduril-org` | `jetpack-nixos-contributing` |
+| omacom | `omacom-org` | `omarchy-pkgs-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -73,6 +74,7 @@ is authoritative; update this table when one changes):
 | tao12345666333/amp-acp | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (squash) |
 | tifyr/gimp3-mcp | yes | no | agent drafts, Martin reviews | no policy; repo itself uses `Co-Authored-By: Claude …`; one disclosure line in the PR | no | plain sentence, no prefix |
 | anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; one disclosure line in the PR | no | `<component>: …`, merge commits |
+| omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
