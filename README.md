@@ -33,6 +33,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
 | `anduril` | `anduril-org` | anduril organization: security reports, repo table |
 | `anduril` | `jetpack-nixos-contributing` | anduril/jetpack-nixos: no contribution docs, PR template, CI (eval plus checks), kernel config per L4T release |
+| `omacom` | `omacom-org` | omacom organization: security reports, channels, repo table |
+| `omacom` | `omarchy-pkgs-contributing` | omacom/omarchy-pkgs: PKGBUILD guidelines, patch maintenance, Greptile AI review, verification |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |

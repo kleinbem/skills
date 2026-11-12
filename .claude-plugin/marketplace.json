@@ -69,6 +69,11 @@
       "name": "anduril",
       "source": "./plugins/anduril",
       "description": "Anduril organization (anduril/jetpack-nixos): anduril-org (security, repo table), jetpack-nixos-contributing"
+    },
+    {
+      "name": "omacom",
+      "source": "./plugins/omacom",
+      "description": "Omarchy Linux organization (omacom): omacom-org (security, repo table), omarchy-pkgs-contributing"
     }
   ]
 }
