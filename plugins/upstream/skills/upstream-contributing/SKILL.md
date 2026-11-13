@@ -32,9 +32,9 @@ model invocation of manual skills.
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
 | anduril | `anduril-org` | `jetpack-nixos-contributing` |
 | omacom | `omacom-org` | `omarchy-pkgs-contributing` |
-| hyprwm | `hyprwm-org` | `aquamarine-contributing`, `hyprland-contributing` |
+| hyprwm | `hyprwm-org` | `aquamarine-contributing`, `hyprland-contributing`, `hyprbars-contributing` |
 | alsa-project | `alsa-project-org` | `alsa-ucm-conf-contributing` |
-| outfoxxed | `outfoxxed-org` | `quickshell-contributing` |
+| outfoxxed, quickshell-mirror | `outfoxxed-org` | `quickshell-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -80,6 +80,7 @@ is authoritative; update this table when one changes):
 | anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; one disclosure line in the PR | no | `<component>: …`, merge commits |
 | hyprwm/aquamarine | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<component>: …`, squash |
 | hyprwm/Hyprland | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<component>: …`, squash |
+| hyprwm/hyprland-plugins | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<plugin>: …`, squash |
 | alsa-project/alsa-ucm-conf | yes | no | agent drafts, Martin reviews | standard disclosure line in PR | DCO (`Signed-off-by:`) | `ucm2: <component>: …`, squash |
 | quickshell-mirror/quickshell | yes | features/complex bugs | agent drafts, Martin reviews | standard disclosure line in PR | no | `<subsystem>: …` |
 | omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |

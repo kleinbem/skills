@@ -37,8 +37,10 @@ Sources of truth: `README.md`, `ucm2/README.md`, recent PRs #900, #905, #906. As
 
 ## 3. Validation
 
-- Validate syntax with `alsaucm`:
+- When introducing a new machine profile, collect `alsa-info.sh` output from the target hardware so
+  the validation harness has the necessary hardware data to emulate the device.
+- Validate local checkout files by setting `ALSA_CONFIG_UCM2` to point to the repository:
   ```bash
-  alsaucm -c x1e80100 reload
+  ALSA_CONFIG_UCM2="$(pwd)/ucm2" alsaucm -c <card> reload
   ```
-- Or run the repository syntax check workflow locally.
+- Or run the repository syntax check workflow locally via `alsa-tests/python/ucm-validator2`.

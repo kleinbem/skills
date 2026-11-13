@@ -28,8 +28,9 @@ Sources of truth: `README.md`, issues #1295, #1104, #941 on `quickshell-mirror/q
 
 - **URL Interceptor & Scanner (`src/core/qsintercept.cpp`, `src/core/scan.cpp`):**
   - Do NOT perform blocking or synchronous filesystem scans (`scanDir()`) inside `QsUrlInterceptor::intercept()`.
-    `intercept()` runs on the QML compilation/engine thread, and synchronous directory scanning causes deadlocks
-    during plugin reload (`Local plugin changed, reloading`).
+    Qt may invoke `intercept()` concurrently from both the GUI and QML loader threads; concurrent or recursive
+    `scanDir()` calls cause data races, use-after-free crashes, and engine deadlocks during plugin reloads
+    (`Local plugin changed, reloading`).
   - Singletons under Qt 6.12: When intercepting QML modules via `qs:@/...`, ensure singletons are properly
     registered with the QML engine's singleton provider mechanics rather than resolving only as type definitions.
 
