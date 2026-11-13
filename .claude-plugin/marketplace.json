@@ -74,6 +74,21 @@
       "name": "omacom",
       "source": "./plugins/omacom",
       "description": "Omarchy Linux organization (omacom): omacom-org (security, repo table), omarchy-pkgs-contributing"
+    },
+    {
+      "name": "hyprwm",
+      "source": "./plugins/hyprwm",
+      "description": "Hyprland ecosystem organization (hyprwm): hyprwm-org (vouch gating, strict AI usage policy, repo table), aquamarine-contributing, hyprland-contributing, hyprbars-contributing"
+    },
+    {
+      "name": "alsa-project",
+      "source": "./plugins/alsa-project",
+      "description": "ALSA audio architecture organization: alsa-project-org (repo table), alsa-ucm-conf-contributing"
+    },
+    {
+      "name": "outfoxxed",
+      "source": "./plugins/outfoxxed",
+      "description": "Quickshell toolkit organization: outfoxxed-org (repo table), quickshell-contributing"
     }
   ]
 }
