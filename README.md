@@ -36,6 +36,14 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `anduril` | `jetpack-nixos-contributing` | anduril/jetpack-nixos: no contribution docs, PR template, CI (eval plus checks), kernel config per L4T release |
 | `omacom` | `omacom-org` | omacom organization: security reports, channels, repo table |
 | `omacom` | `omarchy-pkgs-contributing` | omacom/omarchy-pkgs: PKGBUILD guidelines, patch maintenance, Greptile AI review, verification |
+| `hyprwm` | `hyprwm-org` | hyprwm organization: vouch gating, strict AI usage policy, CI, repo table |
+| `hyprwm` | `aquamarine-contributing` | hyprwm/aquamarine: DRM/Wayland backend, dynamic CRTC masks, output reconnection on mode gain |
+| `hyprwm` | `hyprland-contributing` | hyprwm/Hyprland: wl_output global removal grace period, monitor rule VRR on reload, EGL teardown |
+| `hyprwm` | `hyprbars-contributing` | hyprwm/hyprland-plugins (hyprbars): inactive titlebar color, workspace scoping, app title resolution |
+| `alsa-project` | `alsa-project-org` | alsa-project organization: audio architecture, DCO sign-off, repo table |
+| `alsa-project` | `alsa-ucm-conf-contributing` | alsa-project/alsa-ucm-conf: UCM2 profiles, Snapdragon X Elite (x1e80100) configs, DMI matching |
+| `outfoxxed` | `outfoxxed-org` | outfoxxed organization: Quickshell toolkit, channels, repo table |
+| `outfoxxed` | `quickshell-contributing` | quickshell: QML URL interceptor, avoiding synchronous scanDir deadlocks, Qt 6.12 singletons |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
