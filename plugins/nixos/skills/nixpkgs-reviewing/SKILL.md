@@ -20,11 +20,7 @@ Rules for AI-assisted review drafting:
 2. **Actionable suggestions:** Format code changes as direct GitHub ````suggestion ... ```` blocks whenever possible.
 3. **Factual rationale:** Keep explanations to 1–2 sentences explaining the *why* (link RFC, manual, or upstream issue).
 4. **Human in the loop:** Martin reviews, verifies, and endorses every comment before posting.
-5. **AI disclosure:** Include the trailer below on review bodies or comments longer than 6 sentences (omit it on short comments of 6 sentences or fewer):
-   ```markdown
-   ---
-   *Assisted-by: <tool> (<model>)*
-   ```
+5. **No AI footers on comments or reviews:** Never append `*Assisted-by: ...*` or `*Prepared with ...*` trailers to review bodies or comments.
 
 ---
 
@@ -192,7 +188,4 @@ In `pkgs/by-name/...`:
 ```suggestion
 ... [replacement block] ...
 ```
-
----
-*Assisted-by: Antigravity (<model>)*
 ````

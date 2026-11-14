@@ -29,8 +29,9 @@ most Pi changes and reviews Pi PRs, but can't merge. Slow: outside PRs take days
   one, and `CONTRIBUTING.md` ("Any nixpkgs committer can review and approve") puts it in the
   Nixpkgs orbit. (The `nixpkgs-core` team's repo list isn't public, so membership is unverified.)
   So: Martin reviews and understands everything before it's posted; agent-written commits carry
-  `Assisted-by: <tool> (<model + version>)` (`Co-authored-by` doesn't count); the PR text and
-  every review reply disclose AI help separately. The agent drafts, Martin reviews and posts.
+  `Assisted-by: <tool> (<model + version>)` (`Co-authored-by` doesn't count) and the PR text
+  discloses AI help separately (never append AI footers to comments or reviews). The agent drafts,
+  Martin reviews and posts.
 - **The Pi owner spots and rejects LLM-style code.** doronbehar on #1894: "Useless LLM comment.",
   "Another LLM bad code.", "I don't like these LLM typical `2>/dev/null || true` endings", plus
   "the phrasing of the commit message and the PR description are pretty sloppy". No defensive
