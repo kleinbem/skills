@@ -181,7 +181,7 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   don't make reviewers repeat themselves.
 
 Practical notes:
-- Check both vendored patches and `substituteInPlace`/`--replace-fail` patterns against the source *after* earlier `patches` (`nix-shell -A <attr>`, then `unpackPhase` and `patchPhase`), not the raw `src`: an earlier patch may have shifted lines, and `patch` applying at a hunk offset writes a `.orig` backup file that `pip`/directory installs copy into `$out` (#587923).
+- Compute or refresh a vendored patch against the source after only the patches that precede it (not raw `src`, and stopping before the target patch itself), and check `substituteInPlace`/`--replace-fail` patterns after `patchPhase`: an earlier patch may have shifted lines, and `patch` applying at a hunk offset writes a `.orig` backup file that `pip`/directory installs copy into `$out` (#587923).
 - A test suite that fails fast hides the next failure. Find them all in one pass with a
   `nix-shell -A <attr>` replay of the build and `cargo test --no-fail-fast` (or the equivalent).
 - A fresh nixpkgs worktree has its tracked symlinks as plain files (`/etc/gitconfig` sets

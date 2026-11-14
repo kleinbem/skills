@@ -45,7 +45,7 @@ gh pr view <PR> --json number,title,author,createdAt,baseRefName,labels,files,bo
 * No trailing period in titles; lowercase attribute name; fixup commits must be squashed.
 
 ### 1.3 PR template & AI disclosure
-Check for required automation/AI disclosure when AI assistance is evident, and challenge factual claims that contradict the diff or build. Otherwise leave the PR template checkboxes alone (`CONTRIBUTING.md`, #585559: which boxes are ticked or whether inapplicable ones were removed is not a merge requirement).
+Check for required automation/AI disclosure when AI assistance or non-exempt automation is evident, and challenge factual claims that contradict the diff or build. Otherwise, leave the PR template checkboxes alone (`CONTRIBUTING.md`, #585559: which boxes are ticked or whether inapplicable ones were removed is not a merge requirement).
 
 ### 1.4 Staleness, supersession & baseline check (before auditing code)
 * **Check guards and blockers on `baseRefName` first:** On older fix or workaround PRs, check `"until #N is merged"` references in the body/comments and evaluate any version guards (`lib.versionOlder ...`, compiler/LLVM/Python version checks) on the PR's `baseRefName` (`nix-instantiate --eval`; never judge a `release-YY.MM` backport solely against `master`). If the guard is `false` or the blocker already landed on `baseRefName`, that workaround is obsolete; check whether the diff carries any independent fixes before calling the whole PR a dead no-op (NixOS/nixpkgs#553347: 3-month-old LLVM 21 patch gated on `versionOlder rustc.llvm.version "22"` after `master` moved to LLVM 23, with no other changes).
