@@ -19,8 +19,9 @@ The org has no single policy file; the policies live in the repos, and they diff
   it covers "related projects under the jurisdiction of the Nixpkgs core team" and Nixpkgs
   development on Matrix and Discourse): a responsible human in the loop who reviews everything;
   non-trivial automation disclosed; for commits an `Assisted-by: <tool> (<model + version>)`
-  trailer (`Co-authored-by` does not count); PR texts and review comments disclosed separately.
-  Here the agent may draft texts that Martin reviews.
+  trailer (`Co-authored-by` does not count) and a separate disclosure line in the PR description.
+  Here the agent may draft texts that Martin reviews; do not append AI disclosure footers to PR
+  comments.
 - **Nix** (`NixOS/nix` `CONTRIBUTING.md`, same policy plus one line): "Human communication must
   remain human. Pull request / issue descriptions and comments, documentation, commit messages,
   and code comments must be human-authored." **Martin writes every text there**, including code
