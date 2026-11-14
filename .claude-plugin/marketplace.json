@@ -89,6 +89,11 @@
       "name": "outfoxxed",
       "source": "./plugins/outfoxxed",
       "description": "Quickshell toolkit organization: outfoxxed-org (repo table), quickshell-contributing"
+    },
+    {
+      "name": "charmbracelet",
+      "source": "./plugins/charmbracelet",
+      "description": "Charm organization (charmbracelet/*): charmbracelet-org (features via Discussions, Conventional Commits, security, repo table), gum-contributing"
     }
   ]
 }

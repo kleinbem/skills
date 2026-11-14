@@ -1,0 +1,7 @@
+{
+  "name": "charmbracelet",
+  "description": "Charm organization (charmbracelet/*): charmbracelet-org (features via Discussions, Conventional Commits, security, repo table), gum-contributing",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

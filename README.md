@@ -44,6 +44,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `alsa-project` | `alsa-ucm-conf-contributing` | alsa-project/alsa-ucm-conf: UCM2 profiles, Snapdragon X Elite (x1e80100) configs, DMI matching |
 | `outfoxxed` | `outfoxxed-org` | outfoxxed organization: Quickshell toolkit, channels, repo table |
 | `outfoxxed` | `quickshell-contributing` | quickshell: QML URL interceptor, avoiding synchronous scanDir deadlocks, Qt 6.12 singletons |
+| `charmbracelet` | `charmbracelet-org` | Charm organization: features via Discussions, Conventional Commits, meta CI, security, repo table |
+| `charmbracelet` | `gum-contributing` | charmbracelet/gum: org issue forms, gum PR template, Go build on NixOS, slow outside-PR history, `gum table` CSV parsing |
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
