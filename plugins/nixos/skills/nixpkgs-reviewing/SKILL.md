@@ -28,7 +28,7 @@ Rules for AI-assisted review drafting:
 
 Inspect the PR metadata before reading code:
 ```bash
-gh pr view <PR> --json number,title,author,baseRefName,labels,files,body
+gh pr view <PR> --json number,title,author,createdAt,baseRefName,labels,files,body
 ```
 
 ### 1.1 Base branch & mass rebuilds
@@ -46,6 +46,11 @@ gh pr view <PR> --json number,title,author,baseRefName,labels,files,body
 
 ### 1.3 PR template checklist
 Verify the author filled out the checklist truthfully (e.g. tested on x86_64-linux, sandboxing enabled).
+
+### 1.4 Staleness, supersession & baseline check (before auditing code)
+* **Check guards and blockers on `master` first:** On older fix or workaround PRs, check `"until #N is merged"` references in the body/comments and evaluate any version guards (`lib.versionOlder ...`, compiler/LLVM/Python version checks) against current `master` (`nix-instantiate --eval`). If the guard is now `false` or the blocker already reached `master`, the PR is a dead no-op (NixOS/nixpkgs#553347: 3-month-old LLVM 21 patch gated on `versionOlder rustc.llvm.version "22"` after `master` moved to LLVM 23).
+* **Build unmodified `master` (`nix-build -A <attr>`) before attributing failures:** `master` may already build without the PR, or fail for a newer unrelated reason (NixOS/nixpkgs#553347: the LLVM 21 crash was gone, while `master` failed on missing `zstd` from `cargoSetupHook`, NixOS/nixpkgs#587920).
+* **Superseded PRs closing silently:** When a PR is superseded on `master`, leave a 1-2 sentence factual note naming what superseded it so the author can close it. When checking PR status later, check your own last review before misreading an uncommented close as author pushback.
 
 ---
 
