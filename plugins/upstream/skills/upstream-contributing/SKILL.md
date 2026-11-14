@@ -190,6 +190,11 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   messages, never write any closing keyword variant (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, with or without colon) before external repository references (e.g. `Owner/repo#123` or full GitHub URLs). When merged to the default branch, GitHub automatically marks the external issue or PR as closed! Always use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
 - Never claim review or testing in Martin's name that he didn't do.
+- **Human density in comments and reviews:** write at the level of detail a maintainer types by hand, not an audit report:
+  - Never repeat inline comments or `suggestion` blocks in a top-level review summary; if inline comments carry the code, keep the review body to 1-2 plain sentences (or empty).
+  - State the takeaway, not the research trail: don't dump upstream file paths, internal function/error names, raw byte counts (`281326432 B` -> `268 MiB`), base SHAs (`master 8e530ebcbed9`), or `nix-instantiate` snippets into prose unless needed to locate the bug.
+  - No QA checklists in comments/reviews: write `"Tested on x86_64-linux"` instead of bulleted tool logs (`nixpkgs-vet`, `ldd`, test counts).
+  - No LLM framing or punctuation tells: no `"Requesting changes for two regressions..."` / `"Two issues with..."` openers, and no em-dashes (`—`).
 - Never append AI disclosure footers (e.g. `Prepared with ...`, `Assisted-by: ...`) to PR/issue comments or reviews; disclose AI assistance only on commits (`Assisted-by:`) and PR descriptions where the repo requires it.
 - Show the real test results, most of the time: the PR body's validation and replies to review
   findings get a short summary of what ran, where, and the numbers, plus the proof run (the test
