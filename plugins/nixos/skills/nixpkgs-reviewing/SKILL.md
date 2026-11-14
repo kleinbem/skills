@@ -16,9 +16,9 @@ Sources of truth: `CONTRIBUTING.md`, `pkgs/README.md`, `pkgs/by-name/README.md`,
 Nixpkgs maintainers actively object to verbose, generic LLM comments ("LLM comments are usually way too long and verbose", #571214). Reviewers appreciate concrete, actionable feedback that can be merged with minimal roundtrips.
 
 Rules for AI-assisted review drafting:
-1. **Zero conversational fluff:** No opening praise ("Thanks for this great PR!"), no restating what the PR does, no closing cheerleading.
-2. **Actionable suggestions:** Format code changes as direct GitHub ````suggestion ... ```` blocks whenever possible.
-3. **Factual rationale:** Keep explanations to 1–2 sentences explaining the *why* (link RFC, manual, or upstream issue).
+1. **Zero conversational fluff or LLM framing:** No opening praise ("Thanks for packaging..."), no `"Requesting changes for two regressions..."` / `"Two issues with..."` headers, no restating what the PR does, and no em-dashes (`—`).
+2. **Inline `suggestion`s over summary essays:** Put code changes directly on the relevant lines as GitHub ````suggestion ... ```` blocks, and never repeat those inline points in the top-level review body (keep the review body to 1-2 plain sentences, or empty).
+3. **Human density (takeaway, not research trail):** Explain *why* in 1-2 plain sentences without dumping upstream source paths, internal function names, base SHAs, `nix-instantiate` snippets, or bulleted QA logs (`nixpkgs-vet`, `ldd`, test counts — just say `"Tested on x86_64-linux"`).
 4. **Human in the loop:** Martin reviews, verifies, and endorses every comment before posting.
 5. **No AI footers on comments or reviews:** Never append `*Assisted-by: ...*` or `*Prepared with ...*` trailers to review bodies or comments.
 
@@ -162,30 +162,18 @@ When reviewing a PR that adds or alters a NixOS module:
 
 Synthesize findings into clean, concise GitHub review comments:
 
-### Review Template
-````markdown
-Thanks for packaging `<attr>`! A few suggestions to align with current Nixpkgs standards:
+### Review Example
+Leave code changes as inline comments on the affected lines, and keep the top-level review body to 1-2 plain sentences:
 
-### 1. Maintainer entry
-In `maintainers/maintainer-list.nix`:
-```suggestion
-  <handle> = {
-    github = "<handle>";
-    githubId = <id>;
-    name = "<name>";
-  };
-```
-*(The `email` field should either be a valid email address or omitted).*
+- **Top-level review body:**
+  ```markdown
+  Left two inline suggestions (`isLinux` guard on `nixosTests` for Darwin, and `tag` + `pyproject` in `package.nix`). Built and tested on `x86_64-linux`.
+  ```
+- **Inline comment on `pkgs/by-name/.../package.nix`:**
+  ````markdown
+  Gate `nixosTests` on `stdenv.hostPlatform.isLinux` so Darwin doesn't evaluate Linux VM tests:
 
-### 2. Derivation improvements
-In `pkgs/by-name/...`:
-
-1. **Tag fetcher:** Modern convention prefers `tag = "v${finalAttrs.version}";` over `rev`.
-2. **Builder:** Switch `format = "setuptools";` to `pyproject = true;`.
-3. **Enable tests:** Upstream tests pass with `nativeCheckInputs = [ ... pytestCheckHook ];`.
-4. **Version check:** Enable `versionCheckHook` to verify the CLI binary at build time.
-
-```suggestion
-... [replacement block] ...
-```
-````
+  ```suggestion
+      tests = lib.optionalAttrs stdenv.hostPlatform.isLinux { inherit (nixosTests) <attr>; };
+  ```
+  ````
