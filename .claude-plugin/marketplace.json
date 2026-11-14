@@ -73,7 +73,7 @@
     {
       "name": "omacom",
       "source": "./plugins/omacom",
-      "description": "Omarchy Linux organization (omacom): omacom-org (security, repo table), omarchy-pkgs-contributing"
+      "description": "Omarchy Linux organization (omacom): omacom-org (security, repo table), omarchy-contributing, omarchy-pkgs-contributing"
     },
     {
       "name": "hyprwm",

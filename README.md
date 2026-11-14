@@ -34,7 +34,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
 | `anduril` | `anduril-org` | anduril organization: security reports, repo table |
 | `anduril` | `jetpack-nixos-contributing` | anduril/jetpack-nixos: no contribution docs, PR template, CI (eval plus checks), kernel config per L4T release |
-| `omacom` | `omacom-org` | omacom organization: security reports, channels, repo table |
+| `omacom` | `omacom-org` | omacom organization (was basecamp): AI stance, bots, security reports, channels, repo table |
+| `omacom` | `omarchy-contributing` | omacom/omarchy: bugs-only issues, omarchybot triage, duplicate PRs, PR template, tests |
 | `omacom` | `omarchy-pkgs-contributing` | omacom/omarchy-pkgs: PKGBUILD guidelines, patch maintenance, Greptile AI review, verification |
 | `hyprwm` | `hyprwm-org` | hyprwm organization: vouch gating, strict AI usage policy, CI, repo table |
 | `hyprwm` | `aquamarine-contributing` | hyprwm/aquamarine: DRM/Wayland backend, dynamic CRTC masks, output reconnection on mode gain |

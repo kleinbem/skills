@@ -31,7 +31,7 @@ model invocation of manual skills.
 | tao12345666333 (personal account) | `tao12345666333-org` | `amp-acp-contributing` |
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
 | anduril | `anduril-org` | `jetpack-nixos-contributing` |
-| omacom | `omacom-org` | `omarchy-pkgs-contributing` |
+| omacom (was basecamp/omarchy) | `omacom-org` | `omarchy-contributing`, `omarchy-pkgs-contributing` |
 | hyprwm | `hyprwm-org` | `aquamarine-contributing`, `hyprland-contributing`, `hyprbars-contributing` |
 | alsa-project | `alsa-project-org` | `alsa-ucm-conf-contributing` |
 | outfoxxed, quickshell-mirror | `outfoxxed-org` | `quickshell-contributing` |
@@ -84,6 +84,7 @@ is authoritative; update this table when one changes):
 | hyprwm/hyprland-plugins | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<plugin>: …`, squash |
 | alsa-project/alsa-ucm-conf | yes | no | agent drafts, Martin reviews | standard disclosure line in PR | DCO (`Signed-off-by:`) | `ucm2: <component>: …`, squash |
 | quickshell-mirror/quickshell | yes | features/complex bugs | agent drafts, Martin reviews | standard disclosure line in PR | no | `<subsystem>: …` |
+| omacom/omarchy | yes, base `quattro`; duplicates closed | issues for verified bugs only; ideas in Discussions | agent drafts, Martin reviews | no policy; one disclosure line | no | plain imperative sentence, squash |
 | omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |
 | charmbracelet/gum | yes; features need an approved Discussion first | features (Discussion); bugs no | agent drafts, Martin reviews | no policy; no disclosure in issues, one line in a PR | no | Conventional Commits, `feat(table): …`, squash |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
