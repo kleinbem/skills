@@ -10,7 +10,7 @@ Layer 3 of 3: read `upstream-contributing` and `nixos-org` first (as files, `~/.
 This skill holds only what is specific to Nixpkgs and wins where they differ.
 
 Sources of truth, in the Nixpkgs checkout: `CONTRIBUTING.md`, `pkgs/README.md`,
-`pkgs/by-name/README.md`, `maintainers/README.md` (summarised here as of 2026-10-21, rechecked 2026-10-28). Read the
+`pkgs/by-name/README.md`, `maintainers/README.md` (summarised here as of 2026-10-21, rechecked 2026-11-14). Read the
 relevant section before acting on a rule from memory.
 
 ## 0. Before starting
@@ -120,10 +120,8 @@ relevant section before acting on a rule from memory.
    `nixos/doc/manual/release-notes/rl-<YYMM>.section.md`. A major or breaking package change
    gets a Nixpkgs release note in `doc/release-notes`; a package removal gets a throwing alias
    instead of a note (`CONTRIBUTING.md`, "Release notes").
-8. Fill in the PR template checkboxes honestly (`.github/PULL_REQUEST_TEMPLATE.md`).
-   Never remove section headings or replace checkboxes with custom bullets. Tick a box only
-   once it is true for the exact commits being pushed, and always include the mandatory
-   automation/AI policy disclosure.
+8. Fill in the PR template checkboxes honestly (`.github/PULL_REQUEST_TEMPLATE.md`, including the `[Nixpkgs Release Notes]` / `[NixOS Release Notes]` links).
+   Keep the section headings and the template in place (#585559 allows omitting inapplicable checkboxes or adding short change-specific ones, though keeping the standard entries satisfies `nix-check-nixpkgs-pr`). Tick a box only once it is true for the exact commits being pushed, and always include the mandatory automation/AI policy disclosure.
 
 ## 4. What reviewers commonly ask for
 Recurring themes from committer reviews of comparable PRs (Tauri/Rust apps, services with
@@ -183,9 +181,7 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   don't make reviewers repeat themselves.
 
 Practical notes:
-- Check `substituteInPlace`/`--replace-fail` patterns against the source *after* `patches`
-  (`nix-shell -A <attr>`, then `unpackPhase` and `patchPhase`), not the raw `src`: a patch may
-  already have changed the line.
+- Compute or refresh a vendored patch against the source after only the patches that precede it (not raw `src`, and stopping before the target patch itself), and check `substituteInPlace`/`--replace-fail` patterns after `patchPhase`: an earlier patch may have shifted lines, and `patch` applying at a hunk offset writes a `.orig` backup file that `pip`/directory installs copy into `$out` (#587923).
 - A test suite that fails fast hides the next failure. Find them all in one pass with a
   `nix-shell -A <attr>` replay of the build and `cargo test --no-fail-fast` (or the equivalent).
 - A fresh nixpkgs worktree has its tracked symlinks as plain files (`/etc/gitconfig` sets
