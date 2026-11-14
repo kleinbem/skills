@@ -35,6 +35,7 @@ model invocation of manual skills.
 | hyprwm | `hyprwm-org` | `aquamarine-contributing`, `hyprland-contributing`, `hyprbars-contributing` |
 | alsa-project | `alsa-project-org` | `alsa-ucm-conf-contributing` |
 | outfoxxed, quickshell-mirror | `outfoxxed-org` | `quickshell-contributing` |
+| charmbracelet (Charm) | `charmbracelet-org` | `gum-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -84,6 +85,7 @@ is authoritative; update this table when one changes):
 | alsa-project/alsa-ucm-conf | yes | no | agent drafts, Martin reviews | standard disclosure line in PR | DCO (`Signed-off-by:`) | `ucm2: <component>: …`, squash |
 | quickshell-mirror/quickshell | yes | features/complex bugs | agent drafts, Martin reviews | standard disclosure line in PR | no | `<subsystem>: …` |
 | omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |
+| charmbracelet/gum | yes; features need an approved Discussion first | features (Discussion); bugs no | agent drafts, Martin reviews | no policy; no disclosure in issues, one line in a PR | no | Conventional Commits, `feat(table): …`, squash |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
