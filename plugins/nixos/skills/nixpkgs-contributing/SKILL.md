@@ -49,8 +49,9 @@ relevant section before acting on a rule from memory.
   the full review happens before marking ready. Useful to run CI or nixpkgs-review-gha early.
 - Running `nix-update` or other standard community automation is exempt; an LLM writing the
   change or its commit message is not.
-- The disclosure also applies to PR comments and reviews, and to any tooling used to verify
-  the output (`CONTRIBUTING.md`, "Automation/AI policy").
+- Disclose automated verification tooling in the PR description too (`CONTRIBUTING.md`,
+  "Automation/AI policy"). On PR comments and reviews, disclose AI assistance when the AI-drafted
+  text is longer than 6 sentences; omit AI footers on comments of 6 sentences or fewer.
 
 ## 2. Derivation rules
 - New top-level `callPackage` packages: `pkgs/by-name/<2-letter-prefix>/<attr>/package.nix`.
