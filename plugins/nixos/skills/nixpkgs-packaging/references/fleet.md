@@ -125,6 +125,18 @@ release workflow opens a removal PR once the cause (`releaseWhen`) builds again;
 Flake runs nix-detour's update action (report only since 2026-11-01): it names the packages to
 hold, also those reached through services or MCP configs, in the "Lock update fails validation"
 issue; a person adds them to nix-detour-fleet.
+- **Overlapping breakages hide obsolete patches:** `hold-release` only tests whether the *unfixed*
+  package builds in nixos-unstable. When a `staging-next` merge removes Failure A (LLVM 21,
+  NixOS/nixpkgs#578990) while introducing Failure B (`cargoSetupHook` requiring `zstd`), the unfixed
+  package stays red and `held-packages.json` silently keeps carrying Failure A's dead patch (`qdrant`
+  carried NixOS/nixpkgs#553347's AVX-512 patch for two weeks after LLVM 23 reached unstable). Re-test
+  held `patches`/`override` causes after a `staging-next` cycle or when a hold nears 14 days.
+- **Never park a hold's upstream fix only in a worktree + `~/.cache/*-handoff.md`:** `just clean`
+  does not scan `~/Develop/github.com/NixOS/nixpkgs.wt-*` or `~/.cache/`, so `nixpkgs.wt-qdrant-zstd`
+  sat unpushed for 13 days until NixOS/nixpkgs#587920 opened. In the same session the hold lands,
+  either open the draft PR (with Martin's OK) or open a `"report upstream: …"` tracking issue in
+  `kleinbem/nix-packages` with the patch attached (or pushed to a fork branch) so worktree cleanup
+  cannot lose it.
 
 ## 7. Canaries against upstream main
 
@@ -147,6 +159,13 @@ agent app with a CLI can reuse it.
 `nix-packages/watch/upstream-prs/prs.txt` (weekly, one issue): conflicts, merges, new human
 comments. Add every upstream PR a workaround waits on. The session's own PR watchers cover the
 active ones.
+- **Watch the fix/workaround PRs, not only a silent symptom issue:** `watch/upstream-prs/run.sh`
+  sees comments, reviews, CI, and merge/close events; it cannot see silent branch propagation
+  (`staging` -> `staging-next` -> `master` -> `nixos-unstable`). Listing only the build-failure
+  issue NixOS/nixpkgs#553191 reported `"nothing new"` while NixOS/nixpkgs#578990 (`rustc` -> LLVM 23)
+  propagated to `nixos-unstable` and made NixOS/nixpkgs#553347 obsolete. List the actual PRs in
+  `prs.txt`, and check `git merge-base --is-ancestor` (or `nixpk.gs/pr-tracker`) for merged `staging`
+  PRs awaiting propagation.
 
 ## 9. Other distributions
 

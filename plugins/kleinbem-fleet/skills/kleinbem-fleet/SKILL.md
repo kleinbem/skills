@@ -103,7 +103,15 @@ link to the upstream issue or PR it waits on: a URL or `owner/repo#123`. That li
 workaround gets dropped when the fix arrives.
 - No report yet: draft one in the same session through `upstream-contributing` (a new project
   first gets its contribution skill; the skill decides issue, PR or both). Martin files or
-  approves it. Until it exists, open an issue in our repo ("report upstream: …") and link that.
+  approves it. Until it exists, open an issue in our repo ("report upstream: …") with the patch or
+  a pushed fork branch linked; never leave a prepared fix only in a local worktree or
+  `~/.cache/*-handoff.md` (`just clean` doesn't see them, and `qdrant`'s `zstd` fix sat unpushed for
+  13 days).
+- Link the actual fix or workaround PR when one exists, not only a silent symptom issue:
+  `nix-check-workarounds --states` and `watch-upstream-prs` track PR/issue state and activity, so a
+  symptom issue with no comments stays `"nothing new"` even after a `staging` fix propagates and
+  makes a borrowed patch obsolete (tracking: NixOS/nixpkgs#553191 vs. NixOS/nixpkgs#553347 and
+  NixOS/nixpkgs#578990).
 - Our own workarounds (waiting on another fleet change) link our own issue.
 - A comment that only mentions a workaround says `no-link: <why>`.
 - Check with `nix-check-workarounds` (kleinbem/nix-toolbox; the workspace devshell puts the
