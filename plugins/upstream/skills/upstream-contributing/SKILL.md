@@ -190,7 +190,7 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   messages, never write any closing keyword variant (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, with or without colon) before external repository references (e.g. `Owner/repo#123` or full GitHub URLs). When merged to the default branch, GitHub automatically marks the external issue or PR as closed! Always use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
 - Never claim review or testing in Martin's name that he didn't do.
-- Do not append AI disclosure footers (e.g. "Prepared with ...") to PR or issue comments; keep AI disclosure on commits and PR descriptions where the repo requires it.
+- Do not append AI disclosure footers (e.g. "Prepared with ...") to short PR or issue comments (6 sentences or fewer); disclose AI assistance on commits, PR descriptions, and AI-drafted comments or reviews longer than 6 sentences where the repo requires it.
 - Show the real test results, most of the time: the PR body's validation and replies to review
   findings get a short summary of what ran, where, and the numbers, plus the proof run (the test
   fails on the old or a deliberately broken version). Use the independent reviewer's test data
