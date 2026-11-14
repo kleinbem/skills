@@ -44,8 +44,8 @@ gh pr view <PR> --json number,title,author,createdAt,baseRefName,labels,files,bo
 * Module commits: `nixos/<module>: ...`
 * No trailing period in titles; lowercase attribute name; fixup commits must be squashed.
 
-### 1.3 PR template checklist
-Verify the author filled out the checklist truthfully (e.g. tested on x86_64-linux, sandboxing enabled).
+### 1.3 PR template & AI disclosure
+Check for required automation/AI disclosure when AI assistance is evident, and challenge factual claims that contradict the diff or build. Otherwise leave the PR template checkboxes alone (`CONTRIBUTING.md`, #585559: which boxes are ticked or whether inapplicable ones were removed is not a merge requirement).
 
 ### 1.4 Staleness, supersession & baseline check (before auditing code)
 * **Check guards and blockers on `baseRefName` first:** On older fix or workaround PRs, check `"until #N is merged"` references in the body/comments and evaluate any version guards (`lib.versionOlder ...`, compiler/LLVM/Python version checks) on the PR's `baseRefName` (`nix-instantiate --eval`; never judge a `release-YY.MM` backport solely against `master`). If the guard is `false` or the blocker already landed on `baseRefName`, that workaround is obsolete; check whether the diff carries any independent fixes before calling the whole PR a dead no-op (NixOS/nixpkgs#553347: 3-month-old LLVM 21 patch gated on `versionOlder rustc.llvm.version "22"` after `master` moved to LLVM 23, with no other changes).
@@ -90,7 +90,7 @@ Verify the author filled out the checklist truthfully (e.g. tested on x86_64-lin
 ### 2.3 Metadata (`meta = { ... }`)
 * **`description`:** One capitalized sentence, no leading article ("A tool for..."), does not repeat the package name, no trailing period.
 * **`license`:** `lib.licenses.<id>` matching upstream. Verify against upstream repository's `LICENSE` file.
-* **`maintainers`:** `maintainers = with lib.maintainers; [ <handle> ];`.
+* **`maintainers`:** Required for new packages (`maintainers = with lib.maintainers; [ <handle> ];`); updates to existing maintainerless packages do not require adding one (`pkgs/README.md`, #570838).
   * If a new maintainer was added in `maintainers/maintainer-list.nix`, verify `email` is a valid email or omitted (not just a GitHub username).
 * **`mainProgram`:** Hardcoded string of the primary executable, if applicable.
 * **`platforms`:** Set appropriately (`lib.platforms.all`, `lib.platforms.unix`, etc.).
