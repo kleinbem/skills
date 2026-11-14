@@ -133,9 +133,10 @@ issue; a person adds them to nix-detour-fleet.
   held `patches`/`override` causes after a `staging-next` cycle or when a hold nears 14 days.
 - **Never park a hold's upstream fix only in a worktree + `~/.cache/*-handoff.md`:** `just clean`
   does not scan `~/Develop/github.com/NixOS/nixpkgs.wt-*` or `~/.cache/`, so `nixpkgs.wt-qdrant-zstd`
-  sat unpushed for 13 days until NixOS/nixpkgs#587920 opened. Either open the draft PR (with
-  Martin's OK) or open a `"report upstream: …"` tracking issue in `kleinbem/nix-packages` in the
-  same session the hold lands.
+  sat unpushed for 13 days until NixOS/nixpkgs#587920 opened. In the same session the hold lands,
+  either open the draft PR (with Martin's OK) or open a `"report upstream: …"` tracking issue in
+  `kleinbem/nix-packages` with the patch attached (or pushed to a fork branch) so worktree cleanup
+  cannot lose it.
 
 ## 7. Canaries against upstream main
 
