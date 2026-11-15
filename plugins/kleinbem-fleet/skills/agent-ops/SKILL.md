@@ -118,12 +118,13 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
   or secret, SSH, firewall, network, auth or TLS paths without the label: add it and re-run.
 - In a busy repo, fold small related changes into one labelled PR, and don't label a second one
   there while the first review is still running.
-- A labelled PR: disable auto-merge until the review is in (`gh pr merge <n> --disable-auto`
-  right after opening), then re-arm it. If CodeRabbit says "Review rate limited", wait for the
-  time it gives and comment `@coderabbitai review`; don't let it merge unreviewed.
+- A labelled PR doesn't get `gh pr merge --auto` at creation: arm it only after the review body
+  and every thread are handled. If CodeRabbit says "Review rate limited", wait for the time it
+  gives and comment `@coderabbitai review`.
 - Pushes after the review aren't reviewed (incremental reviews are off, the check reports
-  `skipped`). After a push that changes more than the review's own fixes, comment
-  `@coderabbitai review`. Adding the label later starts a review as well.
+  `skipped`). Before a push that changes more than the review's own fixes, run
+  `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm once
+  that review is handled. Adding the label to an armed PR later: disarm it first the same way.
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
   thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
   way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
