@@ -38,5 +38,6 @@ No org `.github` repo. Sources: each repo's files and recent PRs via `gh api`. A
 |---|---|---|
 | omacom/omarchy | `omarchy-contributing` | The distribution: shell, configs, `bin/`, migrations; default branch `quattro` |
 | omacom/omarchy-pkgs | `omarchy-pkgs-contributing` | Arch PKGBUILD recipes, builder CI, package tooling |
+| omacom/hype | `hype-contributing` | Markdown presentations (Qt 6, QML, CLI); packaging in omarchy-pkgs |
 | omacom/omasnap | none yet | Screenshot editor; Martin's omacom/omasnap#232 open (first contact skipped the skill) |
 | omacom/omarchy-iso | none yet | Installation image |

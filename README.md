@@ -37,6 +37,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `omacom` | `omacom-org` | omacom organization (was basecamp): AI stance, bots, security reports, channels, repo table |
 | `omacom` | `omarchy-contributing` | omacom/omarchy: bugs-only issues, omarchybot triage, duplicate PRs, PR template, tests |
 | `omacom` | `omarchy-pkgs-contributing` | omacom/omarchy-pkgs: PKGBUILD guidelines, patch maintenance, Greptile AI review, verification |
+| `omacom` | `hype-contributing` | omacom/hype: title style, CI, outside PRs, testing in the Nix sandbox |
 | `hyprwm` | `hyprwm-org` | hyprwm organization: vouch gating, strict AI usage policy, CI, repo table |
 | `hyprwm` | `aquamarine-contributing` | hyprwm/aquamarine: DRM/Wayland backend, dynamic CRTC masks, output reconnection on mode gain |
 | `hyprwm` | `hyprland-contributing` | hyprwm/Hyprland: wl_output global removal grace period, monitor rule VRR on reload, EGL teardown |
