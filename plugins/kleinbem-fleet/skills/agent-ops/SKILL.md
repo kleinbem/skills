@@ -140,6 +140,10 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
 - A requested re-review brings new threads: answer them all again before walking away.
 - Bot PRs and bot pushes report `skipped`. If a PR merged unreviewed, say so in your report.
 - Private repos (kleinbem-secrets, mesh-llm-gpu) have no CodeRabbit.
+- A review of whole files rather than a diff (a package, a script, a whole repo; also in a fork
+  like `kleinbem/nixpkgs` for upstreams without CodeRabbit): `cr-full-review open <paths>`, then
+  `wait <url>` and `close <url>` (`kleinbem/coderabbit` `bin/`). The PR's base is an empty tree;
+  findings land in `~/.cache/cr-full-review/` and get fixed in normal PRs.
 
 ## Verify with real builds
 
