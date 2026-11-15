@@ -10,6 +10,9 @@ hardware; checks and full builds go to GitHub runners.
   (`<app>-next`, adapted to upstream main for the next release). Worktrees in
   `~/Develop/github.com/NixOS/nixpkgs.wt-<name>`; the main clone is git-only, `git fetch upstream
   master` from a worktree is fine.
+- Rebase a one-commit PR branch with `git rebase --onto upstream/master HEAD~1`. A plain
+  `git rebase upstream/master` can run for 15+ minutes looking for the merge base when the
+  worktree shows the branch tens of thousands of commits behind.
 - Pre-push: `nix fmt`, `./ci/nixpkgs-vet.sh master`,
   `~/Develop/github.com/kleinbem/nix-toolbox/bin/nix-check-nixpkgs-pr --drvs-against <old head>`
   (deadnix, variant `meta.position`, workaround links, which derivations changed),
@@ -21,6 +24,8 @@ hardware; checks and full builds go to GitHub runners.
   PR branch moves; platform inputs `x86_64-linux`, `aarch64-linux` (bool), `x86_64-darwin`,
   `aarch64-darwin` (`no | yes_sandbox_false | yes_sandbox_relaxed | yes_sandbox_true`; the
   workflow defaults both darwins to `yes_sandbox_relaxed`, pass `x86_64-darwin=no` unless needed).
+  It refuses unfree packages ("Refusing to evaluate … unfree license", all platforms fail in
+  minutes with nothing built): push the branch and use `review.yml` on the PR for those.
 - `review.yml`: nixpkgs-review on a PR number; always `-f post-result=false` (posting is a public
   step), `on-success=nothing`.
 - darwin: tests with `__darwinAllowLocalNetworking` need `yes_sandbox_relaxed` (as Hydra). Run
