@@ -10,7 +10,7 @@ Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.
 This skill holds only what is specific to block/buzz and wins where they differ.
 
 Source of truth: `CONTRIBUTING.md`, `AGENTS.md` and `.github/PULL_REQUEST_TEMPLATE.md` in the
-repo, summarised here as of 2026-11-01. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
+repo, summarised here as of 2026-11-15. Read them before acting on a rule from memory; they change. `AGENTS.md` holds the product
 contract, the ready-for-review checklist and upstream's own "Review-Proven Rules".
 
 ## 0. Before writing code
@@ -34,7 +34,15 @@ contract, the ready-for-review checklist and upstream's own "Review-Proven Rules
   5. one user action = one atomic persist;
   6. a guard must not hide the only recovery affordance;
   7. new UI: audit assistive semantics (one owner per label, no duplicate screen-reader stops);
-  8. every input modality (keyboard, pointer, hotkey) is a first-class seam.
+  8. every input modality (keyboard, pointer, hotkey) is a first-class seam;
+  9. design every client-driven path (connect, reconnect, renewal, poll, catch-up) for the
+     whole fleet running it at once: count relay reads per client and reconnect from a cursor,
+     jitter and back off with a cap, prefer event-driven refresh over short polls, and on the
+     relay assume every connect/auth cache misses (from relay load tests, #8846, #9012).
+- **Open-source boundary** (`AGENTS.md`, since #9114): nothing that only makes sense inside
+  Block (its communities and hosts, private repos, internal hosts, accounts, tickets, people).
+  A feature must be generic; distributor-specific values go into release or deployment
+  configuration through generic settings. Review judges purpose, not only strings.
 - `desktop/` is legacy, being replaced by block/buzz-app: never use it as a reference for
   `mobile/`, but keep mobile's event payloads wire-compatible with the other clients (#8868).
 - Architecture conventions (`AGENTS.md`, "Key Patterns"): prefer a new Nostr event kind
@@ -81,6 +89,15 @@ Environment notes (NixOS):
 - Hermit runs here (nix-ld): `. ./bin/activate-hermit`, or call `bin/cargo` (1.98.1), `bin/just`
   (1.46.0), `bin/node`, `bin/pnpm`, `bin/lefthook` (2.1.3) directly (verified 2026-11-09).
   Fallback: `nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#gcc nixpkgs#rustfmt nixpkgs#clippy`.
+- `bin/cargo` is Hermit's rustup; the toolchain lives in `~/.rustup`. A toolchain installed by
+  nixpkgs' rustup instead links through that rustup's store path, and every link fails
+  (`ld-wrapper.sh: No such file or directory`, ld exit 127) once Nix collects it. Reinstall with
+  Hermit's: `bin/rustup toolchain uninstall 1.98.1-x86_64-unknown-linux-gnu`, then any
+  `bin/cargo` call installs it again (2026-11-15).
+- The fleet hosts run envfs (nix-config `core.nix`), which serves `/bin/<tool>` from `PATH`. A
+  hardcoded `/bin/kill` or `/usr/bin/env` therefore works here, but fails on stock NixOS and in
+  the Nix build sandbox. Reproduce such a bug in the sandbox (the nixpkgs build), not with
+  `bin/cargo test` on this host (#9530).
 - jj doesn't run git hooks, and lefthook's pre-commit lanes act on staged files, which jj never
   stages: `bin/lefthook run pre-commit` checks nothing. Run the recipes those lanes run for the
   paths the change touches (Rust: `just fmt-check`, `just clippy`; `just file-size-check`
