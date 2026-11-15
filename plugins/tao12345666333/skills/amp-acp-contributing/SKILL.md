@@ -13,7 +13,7 @@ where they differ.
 Sources of truth in the repo: `AGENTS.md` (commands, architecture, code style, "Update Protocol"),
 `README.md`, `docs/`, `.github/workflows/{ci,release}.yml`, `.github/dependabot.yml`, `.agents/setup`.
 No `CONTRIBUTING.md`, no PR or issue templates, no `CODEOWNERS`, no `SECURITY.md`. As of 2026-11-11
-(main `f84bddf`, latest release v0.12.0 on 2026-11-01).
+(main `f84bddf`, release v0.12.0); latest release v0.13.0 on 2026-11-15.
 
 Apache-2.0, about 100 stars, one maintainer (`@tao12345666333`, Jintao Zhang) who merges
 everything; much of main comes from Amp agent sessions (`ampagent` commits) and Dependabot.
@@ -46,10 +46,9 @@ Releases are frequent (v0.11.0 and v0.12.0 two days apart) and publish to npm.
 - In `nix shell nixpkgs#bun`: `bun install --frozen-lockfile`, `bun run lint`, `bun test src/`,
   `bun run test:binary` (what `ci.yml` runs on ubuntu-latest). `test:e2e:live` needs an
   authenticated Amp CLI and spends Amp credits: only with Martin's OK.
-- Timing: `src/amp-transport.test.ts` "delivers delayed initialization after steering an early
-  cancellation" waits a fixed 50 ms for its fake CLI; under CPU load it fails (2026-11-11: idle
-  0/10, with `stress-ng --cpu 24` 5/25 on v0.12.0 and 9/25 on `f84bddf`). The nixpkgs package
-  skips it; report or fix upstream before relying on it.
+- Timing: fake-CLI tests that wait a fixed delay can fail under CPU load while passing idle.
+  Repeat a suspect test with `stress-ng --cpu 24` running before trusting it (v0.12.0's
+  "delivers delayed initialization …" failed 5/25 that way; fixed in v0.13.0 by #105).
 
 ## 4. Commits and 5. Pull request
 
@@ -66,7 +65,7 @@ Releases are frequent (v0.11.0 and v0.12.0 two days apart) and publish to npm.
 ## 7. What the history shows
 
 Merge times of fork PRs (last 40 merged, 2026-11-11): 2, 2, 3, 8, 8, 8 h for a regular
-contributor's fixes, 183–1086 h for older one-off PRs.
+contributor's fixes, 183–1086 h for older one-off PRs. Our #105 (a test fix) took 38 h.
 `gh pr list -R tao12345666333/amp-acp --state merged --limit 40 --json createdAt,mergedAt,isCrossRepository --jq '[.[] | select(.isCrossRepository) | (((.mergedAt|fromdate) - (.createdAt|fromdate))/3600|floor)] | sort | join(",")'`
 Closed unmerged outside PRs are rare (#72, #103, both superseded by maintainer work).
 
@@ -75,7 +74,7 @@ Closed unmerged outside PRs are rare (#72, #103, both superseded by maintainer w
 - Clone: `~/.cache/acp-bridges/amp-acp` (read-only reference; make a jj clone under
   `~/Develop/github.com/tao12345666333/amp-acp` with a `fork` remote before the first PR).
 - nixpkgs: `amp-acp` (NixOS/nixpkgs#584499, Martin maintains): bundled `@ampcode/cli` binaries
-  removed, `AMP_CLI_PATH` defaults to nixpkgs' `amp-cli`, one racy test skipped (section 3).
+  removed, `AMP_CLI_PATH` defaults to nixpkgs' `amp-cli`; since 0.13.0 no test is skipped.
 - Berd (block/berd) offers Amp through `amp-acp`; Berd's install recipe is `npm install -g amp-acp`.
 
 ## Review checklist
