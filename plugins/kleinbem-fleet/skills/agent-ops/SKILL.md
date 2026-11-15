@@ -104,20 +104,27 @@ description: >-
   #355) was wrong: `acpi_tad` held rtc0, `hwclock --rtc /dev/rtc1` worked, the other five hosts
   trimmed fine, and the fix was blacklisting one module on one host (#356).
 
-## CodeRabbit gates every PR
+## CodeRabbit reviews on request
 
 Public kleinbem repos require the `CodeRabbit` check and resolved conversations (github-config
-#30), so an armed PR doesn't merge until its review is answered. Config: `kleinbem/coderabbit`.
+#30). Config: `kleinbem/coderabbit`. The free plan gives about one review per hour per repo and
+author; a rate-limited review passes the check, so the PR merges unreviewed. So reviews are
+opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and merge.
 
-- The free plan reviews every PR by itself but only a few per hour; a rate-limited one merges
-  unreviewed. Keep that budget for changes that need it: open a PR with `--label cr-skip` (no
-  review, the check reports `skipped`) only when it changes at most 20 lines, not counting lock
-  and generated files, and touches nothing in `.github/`, `*.tf`, secrets or sops files, or
-  auth, firewall, network or SSH config. Before a push that breaks that rule, remove the label
-  and run `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm
-  auto-merge only once the review is answered.
-- If no review shows up 10 minutes after opening (or after a push), comment `@coderabbitai
-  review`, once. Go by the review, not the check: the check can pass without one.
+- Add `--label cr-review` to `gh pr create` when a review is worth the hour: new logic or
+  behaviour, security, secrets or access, fleet-wide or cross-repo effects, a larger refactor, or
+  code you aren't sure of. Skip it for docs, wording, version bumps and changes Martin already
+  reviewed. When unsure, label it. fleet-lint fails a PR that touches `.github/`, `*.tf`, sops,
+  or secret, SSH, firewall, network, auth or TLS paths without the label: add it and re-run.
+- In a busy repo, fold small related changes into one labelled PR, and don't label a second one
+  there while the first review is still running.
+- A labelled PR doesn't get `gh pr merge --auto` at creation: arm it only after the review body
+  and every thread are handled. If CodeRabbit says "Review rate limited", wait for the time it
+  gives and comment `@coderabbitai review`.
+- Pushes after the review aren't reviewed (incremental reviews are off, the check reports
+  `skipped`). Before a push that changes more than the review's own fixes, run
+  `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm once
+  that review is handled. Adding the label to an armed PR later: disarm it first the same way.
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
   thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
   way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
@@ -130,9 +137,8 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
 - List open threads: `gh api graphql -f query='{repository(owner:"kleinbem",name:"<repo>"){pullRequest(number:<n>){reviewThreads(first:100){pageInfo{hasNextPage endCursor} nodes{id isResolved comments(first:1){nodes{path body}}}}}}}'`.
   If `hasNextPage` is true, ask again with `after:"<endCursor>"`: the gate counts every thread.
   Resolve one: `gh api graphql -f query='mutation{resolveReviewThread(input:{threadId:"<id>"}){thread{isResolved}}}'`.
-- A new push triggers a fresh review with new threads, so answer them all again before walking away.
-- Bot PRs and bot pushes report `skipped`. A rate-limited review reports a passing check plus a
-  comment: the PR then merges unreviewed, so say so in your report.
+- A requested re-review brings new threads: answer them all again before walking away.
+- Bot PRs and bot pushes report `skipped`. If a PR merged unreviewed, say so in your report.
 - Private repos (kleinbem-secrets, mesh-llm-gpu) have no CodeRabbit.
 
 ## Verify with real builds
