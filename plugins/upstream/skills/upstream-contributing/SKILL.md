@@ -266,6 +266,10 @@ skill may forbid even more (llama.cpp: the agent never commits, pushes or posts)
   After every push, list each open PR's unresolved threads (`gh api graphql` reviewThreads,
   `isResolved`): a CodeRabbit thread on Mesh-LLM#2494 went unanswered for three days and turned an
   approval into "changes requested".
+- After answering a human review, re-request it: the reviewer gets no other signal that it's their
+  turn. `scripts/rerequest-candidates.sh` (next to this skill) lists open PRs whose reviewer
+  commented or requested changes before your last push and isn't requested again, with the
+  `gh api` call for each. Re-requesting notifies the reviewer, so it needs Martin's OK (section 7).
 - A point the PR's own change causes is not out of scope: Mesh-LLM#2684 declined CodeRabbit's
   Windows-ACL point as a follow-up, and a maintainer requested changes for it, because the new
   rename had lost the DACL the old in-place write kept. Fix regressions in the PR; defer only
