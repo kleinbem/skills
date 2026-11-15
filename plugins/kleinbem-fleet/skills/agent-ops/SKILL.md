@@ -109,11 +109,15 @@ description: >-
 Public kleinbem repos require the `CodeRabbit` check and resolved conversations (github-config
 #30), so an armed PR doesn't merge until its review is answered. Config: `kleinbem/coderabbit`.
 
-- The trial ends around 2026-11-11. On the free plan CodeRabbit doesn't review repos with fewer
-  than 10 stars by itself, which is every public kleinbem repo. If no review shows up 10 minutes
-  after opening, comment `@coderabbitai review` on the PR, once. Go by the review, not the check:
-  the check can pass without one (see the rate limit below). After a new push, the same: comment
-  only if no review shows up for it.
+- The free plan reviews every PR by itself but only a few per hour; a rate-limited one merges
+  unreviewed. Keep that budget for changes that need it: open a PR with `--label cr-skip` (no
+  review, the check reports `skipped`) only when it changes at most 20 lines, not counting lock
+  and generated files, and touches nothing in `.github/`, `*.tf`, secrets or sops files, or
+  auth, firewall, network or SSH config. Before a push that breaks that rule, remove the label
+  and run `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm
+  auto-merge only once the review is answered.
+- If no review shows up 10 minutes after opening (or after a push), comment `@coderabbitai
+  review`, once. Go by the review, not the check: the check can pass without one.
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
   thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
   way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
