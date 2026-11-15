@@ -101,7 +101,7 @@ commands of `contribution-skill-authoring`):
 - gum comes from nixpkgs (`gum`, 2.0.2 on 2026-11-14).
 - kleinbem/kleinbem `tools/jj-fleet.sh` (`print_tsv_table`) replaces `"` with `'` before
   `gum table`, because a field that starts with a quote breaks `encoding/csv` even with
-  `--lazy-quotes`; an issue asking for a no-quoting mode is drafted (2026-11-14), not filed yet.
+  `--lazy-quotes`; charmbracelet/gum#1186 (filed 2026-11-15) asks for a no-quoting mode.
   Related: charmbracelet/gum#345 (closed by #759), #935 (open, `\t` separator), #979 (`\0`).
 
 ## Review checklist
