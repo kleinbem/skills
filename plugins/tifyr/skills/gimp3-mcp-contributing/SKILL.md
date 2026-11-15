@@ -96,18 +96,22 @@ own branches. It continues maorcc/gimp-mcp, whose history it keeps. Active 2026-
 
 ## 7. What the history shows
 
-As of 2026-11-01 (`gh pr list -R tifyr/gimp3-mcp --state all`): one PR ever, #1 from kv055, open
-four days without a reply or review. No merged outside contribution yet, so no review patterns.
+As of 2026-11-15 (`gh pr list -R tifyr/gimp3-mcp --state all`): two PRs. #1 from kv055 has had no
+reply or review in 18 days; no commits since 2026-09-16. No merged outside contribution yet, so no review patterns.
 The maintainer lands work as merge commits of his own branches (11 of the last 100 commits).
 
 ## 8. Our setup and current threads
 
 - Fork `kleinbem/gimp3-mcp`, clone `~/Develop/github.com/tifyr/gimp3-mcp` (jj colocated,
   `origin` upstream, `fork` ours).
-- Downstream: kleinbem/nix-packages carries `pkgs/gimp3-mcp/mcp-2.patch` (mcp 2: `FastMCP` is
-  `MCPServer`, tool errors re-raised as `ToolError` so their messages reach the client),
-  kleinbem/nix-packages#232. no-link: upstream support for mcp 2 next to mcp 1 is prepared
-  (2026-11-01) but no issue or PR exists yet; replace this with the PR once it is open.
+- tifyr/gimp3-mcp#2 (draft, opened 2026-11-15): runs the server on mcp 1 and 2 (`MCPServer`
+  import with a `FastMCP` fallback; the worker-thread wrapper re-raises errors as `ToolError` so
+  their messages reach the client on mcp 2). Probed on mcp 1.10.1, 1.30.0, 2.0.0 and 2.3.0; mcp
+  1.10.1 needs pydantic < 2.12 to start at all. Its `CHANGELOG.md` `## Unreleased` block conflicts
+  with #1's: whichever merges second rebases. Martin reviews before it goes ready.
+- Downstream: kleinbem/nix-packages `pkgs/gimp3-mcp/package.nix` fetches #2's commit
+  (kleinbem/nix-packages#316, replacing the old mcp 2-only patch from #232); refresh the hash when
+  #2 is rebased, drop it with the release that has #2.
 
 ## Review checklist
 
