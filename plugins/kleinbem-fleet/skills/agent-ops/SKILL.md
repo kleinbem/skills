@@ -113,8 +113,9 @@ Public kleinbem repos require the `CodeRabbit` check and resolved conversations 
   unreviewed. Keep that budget for changes that need it: open a PR with `--label cr-skip` (no
   review, the check reports `skipped`) only when it changes at most 20 lines, not counting lock
   and generated files, and touches nothing in `.github/`, `*.tf`, secrets or sops files, or
-  auth, firewall, network or SSH config. If a later push breaks that rule, remove the label and
-  comment `@coderabbitai review`.
+  auth, firewall, network or SSH config. Before a push that breaks that rule, remove the label
+  and run `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm
+  auto-merge only once the review is answered.
 - If no review shows up 10 minutes after opening (or after a push), comment `@coderabbitai
   review`, once. Go by the review, not the check: the check can pass without one.
 - After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
