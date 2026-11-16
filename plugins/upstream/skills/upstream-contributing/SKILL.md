@@ -21,7 +21,7 @@ model invocation of manual skills.
 
 | Organization | Org skill | Repository skills |
 |---|---|---|
-| NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work), `nixpkgs-packaging` (a new app end to end), `nixpkgs-reviewing` (reviewing PRs), `nixos-hardware-contributing` |
+| NixOS | `nixos-org` | `nixpkgs-contributing`, `nixpkgs-maintaining` (maintainer work), `nixpkgs-packaging` (a new app end to end), `nixpkgs-reviewing` (reviewing PRs), `nixos-hardware-contributing`, `nix-contributing` |
 | block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing`, `catch-contributing` |
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
@@ -67,6 +67,7 @@ is authoritative; update this table when one changes):
 |---|---|---|---|---|---|---|
 | nixpkgs | yes | no | agent drafts, Martin reviews | `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<attr>: …` |
 | NixOS/nixos-hardware | yes | no | agent drafts, Martin reviews | Nixpkgs policy: `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<path>: …` (`raspberry-pi/common/kernel: …`), merge commits |
+| NixOS/nix | yes; first PRs tightly scoped fixes | no; search, open one when unsure a change is wanted | **Martin writes every text** (issues, PRs, comments, commit messages, code comments, docs); agent gives facts and code | `Assisted-by: <tool> (<model>)` trailer on agent-written commits; one disclosure line in the issue or PR body | no | `<component>: …` (`libstore: …`), merge commits |
 | block/buzz | yes | beyond small fixes | agent drafts, Martin reviews | none needed | DCO, only after Martin reviewed | Conventional Commits |
 | block/buzz-app | yes, rarely merged; fork CI needs approval | no; scope checkpoint in the PR | agent drafts, Martin reviews | `Co-authored-by:` trailer for the agent | DCO, only after Martin reviewed | free-form (Conventional Commits common), squash |
 | aaif-goose/goose | only for a **Ready** issue | always | Martin writes the issue | `Co-Authored-By` accepted, no disclosure needed | no | Conventional Commits |
