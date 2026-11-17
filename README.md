@@ -34,6 +34,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `noooste` | `garage-ui-contributing` | Noooste/garage-ui: Conventional Commits PR titles, coverage gate, maintainer's review style, nixpkgs angle |
 | `tifyr` | `tifyr-org` | tifyr organization: security reports, repo table |
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
+| `sptapyo` | `sptapyo-org` | SPTApyo (personal account): security reports, repo table |
+| `sptapyo` | `nix-app-center-contributing` | SPTApyo/nix-app-center: size guide, AI ownership rule, Conventional Commits, coverage gate, agent safety rules, testing on a config copy |
 | `anduril` | `anduril-org` | anduril organization: security reports, repo table |
 | `anduril` | `jetpack-nixos-contributing` | anduril/jetpack-nixos: no contribution docs, PR template, CI (eval plus checks), kernel config per L4T release |
 | `omacom` | `omacom-org` | omacom organization (was basecamp): AI stance, bots, security reports, channels, repo table |

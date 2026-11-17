@@ -36,6 +36,7 @@ model invocation of manual skills.
 | alsa-project | `alsa-project-org` | `alsa-ucm-conf-contributing` |
 | outfoxxed, quickshell-mirror | `outfoxxed-org` | `quickshell-contributing` |
 | charmbracelet (Charm) | `charmbracelet-org` | `gum-contributing` |
+| SPTApyo (personal account) | `sptapyo-org` | `nix-app-center-contributing` |
 
 Read this skill, then the org skill, then the repo skill, before the first edit. The org skill's
 repo table says which repos have a skill.
@@ -90,6 +91,7 @@ is authoritative; update this table when one changes):
 | omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |
 | omacom/hype | yes; small fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line | no | plain imperative sentence |
 | charmbracelet/gum | yes; features need an approved Discussion first | features (Discussion); bugs no | agent drafts, Martin reviews | no policy; no disclosure in issues, one line in a PR | no | Conventional Commits, `feat(table): …`, squash |
+| SPTApyo/nix-app-center | yes; within 400 lines and 10 files | beyond a small fix | agent drafts, Martin reads the whole diff | none asked; "you understand every line you submit" | no | Conventional Commits, 72 chars, squash |
 | AUR | as (co-)maintainer; others' packages via comment | no | agent drafts PKGBUILDs; **Martin pushes** and writes comments/emails | no policy; no agent trailers (history is permanent) | no | free-form (`update: x.y.z`) |
 
 A repo not in the table has no repository skill yet: run the first-contact procedure above, which
