@@ -81,7 +81,7 @@ and no `CODEOWNERS`. As of 2026-11-17: 46 PRs, nearly all from `ndizazzo` (agent
 From `README.md` ("Local validation"); Node 24 from nixpkgs is enough, no install step:
 
 ```bash
-nix shell nixpkgs#nodejs_24 nixpkgs#shellcheck nixpkgs#actionlint -c bash -c '
+nix shell nixpkgs#nodejs_24 nixpkgs#dpkg nixpkgs#zstd nixpkgs#shellcheck nixpkgs#actionlint -c bash -c '
   node --experimental-strip-types scripts/image-matrix.ts validate &&
   node --experimental-strip-types --test --experimental-test-coverage \
     --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 \
@@ -93,8 +93,12 @@ nix shell nixpkgs#nodejs_24 nixpkgs#shellcheck nixpkgs#actionlint -c bash -c '
 - `tests/image-matrix.test.ts` must keep 100% line, branch and function coverage.
 - Docker fixture suite (real `dpkg-deb`/`pacman` installs, reproducibility, layer checks):
   `MESH_PACKAGING_DOCKER_TESTS=1 node --experimental-strip-types --test tests/package-build-efficiency.test.ts`.
-  Without the variable those tests skip (2026-11-17 on nixos-nvme: 215 tests, 212 pass,
-  3 skipped, 38 s). It calls `docker`; where only podman exists, run it on a GitHub runner.
+  Without the variable that test skips; the package tests in `tests/native-package.test.ts`
+  skip too when `dpkg-deb` or `zstd` is missing, hence both in the shell above (2026-11-17 on
+  nixos-nvme: 217 tests, 216 pass, 1 skipped). Name each skip by its real reason in a PR. The
+  fixture suite calls `docker`; where only podman exists, dispatch `images-precheck.yml` on
+  the fork (`gh workflow run images-precheck.yml -R kleinbem/mesh-packaging --ref <branch>`),
+  which needs no Depot access and runs it.
 - The release workflow runs on the fork as a manual dry run
   (`gh workflow run images-release.yml -R kleinbem/mesh-packaging --ref <branch> -f mesh_ref=v<ver>
   -f mesh_version=<ver> -f native_selector=all`), with two test-only changes on a throwaway
