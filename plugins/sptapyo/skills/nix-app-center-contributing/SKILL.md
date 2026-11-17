@@ -41,8 +41,8 @@ non-bot commits. The repo name on GitHub is `Nix-App-Center`; URLs in its own fi
 ## 1. Before starting
 
 - Search issues and PRs; as of 2026-11-17 there are no issues at all and no PR from outside.
-- A bug fix within the size guide goes straight to a PR. A feature, or a fix that changes how a
-  layout is detected or attached, gets an issue first.
+- A bug fix within the size guide goes straight to a PR (`CONTRIBUTING.md`: an issue first only
+  for "anything bigger than a small fix"). A feature gets an issue first.
 - Plans and to-do lists don't go into the repo ("plans live in issues").
 
 ## 2. Designing the change
@@ -107,6 +107,10 @@ non-bot commits. The repo name on GitHub is `Nix-App-Center`; URLs in its own fi
 - No required approvals, no review-thread gate, no AI reviewer. Dependabot and a weekly
   `flake-lock.yml` open the bot PRs.
 - A new push cancels the previous CI run of the branch.
+- CI on a fork PR waits for the maintainer's approval (`action_required`, seen on
+  SPTApyo/nix-app-center#37), so run `just check` and `just cov` locally before opening.
+  `just translations` needs git: in a jj workspace run `./po/update-pot.sh` and check
+  `jj diff po/` shows only the `POT-Creation-Date` line, then `jj restore po/`.
 
 ## 7. What the history shows
 
@@ -125,7 +129,9 @@ sentence with the user-visible effect (SPTApyo/nix-app-center#31).
 ## 8. Our setup and current threads
 
 - Clone: `~/Develop/github.com/SPTApyo/nix-app-center`, remotes `origin` = upstream, `fork` =
-  `kleinbem/nix-app-center`.
+  `kleinbem/Nix-App-Center`.
+- First outside PR: SPTApyo/nix-app-center#37 (attach kept out of a flake's own imports list),
+  opened 2026-11-17.
 - Downstream angle: the fleet's `nix-config` is a flake-parts flake with `nixosConfigurations`
   defined outside `flake.nix`. Found 2026-11-17 on v0.3.0: host detection needs the `host`
   setting there, and `attach` splices its NixOS modules into the flake-parts `imports` list,
