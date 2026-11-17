@@ -46,7 +46,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 | Repo | Repository skill | Notes |
 |---|---|---|
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
-| Mesh-LLM/mesh-packaging | none yet | install paths, distro packages; our nixpkgs/AUR work touches it |
+| Mesh-LLM/mesh-packaging | `mesh-packaging-contributing` | repackages release archives only (deb, Arch, OCI, Homebrew, npm); bundle contents are fixed in mesh-llm |
 | Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every other tracked file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
 | Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork | none yet | |
 
