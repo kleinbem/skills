@@ -59,9 +59,9 @@ and no `CODEOWNERS`. As of 2026-11-17: 46 PRs, nearly all from `ndizazzo` (agent
 - Verify on the published artifact first: `gh release download packaging-v<ver> -R
   Mesh-LLM/mesh-packaging -p '<file>'`, then list it (`tar --zstd -tvf` for `.pkg.tar.zst`,
   `ar p <deb> data.tar.zst | tar --zstd -tv`) and compare with the upstream archive
-  (`gh release download v<ver> -R Mesh-LLM/mesh-llm`). The build script alone misleads: the
-  bundle passes through `actions/upload-artifact` between jobs (`artifacts/upstream`), which
-  drops file modes; only the host gets `chmod 0755` back.
+  (`gh release download v<ver> -R Mesh-LLM/mesh-llm`). The build script alone misleads:
+  `actions/download-artifact` writes every file back as `0644` (the uploaded zip still
+  records the modes), so anything passed between jobs as a directory loses its executable bits.
 - Packages are deliberately uniform: name `mesh-llm` for every variant, host in
   `/usr/local/bin`, product tree in `/usr/local/lib/mesh-llm/<version>/` with a
   `native-runtimes` symlink beside it. Filenames carry version, distro, arch, backend and
@@ -95,9 +95,18 @@ nix shell nixpkgs#nodejs_24 nixpkgs#shellcheck nixpkgs#actionlint -c bash -c '
   `MESH_PACKAGING_DOCKER_TESTS=1 node --experimental-strip-types --test tests/package-build-efficiency.test.ts`.
   Without the variable those tests skip (2026-11-17 on nixos-nvme: 215 tests, 212 pass,
   3 skipped, 38 s). It calls `docker`; where only podman exists, run it on a GitHub runner.
-- The release workflow itself (Depot runners, `repository_dispatch`) can't run from a fork.
-  Proof for a package change is the fixture suite plus a manual build of the affected format
-  from a real upstream archive, installed in the distro's container.
+- The release workflow runs on the fork as a manual dry run
+  (`gh workflow run images-release.yml -R kleinbem/mesh-packaging --ref <branch> -f mesh_ref=v<ver>
+  -f mesh_version=<ver> -f native_selector=all`), with two test-only changes on a throwaway
+  branch: `depot/setup-action` and `depot/build-push-action` replaced by
+  `docker/setup-buildx-action` and `docker/build-push-action` (drop `project:`, give the
+  `build-id`/`project-id` outputs a literal), and `--repository "Mesh-LLM/mesh-packaging"` for
+  `release-handoff.ts create`, which rejects any other name. A full run takes about 25 minutes.
+  Add a control run that should fail, and say in the PR what the test branch changed (#47).
+- A local build of one row: verify the archive with `scripts/upstream-archive.ts`, put the
+  result in `artifacts/upstream`, then `podman build -f docker/Dockerfile.mesh-llm --target
+  native-package-artifact --output type=local,dest=<dir>` with the row's build args. Built that
+  way, the 0.80.0 Arch CPU package was byte-identical to the published asset.
 
 ## 4. Commits
 
@@ -140,9 +149,10 @@ gh pr list -R Mesh-LLM/mesh-packaging --state all --limit 60 \
 
 ## 8. Our setup
 
-- No clone or fork yet. When the first PR is ready: clone to
-  `~/Develop/github.com/Mesh-LLM/mesh-packaging` (jj colocated), remotes `origin` (upstream)
-  and `fork` (`kleinbem/mesh-packaging`), one jj workspace per branch.
+- Clone `~/Develop/github.com/Mesh-LLM/mesh-packaging` (jj colocated), remotes `origin`
+  (upstream) and `fork` (`kleinbem/mesh-packaging`, Actions enabled), one jj workspace per
+  branch in `mesh-packaging.ws/`.
+- Open: #47 (runtime tools lose their executable bit; draft since 2026-11-17).
 - Downstream angle: our source-built packages (nixpkgs `mesh-llm` and `skippy-native-runtime`,
   `kleinbem/aur-packages`) install into `<prefix>/lib/mesh-llm/native-runtimes`, the same
   discovery path these packages use, so layout and dependency findings carry over in both
