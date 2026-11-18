@@ -29,7 +29,7 @@ Jetson an older driver.
 | Missing `#include` that unity builds hid | clef.cpp `<algorithm>`: issue M#2495 → M#2524, L#30981 | the project that owns the file |
 | CPU variants the host compiler can't build (`+sme`) | L#26103 (existing, approved) — search first, carry it vendored with the link | upstream |
 | PTX-only CUDA build the driver can't JIT | M#2303: pass the target architectures through | upstream |
-| CUDA major mismatch with the device's driver | build with `cudaPackages_12` and the device's capability for Jetson (agent-ops) | package config, not a workaround |
+| CUDA major mismatch with the device's driver | build with the CUDA major the driver runs and the device's capability (Orin: agent-ops) | package config, not a workaround |
 
 ## Read-only store and non-root builds
 

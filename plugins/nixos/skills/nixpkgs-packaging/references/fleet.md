@@ -82,8 +82,8 @@ upstreams: copy the pattern when their CI needs approval for forks.
 
 ## 4. Real hardware
 
-- **Orin Nano (aarch64, JetPack 6, sm_87):** CUDA 12 builds with `cudaPackages_12` and
-  `cudaCapabilities = [ "8.7" ]` (nixpkgs master defaults to CUDA 13, which JetPack 6 can't run).
+- **Orin Nano (aarch64, JetPack 7, sm_87):** CUDA builds with nixpkgs' default CUDA 13 and
+  `cudaCapabilities = [ "8.7" ]`.
   Ask Martin for a no-touch SSH grant (`just access::grant-notouch orin-nano`) and the go to stop
   its services (Frigate, mesh-llm, the GPU runner); remind him to start them afterwards. 8 GB RAM:
   `cores 2, max-jobs 1` for big Rust builds. Proof of GPU use: `tegrastats` GR3D load and the

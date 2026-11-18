@@ -147,9 +147,8 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
 
 ## Verify with real builds
 
-- GPU tests on orin-nano (JetPack 6, driver for CUDA 12): nixpkgs master defaults to CUDA 13
-  (seen 2026-10-27), which that driver can't run. Build with `cudaPackages_12` and
-  `config.cudaCapabilities = [ "8.7" ]`.
+- GPU tests on orin-nano (JetPack 7, CUDA 13): nixpkgs' default CUDA matches its driver. Set
+  `config.cudaCapabilities = [ "8.7" ]`; no `cudaPackages` override.
 - Eval isn't verification: build the narrowest derivation that runs the check (for sops-nix,
   `config.system.build.sops-nix-manifest`; for module docs, the NixOS manual; for packages, their
   tests).

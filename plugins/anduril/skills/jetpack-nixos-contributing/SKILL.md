@@ -69,7 +69,7 @@ reviews.
 ## 5. Pull request
 
 - Keep the template's two sections, `Description of changes` and `Testing`; Testing names the
-  SoM and carrier board (for Martin: Orin Nano Super devkit, JetPack 6).
+  SoM and carrier board (for Martin: Orin Nano Super devkit, JetPack 7).
 
 ## 6. CI and bots
 
@@ -87,7 +87,7 @@ Measured 2026-11-07 (commands in `contribution-skill-authoring`, section 3):
 ## 8. Our setup and current threads
 
 - No fork yet; clone at `~/Develop/github.com/anduril/jetpack-nixos`. kleinbem/nix-hardware pins
-  it (`orin-nano.nix`, an Orin Nano Super on JetPack 6).
+  it (`orin-nano.nix`, an Orin Nano Super on JetPack 7 since kleinbem/nix-config#884).
 - nix-hardware carries the `nftables-fleet` kernel patch (NFT_CT, NFT_FIB_*, NFT_REDIR …) for the
   NixOS nftables firewall; tracking: kleinbem/nix-hardware#107.
 
