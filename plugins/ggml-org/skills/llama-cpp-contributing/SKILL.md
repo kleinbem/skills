@@ -148,8 +148,8 @@ cite most:
   `.pre-commit-config.yaml` covers trailing whitespace, end of file, YAML and large files.
 - Verify perplexity and performance didn't regress (`llama-perplexity`, `llama-bench`) when the
   change can affect them.
-- Our hardware: x86_64 with an Intel iGPU (Vulkan) on nixos-nvme; aarch64 with CUDA 12.6 and the
-  JetPack 6 GCC 13.5 toolchain on orin-nano (the SME-variant case); no AMD. Compare a failure
+- Our hardware: x86_64 with an Intel iGPU (Vulkan) on nixos-nvme; aarch64 with CUDA 13 on
+  JetPack 7 on orin-nano (the SME-variant case); no AMD. Compare a failure
   against unmodified `master` on the same host before blaming the change.
 
 ## 4. Commits and the PR title
