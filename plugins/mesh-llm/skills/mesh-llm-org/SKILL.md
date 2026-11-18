@@ -10,7 +10,7 @@ disable-model-invocation: true
 Layer 2 of 3: read after `upstream-contributing`, before the repository skill; the repository
 skill wins where they differ. Sources: `Mesh-LLM/mesh-llm` (`CONTRIBUTING.md`, `AGENTS.md`,
 `SECURITY.md`), `Mesh-LLM/mesh-packaging` (`AGENTS.md`); the org's `.github` repo holds only its
-profile. As of 2026-11-03.
+profile. As of 2026-11-03; plugin repos 2026-11-18.
 
 ## 0. Attribution
 
@@ -35,11 +35,13 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   holds experiment branches (last pushed 2026-08-30) and is not where fixes go. `mesh-packaging`
   owns distribution (Docker images, native packages, Homebrew via `homebrew-tap`); its scripts are
   TypeScript/Node. Distribution-specific changes (Nix, Arch/AUR) belong downstream unless they
-  replace fragile patching. Default plugins live in their own repos (capsules:
-  `Mesh-LLM/capsules`); the mesh-llm release bundles each one's pinned release archive under
-  `plugins/` (#2546, #2520). The Python SDK lives in `Mesh-LLM/mesh-llm-python-sdk`; a public
+  replace fragile patching. Plugins live in their own `*-plugin` repos (capsules:
+  `Mesh-LLM/capsules-plugin`), most on the `Mesh-LLM/example-plugin` CI standard; they depend
+  on `mesh-llm-plugin` by git rev, since crates.io stops at 0.78.1. Releases up to 0.78 bundled
+  default plugins under `plugins/` (#2546, #2520); #2977 stopped that for 0.79, and users get
+  them from the Hugging Face catalog `meshllm/plugin-catalog`. The Python SDK lives in `Mesh-LLM/mesh-llm-python-sdk`; a public
   SDK change in mesh-llm needs a companion PR there (mesh-llm `AGENTS.md`, #2703).
-- **No DCO sign-off;** Conventional Commits; CodeRabbit reviews mesh-llm PRs and expects answers.
+- **No DCO sign-off** except in capsules-plugin (`dco` check); Conventional Commits; CodeRabbit reviews mesh-llm PRs and expects answers.
 
 ## 2. Repositories
 
@@ -48,7 +50,9 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
 | Mesh-LLM/mesh-packaging | `mesh-packaging-contributing` | repackages release archives only (deb, Arch, OCI, Homebrew, npm); bundle contents are fixed in mesh-llm |
 | Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every other tracked file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
-| Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork | none yet | |
+| Mesh-LLM/capsules-plugin | `capsules-plugin-contributing` | the capsules plugin; run by Ethan Zhang's agent through issue claims; DCO required |
+| Mesh-LLM/openai-endpoint-plugin | `openai-endpoint-plugin-contributing` | attaches an external OpenAI-compatible server; small, few PRs |
+| Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork, the other `*-plugin` repos | none yet | |
 
 A repo with "none yet" gets its repository skill before our first contribution
 (`upstream-contributing`, "First contact").
