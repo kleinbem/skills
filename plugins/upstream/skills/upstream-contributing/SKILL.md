@@ -72,7 +72,7 @@ is authoritative; update this table when one changes):
 | block/buzz | yes | beyond small fixes | agent drafts, Martin reviews | none needed | DCO, only after Martin reviewed | Conventional Commits |
 | block/buzz-app | yes, rarely merged; fork CI needs approval | no; scope checkpoint in the PR | agent drafts, Martin reviews | `Co-authored-by:` trailer for the agent | DCO, only after Martin reviewed | free-form (Conventional Commits common), squash |
 | aaif-goose/goose | only for a **Ready** issue | always | Martin writes the issue | `Co-Authored-By` accepted, no disclosure needed | no | Conventional Commits |
-| Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits |
+| Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits by habit (optional since 2026-11) |
 | Mesh-LLM/mesh-packaging | yes; maintainers may fold it into their own PR | no; an issue with evidence works as well | agent drafts, Martin reviews | no agent trailers (org rule) | no | Conventional Commits, squash |
 | Mesh-LLM/mesh-llm-python-sdk | yes (none from outside yet) | no | agent drafts, Martin reviews | no agent trailers (org rule) | no | Conventional Commits, `(sdk)` scope, squash |
 | Mesh-LLM/capsules-plugin | yes, rare (#290 merged) | no rule; name the issue, check its live claim | agent drafts, Martin reviews | no agent trailers (org rule) | **DCO** (`dco` check), only after Martin reviewed | Conventional Commits with scope, squash |

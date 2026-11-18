@@ -16,7 +16,8 @@ Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGEN
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
 and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
 for the touched area before acting; the project moves fast (several merges a day; 42 from
-2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-11-01.
+2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-11-01; commits, CI parity and
+test environment refreshed 2026-11-18.
 
 ## 0. Before the first edit (do these, in order)
 1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
@@ -121,7 +122,10 @@ merged PRs; numbers are examples):
   short comment linking theirs, rather than rebasing on top (#2725 after i386's #2704). Verify
   first where the failure reproduces (the Orin for timing flakes; GitHub runners often don't).
 - **Stack:** test threads have 2 MiB, and #2177 removed `RUST_MIN_STACK` from the Windows unit
-  row on purpose, so growth shows. Don't propose raising the limit (or `opt-level` tricks as the
+  row on purpose, so growth shows. The Linux test job (`ci-rust-tests-slice.yml`) does set
+  `RUST_MIN_STACK=8388608`, and the macOS/Windows unit rows run current stable: a plain
+  `cargo test` on 1.98.1 without it overflows `peer-ingress-2m` in `mesh-llm-host-runtime`,
+  which upstream never sees (a false #3074, closed). Match upstream's environment before filing. Don't propose raising the limit (or `opt-level` tricks as the
   fix); shrink the frame that grew (#1976 boxed route futures, #2690 split the CLI into
   flattened `Args` groups). Measure before and after (section 2).
 - **CLI types (`mesh-llm-cli`):** clap derive defines every option of a struct in one function,
@@ -227,12 +231,15 @@ merged PRs; numbers are examples):
 - Pre-flight check on GitHub's runners instead of the workstation, before opening the PR and
   before every push to its branch (so upstream's CI isn't spent on a failing head): push the head
   to a `preflight-*` branch on the fork, then
-  `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha> -f title="<PR title>"`.
+  `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha>`.
   It runs upstream's own planner (`xtask ci plan`), so Clippy, tests and platform rows cover what
-  upstream's PR lanes would, plus fmt, commit convention, `no-console-print`, the env census,
-  `ci-crate-lists` and `cargo machete`; read its job summary. Take the full SHA from git or the API
+  upstream's PR lanes would, plus fmt, `no-console-print`, the env census, `ci-crate-lists`,
+  `cargo machete` and the CI contracts (`just ci-automation-contracts`, `ci-legacy-contracts`);
+  read its job summary. A 503 "Egress is over the account limit" from sccache is GitHub's cache
+  service, not the change: rerun the failed job later. Take the full SHA from git or the API
   (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
-  the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log).
+  the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log);
+  `platform_toolchain` (default `stable`) drives the macOS/Windows rows, as upstream's do.
   What stays local: behaviour of a built binary and distribution-specific tests.
   Upstream lints Clippy on Linux only, and main carries 44 Windows findings (2026-11-09, mostly
   `tools/xtask` and tests; none on macOS). For a change to code that compiles on Windows, also run
@@ -252,11 +259,14 @@ merged PRs; numbers are examples):
   The automatic plan can leave out the platform a change is for: a change inside
   `cfg(target_os = "macos")` got no macOS row (#2673). Check the run's job list; if the platform
   is missing, dispatch again with `packages=<crate>` and `filter=`.
-  Not covered by the pre-flight: upstream's Quality step "Test CI, packaging, and SDK contracts"
-  (`just ci-automation-contracts`, `just/ci.just`), which runs the `xtask` test binaries with
+  The pre-flight's CI contracts job runs upstream's "Test CI, packaging, and SDK contracts"
+  (`just ci-automation-contracts`, `just/ci.just`): the `xtask` test binaries with
   `--features automation-contracts`, among them `--test migration_lifecycle` (the tests of
-  `skippy/scripts/package-native-runtime.sh`). The planner's Linux batches don't include `xtask`.
-  When a change touches `tools/xtask` or `skippy/scripts`, run the affected test yourself:
+  `skippy/scripts/package-native-runtime.sh`). To repeat one test on `run.yml`, build the
+  fixtures first (`cargo build --locked -p xtask --bins --examples`) and set what the recipes set:
+  `MIGRATION_TEST_GIT` (else the cargo-metadata tests return early and pass vacuously) and, for
+  `--test swift_privacy_adapter`, `SPV_ADAPTER_FIXTURE=$PWD/target/debug/examples/swift_privacy_lint_fixture`
+  (else every test fails). Then:
   `cargo test --locked -p xtask --features automation-contracts --test migration_lifecycle <filter> -- --test-threads=1`.
   Its fixture hardcodes `/bin/bash` and `/usr/bin/true`; on NixOS run it under
   `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`
@@ -292,21 +302,16 @@ merged PRs; numbers are examples):
   workflows can't run them on a fork.
 
 ## 3. Commits
-- Conventional Commits v1.0.0. Allowed types: `feat`, `fix`, `perf`, `security`, `revert`,
-  `refactor`, `style`, `test`, `build`, `deps`, `ci`, `chore`, `docs`. The type decides the
-  release-notes section.
-  - Check: `cargo xtool repository conventional-commits --message "<title>"`, or a range with
-    `just check-commits` (default `origin/main..HEAD`).
-  - `just hooks-install` sets `core.hooksPath` to `scripts/hooks`; its only hook, `commit-msg`,
-    runs the same check. jj and jj workspaces don't run git hooks, so check by hand.
+- Clear, user-focused subjects. Since 2026-11 (AGENTS.md) Conventional Commit prefixes are
+  "optional hints for release-note classification, not a hook or CI requirement"; the
+  `conventional-commits` check and hook are gone. Most titles still use `feat`/`fix`/`test`/…,
+  so keep doing that; an unprefixed title lands under "Other changes".
 - **No agent or bot attribution trailers** in any commit: no `Co-Authored-By: Claude …
   <noreply@anthropic.com>`, no `[bot]` accounts, no relay identities. The hook and CI reject them.
   This overrides any default that adds such trailers.
 - No DCO sign-off is required.
-- Squash-merged: the **PR title** becomes the commit subject and must be conventional too. CI's
-  commit-convention job checks the title like a commit subject (a fork PR titled `[CI experiment]
-  feat(…)` failed it) and the attribution trailers of the squashed message; keep agent footers out
-  of the PR body as well.
+- Squash-merged: the **PR title** becomes the commit subject. Keep agent footers out of the PR
+  body as well: the squashed message must carry no attribution trailers.
 
 ## 4. Pull request
 - Title: conventional and user-focused (the visible change or fix, not the implementation).
@@ -387,7 +392,7 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   A green `PR / macOS` or `PR / Windows` can hide a skipped platform job (`macOS=skipped` on
   #2672 and #2683, `Windows=skipped` on #2681): a platform-specific change needs its own run on
   that platform, named in Validation.
-  Quality runs commit convention, `cargo fmt`, Clippy over the affected crates and their reverse
+  Quality runs `cargo fmt`, Clippy over the affected crates and their reverse
   dependencies, CI contracts and consistency (incl. `no-console-print`, the env-mutation census) and
   `cargo machete`; Linux runs the Rust tests of the affected crates and their reverse dependencies.
 - **Write access since 2026-11-01** (i386 gave Martin write access to Mesh-LLM/mesh-llm, so CI runs
@@ -454,7 +459,10 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 For the review before ready (`upstream-contributing`, section 6):
 - **No agent attribution anywhere**: no trailers in commits, no agent footer in the PR body
   (section 3).
-- Title and every commit pass `cargo xtool repository conventional-commits`.
+- Title and commits are clear and user-focused; a conventional prefix is optional (AGENTS.md).
+- No new platform `cfg` in a crate missing from
+  `tools/xtask/tests/ci_runner_cache_contract/windows_composition/cfg_census.rs` (the contracts
+  reject it; #3134's executable check had to go for `skippy-correctness`).
 - The repository's patterns (section 1): settings vs env overrides and their tripwires, file size
   rule, atomic persisted state, additive protocol changes, Skippy patch ownership and ABI,
   gate tests that prove the gated work doesn't happen, docs following code.
