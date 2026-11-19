@@ -64,13 +64,13 @@ same bug. So:
 - **Reuse what nixpkgs has.** A bundled component that nixpkgs already ships (goose) comes from
   that package, not a second build: buzz-app's own 40-line goose-acp build became a binary wrapper
   around `goose acp` from goose-cli, as Berd already did. Check sibling packages for the pattern.
-- **Split:** one package per independently useful thing (runtime, CLI, daemon), variants by
-  override (`-cuda`, `-rocm`, `-vulkan`, `nixpkgs-contributing` §2). **One PR per concern, the
+- **Split:** one package per independently useful thing (runtime, CLI, daemon); GPU backends from
+  `config`, not variant packages (`nixpkgs-contributing` §2). **One PR per concern, the
   shared base first** (buzz-cli bump merged in 3 days; seven one-package PRs in two days and a
   six-package suite PR both stalled). A PR a reviewer can read in one sitting. For an app with a
-  runtime, variants and a module, from the first PR on: PR 1 has the app, its runtime and the thin
-  variants; extra products and the module follow in separate PRs (`nixpkgs-contributing` §0;
-  #571722 is being split after three weeks without review).
+  runtime and a module, from the first PR on: PR 1 has the app and its runtime; extra products
+  and the module follow in separate PRs (`nixpkgs-contributing` §0; #571722 merged after the
+  split).
 - **Responsiveness of upstream** (measure merge times of outside PRs, `contribution-skill-authoring`
   §3) sets the strategy: responsive (Mesh-LLM, median 2.5 days) → fix everything upstream and track
   main; slow or closed (block/buzz: no outside PR merged) → carry linked patches, keep them few.
@@ -236,7 +236,9 @@ a container egress rule (kleinbem-dev/nix-gantry#5).
   tag, dead inputs and a broken update script; round 3 a version gap to state).
 - Draft until Martin says ready; an independent review (`upstream-contributing/review-handoff.md`)
   and `nix-check-nixpkgs-pr` before that.
-- After opening: answer bots, don't ping; for merging, ask a committer who has touched related
+- After opening: answer bots, don't ping individuals at random. After about two weeks without a
+  human review, ask the team that owns the area once (GPU packages: `@NixOS/cuda-maintainers`;
+  #571722 got its review the next day). For merging, ask a committer who has touched related
   packages (buzz-cli: booxter, who had fixed its darwin build). Co-maintainers help; ask people
   who package the app elsewhere.
 
