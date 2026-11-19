@@ -130,8 +130,9 @@ directly, and "packages that violate the rules may be deleted without warning".
     `mesh-llm` depending on the exact runtime version it loads. Update the Obsidian plan before
     contacting George.
   - It relies on the unversioned `<prefix>/lib/mesh-llm/native-runtimes/`, which both binaries
-    search (`skippy-runtime-install/src/discovery.rs`), and on runtime selection no longer
-    hard-matching `mesh_version`. Both raised with upstream for the split; check them after it.
+    search (`skippy-runtime-install/src/discovery.rs`). Selection matches the runtime against
+    Skippy's `RUNTIME_VERSION` compiled into the binary, not the MeshLLM version (`mesh_version`
+    is a legacy manifest field), so `mesh-llm` depends on `skippy=<that RUNTIME_VERSION>`.
 
 ## Review checklist
 The AUR has no PRs: this review runs before Martin pushes (`upstream-contributing`, section 6).
