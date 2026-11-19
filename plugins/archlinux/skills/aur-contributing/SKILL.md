@@ -125,6 +125,13 @@ directly, and "packages that violate the rules may be deleted without warning".
   to `/usr/lib/mesh-llm/native-runtimes/`. Build it on the 0.79 release; lessons from the nixpkgs
   packaging apply (`skippy-native-runtime`). Survey and the draft message to George: Obsidian
   `Projects/Buzz nixpkgs/Drafts/mesh-llm-arch-aur-plan.md`.
+  - Skippy moves to its own repo with its own releases (announced 2026-11-19). A split package
+    shares one `pkgver`, so the plan becomes two PKGBUILDs: `skippy` (runtimes, CLI) and
+    `mesh-llm` depending on the exact runtime version it loads. Update the Obsidian plan before
+    contacting George.
+  - It relies on the unversioned `<prefix>/lib/mesh-llm/native-runtimes/`, which both binaries
+    search (`skippy-runtime-install/src/discovery.rs`), and on runtime selection no longer
+    hard-matching `mesh_version`. Both raised with upstream for the split; check them after it.
 
 ## Review checklist
 The AUR has no PRs: this review runs before Martin pushes (`upstream-contributing`, section 6).
