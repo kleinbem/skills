@@ -1,0 +1,7 @@
+{
+  "name": "wimpysworld",
+  "description": "Wimpy's World (wimpysworld/*): wimpysworld-org (security reports, repo table), nothing-but-nix-contributing",
+  "author": {
+    "name": "Martin Kleinberger"
+  }
+}

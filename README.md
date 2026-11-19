@@ -38,6 +38,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
 | `sptapyo` | `sptapyo-org` | SPTApyo (personal account): security reports, repo table |
 | `sptapyo` | `nix-app-center-contributing` | SPTApyo/nix-app-center: size guide, AI ownership rule, Conventional Commits, coverage gate, agent safety rules, testing on a config copy |
+| `wimpysworld` | `wimpysworld-org` | Wimpy's World: security reports, Tailor rulesets, repo table |
+| `wimpysworld` | `nothing-but-nix-contributing` | wimpysworld/nothing-but-nix: AI policy (no AI co-author, `Assisted-by:`), AGENTS.md as spec, lint script, dispatch-only tests |
 | `anduril` | `anduril-org` | anduril organization: security reports, repo table |
 | `anduril` | `jetpack-nixos-contributing` | anduril/jetpack-nixos: no contribution docs, PR template, CI (eval plus checks), kernel config per L4T release |
 | `omacom` | `omacom-org` | omacom organization (was basecamp): AI stance, bots, security reports, channels, repo table |

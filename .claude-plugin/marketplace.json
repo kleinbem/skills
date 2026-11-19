@@ -99,6 +99,11 @@
       "name": "sptapyo",
       "source": "./plugins/sptapyo",
       "description": "SPTApyo (personal GitHub account): sptapyo-org (security reports, repo table), nix-app-center-contributing"
+    },
+    {
+      "name": "wimpysworld",
+      "source": "./plugins/wimpysworld",
+      "description": "Wimpy's World (wimpysworld/*): wimpysworld-org (security reports, repo table), nothing-but-nix-contributing"
     }
   ]
 }
