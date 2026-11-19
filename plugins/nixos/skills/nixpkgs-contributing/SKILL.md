@@ -16,12 +16,12 @@ relevant section before acting on a rule from memory.
 ## 0. Before starting
 - Search open and closed PRs (and issues) for the package first:
   `gh search prs --repo NixOS/nixpkgs "<attr>"`. Build on or credit existing work instead of duplicating it.
-- Split a new app across PRs from the start: the packages (app, its runtime, thin variants like
-  `-cuda`) in one PR, extra products in their own, the NixOS module last. Later PRs can open
-  at once as drafts that contain the base commits ("Depends on #N; only the last commit is
-  new"), rebased once the base merges. The package PR then doesn't link the module's
-  `nixosTests`; the module PR adds it. One PR with 7 packages and a module (#571722) got no
-  human review in three weeks; it is being split into these three.
+- Split a new app across PRs from the start: the app and its runtime in one PR, extra products
+  in their own, the NixOS module last. Later PRs can open at once as drafts that contain the
+  base commits ("Depends on #N; only the last commit is new"), rebased once the base merges.
+  The package PR then doesn't link the module's `nixosTests`; the module PR adds it. #571722
+  (7 packages and a module) got no human review in three weeks; split to two packages, it was
+  reviewed within a day of asking the CUDA team and merged 2026-11-19.
 
 ### Decide the base branch first
 - Check rebuild count (CI `rebuild` labels; estimate locally beforehand).
@@ -65,12 +65,16 @@ relevant section before acting on a rule from memory.
   - Need an option: add an explicit argument to the package and use `override`.
   - Need a patch in a dependency: ask its maintainers whether it can go into the main version.
 - `strictDeps = true` and `__structuredAttrs = true`: nixpkgs-vet fails new top-level packages
-  that don't evaluate with both (NPV-164 to 167, v0.3.x; `buildRustPackage` already sets
-  `strictDeps`). Check with `nix-instantiate --eval -E 'with import ./. {}; { inherit (<attr>)
-  strictDeps __structuredAttrs; }'`.
-- Variants that are just an `override` (`foo-cuda`, `foo-vulkan`) get their own by-name package and
-  a `# nixpkgs-update: no auto update` comment, like `llama-cpp-vulkan`. So does any package whose
-  version must not be bumped on its own; update it from the script of the package that pins it.
+  that don't evaluate with both (NPV-164 to 167, v0.3.x). Don't write what the builder already
+  sets: `buildRustPackage` and `buildPythonPackage` set `strictDeps`, and a reviewer flagged the
+  redundant line on #571722. Check with `nix-instantiate --eval -E 'with import ./. {}; { inherit
+  (<attr>) strictDeps __structuredAttrs; }'`.
+- GPU backends follow `config.cudaSupport` / `config.rocmSupport`. Don't add `-cuda`/`-rocm`/
+  `-vulkan` variant packages or `*Support` arguments that only pass flags on to a dependency: take
+  the dependency as it is, and document the `override` for other backends (Vulkan). This is what
+  the CUDA team asked for on #571722; one build carries one backend.
+- A package whose version must not be bumped on its own gets a `# nixpkgs-update: no auto update`
+  comment; update it from the script of the package that pins it.
 - Build with the default `stdenv` compiler. A build error from a newer GCC (a missing `#include`,
   a stricter warning) gets a patch with the upstream issue or PR linked, not `gcc14Stdenv` or
   `overrideCC`. Only about 15 packages pin an older GCC, mostly unmaintained code (procmail,
@@ -144,7 +148,8 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   - secrets never in `settings` or the store, only loaded from files (`EnvironmentFile=` or
     systemd credentials);
   - a full systemd hardening set (e.g. generated with `shh`), `systemd.tmpfiles.settings` for dirs.
-- **Derivation shape** (from review feedback collected by others): `strictDeps = true`;
+- **Derivation shape** (from review feedback collected by others): `strictDeps = true` unless
+  the builder sets it;
   `finalAttrs` instead of `rec`; `makeBinaryWrapper` when the wrapper needs no shell logic;
   no top-level `with lib;`; keep build-only tools out of the runtime closure; `--set-default`
   rather than `--set` for env vars users may want to override; install shell completions,
@@ -214,7 +219,8 @@ For the review before ready (`upstream-contributing`, section 6):
   touched (section 1); PR title matches.
 - Base branch fits the rebuild count (section 0).
 - Derivation shape (section 2 and the 2026-10-19 scan in section 4): `finalAttrs`, `tag =`,
-  `strictDeps`/`__structuredAttrs`, attribute order, `meta` complete (description style, license,
+  `strictDeps`/`__structuredAttrs` (not repeating builder defaults), GPU flags from `config`
+  (no variant packages), attribute order, `meta` complete (description style, license,
   maintainers, `mainProgram`, platforms), updateScript, version check.
 - Every patch, `substituteInPlace`, skipped test and `doCheck = false` has a comment with the
   upstream link or the reason; patches available remotely are fetched.

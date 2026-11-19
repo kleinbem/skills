@@ -1,8 +1,9 @@
 # Case: MeshLLM (NixOS/nixpkgs#571722)
 
-Packages: `skippy-native-runtime` (+`-vulkan`), `mesh-llm` (+`-cuda`, `-rocm`), `skippy`, module
-`services.mesh-llm`, VM test. Opened 2026-10-08 as a draft, ready 2026-10-25, no human review yet
-on 2026-10-28. 17 Mesh-LLM PRs merged. Left: `cacert` in tests (Mesh-LLM#2577), vendored
+Packages: `skippy-native-runtime`, `mesh-llm`; later PRs add `skippy`, `skippy-tools`, the SDKs,
+plugins and `services.mesh-llm`. Opened 2026-10-08 as a draft, ready 2026-10-25, no human review
+for three weeks; split, then reviewed by the CUDA team a day after asking them (11-13), merged
+2026-11-19 at 0.80.0. 17 Mesh-LLM PRs merged. Left: `cacert` in tests (Mesh-LLM#2577), vendored
 llama.cpp#26103 patches, test skips waiting on #2605, #2629 and issue #2630, and Nix-only
 adaptations with stated reasons (CUDA toolkit override, cargo config, archive removal).
 
@@ -17,8 +18,17 @@ adaptations with stated reasons (CUDA toolkit override, cargo config, archive re
   for the CLI (#2577) instead of four separate CA workarounds.
 - **The runtime as its own derivation**, packaged by upstream's own script, run last in
   `postFixupHooks` so `autoAddDriverRunpath` has run before the manifest checksums.
-- **Variants by override** (`-vulkan`, `-cuda`, `-rocm`), `nixpkgs-update: no auto update`, one
-  update script for the family (`mesh-llm/update.sh` → `skippy-native-runtime/update-release.sh`).
+- **One update script for the family** (`mesh-llm/update.sh` →
+  `skippy-native-runtime/update-release.sh`).
+
+## What the review changed
+
+- ConnorBaker (CUDA team): drop the `-cuda`/`-rocm`/`-vulkan` packages and mesh-llm's own
+  `*Support` arguments. The backend follows `config`, one build carries one backend, mesh-llm
+  takes `skippy-native-runtime` as it is; Vulkan is a documented `override`.
+- A second reviewer: `strictDeps = true` is redundant in `buildRustPackage`.
+- Both landed as amended commits with unchanged derivations where possible, re-tested, and
+  carried into every stacked PR.
 - **Tests at every level:** offline serve test, VM test (serves a 1 MB model, checks host name,
   owner attestation, firewall, that the Nix runtimes are found), client-ready (upstream's QA),
   build-only ROCm/CUDA runtime tests, and finally upstream's whole workspace suite: 10,894 tests

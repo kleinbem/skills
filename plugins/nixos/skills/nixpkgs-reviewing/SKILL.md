@@ -59,7 +59,9 @@ Check for required automation/AI disclosure when AI assistance or non-exempt aut
 ### 2.1 Placement & `pkgs/by-name`
 * New top-level `callPackage` packages must live in `pkgs/by-name/<2-letter-prefix>/<attr>/package.nix`.
 * Nested packages (e.g., `python3Packages.foo`) stay in their respective language directories.
-* Variants created by `.override` (e.g. `foo-cuda`, `foo-vulkan`):
+* New GPU variant packages (`foo-cuda`, `foo-vulkan`) are usually not wanted: the CUDA team
+  asks for backends from `config.cudaSupport`/`config.rocmSupport` instead (#571722). Where a
+  variant does stay:
   * Must have their own `pkgs/by-name` directory.
   * Must re-anchor `meta.position`:
     ```nix
