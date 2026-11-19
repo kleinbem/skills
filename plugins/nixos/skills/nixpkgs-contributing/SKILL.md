@@ -39,9 +39,12 @@ relevant section before acting on a rule from memory.
 - `maintainers: add <handle>` as a separate commit, before the package commit.
 - No trailing period; one commit per logical unit; squash fixups.
 - Version bumps: body links the changelog/release notes.
+- The commit body (everything after the first line) must not contain LLM output (#581542): the
+  agent writes the summary line and trailers only, Martin writes any body. The same holds for
+  PR descriptions, comments and reviews: give him the facts as notes, he writes the text.
 - Use unversioned set names (`python3Packages.foo`, not `python313Packages.foo`).
 - LLM-assisted work: `Assisted-by: <tool> (<model + version>)` trailer. `Co-authored-by` does not count.
-  Disclose in the PR description too. Every line must be reviewed and understood by the human submitter.
+  Martin discloses it in the PR description too, in his words. Every line must be reviewed and understood by the human submitter.
 - The trailer is free-form but needs at least the tool name and the model name with version
   (e.g. `Assisted-by: Claude Code (claude-opus-5-5)`). Attributions in another format can get a
   PR closed (`CONTRIBUTING.md`, "Enforcement").
@@ -230,7 +233,7 @@ For the review before ready (`upstream-contributing`, section 6):
   `passthru.tests` linking the NixOS test, release note, `redirects.json` entries.
 - NixOS tests: new style, falsifiable, no `! cmd` no-ops under errexit.
 - PR body: template kept, boxes true for the exact head (nixpkgs-review-gha judged by its report,
-  not the run status), AI disclosure, short, "I".
+  not the run status), AI disclosure, short, "I", written by Martin (#581542).
 
 Mechanical consistency checks, run them (don't eyeball) before ready. `nix-check-nixpkgs-pr` in
 kleinbem/nix-toolbox does the first four (the option check only notes unlinked `{option}`) (`--log` for warnings, `--drvs-against <rev>` for the
