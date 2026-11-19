@@ -244,7 +244,7 @@ merged PRs; numbers are examples):
   Upstream lints Clippy on Linux only, and main carries 44 Windows findings (2026-11-09, mostly
   `tools/xtask` and tests; none on macOS). For a change to code that compiles on Windows, also run
   `gh workflow run clippy-diff.yml -R kleinbem/mesh-llm-ci -f repo=kleinbem/mesh-llm
-  -f base=<merge-base SHA> -f head=<head SHA> -f platform=windows -f packages='<changed crates>'
+  -f base=<merge-base SHA> -f head=<head SHA> -f platform=windows -f packages='<changed crates, space-separated>'
   -f features=mesh-llm-system/dynamic-native-runtime,mesh-llm-skippy-adapter/dynamic-native-runtime
   -f toolchain=1.98.1`: it fails only on findings the change adds (#2969: base 1, head 1, 0 new).
   Pass each feature only when its crate is selected or a selected package names it as a direct
@@ -278,6 +278,11 @@ merged PRs; numbers are examples):
   - A `packages=` override sends those crates to the macOS and Windows rows too; crates that build
     skippy-ffi fail on Windows there because upstream never tests them on Windows. Ignore that
     row for such manual runs. `filter=` narrows the macOS/Windows test names.
+  - Both workflows take `packages=` space-separated (`'skippy-quantize skippy-correctness'`);
+    `clippy-diff.yml` rejects a comma list at "Validate inputs" (#3134).
+  - A `packages=` run doesn't prepare `.deps/llama.cpp`, so tests that read it fail on Linux
+    there (`skippy-quantize`'s `types::tests`, which read `quantize.cpp`); the planner run
+    passes them (#3134).
   - The Ubuntu full xtask suite always shows 3 "requires just" failures and one rotating flaky
     process test: environment, not regressions.
   - To prove a test fails without the fix, push a no-fix branch and run the pre-flight with
