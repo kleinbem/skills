@@ -67,8 +67,8 @@ is authoritative; update this table when one changes):
 
 | | PRs from us | Issue first | Who writes texts | AI attribution | Sign-off | Title |
 |---|---|---|---|---|---|---|
-| nixpkgs | yes | no | agent drafts, Martin reviews | `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<attr>: …` |
-| NixOS/nixos-hardware | yes | no | agent drafts, Martin reviews | Nixpkgs policy: `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<path>: …` (`raspberry-pi/common/kernel: …`), merge commits |
+| nixpkgs | yes | no | **Martin writes PR descriptions, comments, reviews and commit bodies** (#581542); agent writes code, docs, commit summary lines and gives facts | `Assisted-by: <tool> (<model>)` trailer + PR disclosure in his words | no | `<attr>: …` |
+| NixOS/nixos-hardware | yes | no | as nixpkgs (#581542 probably covers it; the nixpkgs-core repo list isn't public): **Martin writes the texts** | Nixpkgs policy: `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<path>: …` (`raspberry-pi/common/kernel: …`), merge commits |
 | NixOS/nix | yes; first PRs tightly scoped fixes | no; search, open one when unsure a change is wanted | **Martin writes every text** (issues, PRs, comments, commit messages, code comments, docs); agent gives facts and code | `Assisted-by: <tool> (<model>)` trailer on agent-written commits; one disclosure line in the issue or PR body | no | `<component>: …` (`libstore: …`), merge commits |
 | block/buzz | yes | beyond small fixes | agent drafts, Martin reviews | none needed | DCO, only after Martin reviewed | Conventional Commits |
 | block/buzz-app | yes, rarely merged; fork CI needs approval | no; scope checkpoint in the PR | agent drafts, Martin reviews | `Co-authored-by:` trailer for the agent | DCO, only after Martin reviewed | free-form (Conventional Commits common), squash |

@@ -79,8 +79,8 @@ For r-ryantm's PRs and other people's updates or fixes:
    `gh workflow list --repo kleinbem/nixpkgs-review-gha --all`, enable before dispatch). Judge it with
    `../nixpkgs-contributing/scripts/review-result <run-id> --wait`, never by the run status.
    Run the binary (a real invocation, not `--help`); for a module, its NixOS test.
-3. Draft one short comment with the result per system and anything found
-   (`nixpkgs-contributing` voice, AI disclosure). Show it to Martin; posting is his call.
+3. Give Martin the result per system and anything found as notes; he writes and posts the
+   comment himself (#581542 bans LLM prose in comments).
 4. Merge only when Martin says so: post `@NixOS/nixpkgs-merge-bot merge` as a separate comment.
    The bot answers on the PR; when CI was red it does nothing, and a new comment is needed once
    CI is green. A PR it can't take (outside `pkgs/by-name`, a package we don't maintain, by a
