@@ -185,6 +185,11 @@ modules: #549345, #398998, #265771, #507754, #442904, #302495, #324127, #416148,
   `environment.systemPackages`; the module works with other modules. Reviewers also ask for
   `environmentFiles` (a list) over a single file and for documented `settings` keys the module
   reads itself, so `cfg.settings.x or default` isn't needed (#519655, #552984).
+- **CUDA in NixOS module docs:** never suggest per-package `cudaPackages` overrides (e.g.
+  `cudaPackages = pkgs.cudaPackages_12`) — CUDA version must be switched globally via
+  `nixpkgs.overlays` (`cudaPackages = final.cudaPackages_12`). Link
+  `#cuda-configuring-nixpkgs-for-cuda` in the Nixpkgs manual when mentioning `cudaCapabilities`
+  (NixOS/nixpkgs#581183).
 - **Process:** read the whole review before pushing, apply every suggestion or answer it, and
   don't make reviewers repeat themselves.
 
