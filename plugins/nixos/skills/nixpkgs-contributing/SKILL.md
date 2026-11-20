@@ -215,6 +215,27 @@ Practical notes:
 - Eval isn't verification. Build the narrow derivation that runs the check: the NixOS manual
   for module docs, the package's tests, the VM test.
 
+### PR text that gets read (#581542 and its discussion)
+- Status: #581542 merged 2026-11-15, was reverted (#588631) and restored (#588642) the same day;
+  the new Steering Committee may revisit it. Reread `CONTRIBUTING.md` ("Use of LLM output in
+  prose") before every PR; until it changes, Martin writes all prose.
+- What the supporters want: the author's own words showing they understood the change; short
+  (one paragraph of imperfect English beats ten polished ones); why the change is needed and
+  what was verified. AI-style tells (em dashes, "it's not X, it's Y", bullet-heavy prose) trigger
+  distrust, though committers were asked not to close PRs over one of them.
+- Not allowed: LLM polishing of English text. Allowed: machine translation of text he wrote in
+  another language, and quotes he picks. `AGENTS.md` steering for nixpkgs was proposed and
+  rejected (niklaskorz strongly opposes it); don't suggest it.
+- Default body (2026-11-20, worked on six PRs): "Depends on #N" if stacked, a bare list of run
+  links, his disclosure line, then the untouched template. His line, reused verbatim with the
+  tools from each PR's `Assisted-by:` trailers: "Written with assistance from <tool (model)>;
+  reviewed, understood, and tested, with `Assisted-by:` trailers on commits." No "Prepared
+  with", no trailer-shaped `Assisted-by:` line without models in the body.
+- Agent's part: facts as keywords and URLs, never finished sentences (a shown draft leaks into
+  his text); check his text only for correctness; post it with his OK by keeping everything
+  from `## Things done` to the last link line of the old body. Never rebuild the template: a
+  reformatted one lost its links and gained false ticks.
+
 ## Building and testing in the kleinbem setup
 nixpkgs-review-gha, the review-result script, hardware tests, caches, the nix-packages registry
 of open nixpkgs PRs and the holds are described in `nixpkgs-packaging`
