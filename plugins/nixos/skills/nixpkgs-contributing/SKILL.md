@@ -215,22 +215,10 @@ Practical notes:
 - Eval isn't verification. Build the narrow derivation that runs the check: the NixOS manual
   for module docs, the package's tests, the VM test.
 
-### How a PR text gets accepted (whoever writes it)
-From the #581542 discussion, where committers on both sides said what they want to read:
-- Short and dense: what the PR adds, why it's needed, what it depends on, how it was verified.
-  One paragraph a reviewer reads in a minute beats several polished ones; don't narrate the
-  diff or restate what the title and commits already say.
-- Evidence over claims: run links per platform, the test that proves the point (and the one
-  that fails without the fix), upstream issue or PR for every workaround, written in full
-  (`Owner/repo#N`).
-- Shows the author understood the change: the non-obvious choices and their reasons, in plain
-  words; no filler, no "this PR introduces…" framing. AI-style tells (em dashes, "it's not X,
-  it's Y", bullet-heavy prose) make reviewers suspect nobody read it, whoever wrote it.
-- Template kept as it is, every tick true for the exact head; a disclosure line where tools
-  helped; the author answers questions himself.
-- Default shape that met all of this on six PRs (2026-11-20): one or two sentences (or none),
-  "Depends on #N" if stacked, a bare list of run links, the disclosure line, the untouched
-  template.
+### PR text
+What a PR body needs is the same for every upstream: `upstream-contributing` section 4 ("What a
+PR body needs, whoever writes it"). Nixpkgs adds the template (kept as it is, every tick true for
+the exact head) and the rule below.
 
 ### Who writes it under the current rule
 - #581542 (merged 2026-11-15, reverted by #588631 and restored by #588642 the same day; the

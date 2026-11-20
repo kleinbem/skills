@@ -200,6 +200,13 @@ automated content, gets no trailer. Ask when unsure; every correction is another
   repo the text is posted in (a nixpkgs body's `#2492` pointed at nixpkgs, not Mesh-LLM).
 - Never use closing keywords before external links: in fleet repos, PR descriptions or commit
   messages, never write any closing keyword variant (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, with or without colon) before external repository references (e.g. `Owner/repo#123` or full GitHub URLs). When merged to the default branch, GitHub automatically marks the external issue or PR as closed! Always use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
+- **What a PR body needs, whoever writes it:** what the change adds, why it's needed, what it
+  depends on, and how it was verified (run links per platform, the test that proves the point);
+  the non-obvious choices with their reason; an upstream link for every workaround. Not the diff
+  narrated, not what the title and commits already say. Reviewers on both sides of the nixpkgs
+  LLM debate (NixOS/nixpkgs#581542) asked for exactly this, and read text that looks generated
+  as a sign nobody read it, whoever wrote it. The shortest form that worked on six nixpkgs PRs:
+  "Depends on #N" if stacked, a list of run links, one disclosure line, the template.
 - Keep the template's sections. Tick a checkbox only once it is true for the exact head commit.
 - Never claim review or testing in Martin's name that he didn't do.
 - **Human density in comments and reviews:** write at the level of detail a maintainer types by hand, not an audit report:
