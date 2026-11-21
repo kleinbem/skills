@@ -191,6 +191,7 @@ automated content, gets no trailer. Ask when unsure; every correction is another
 
 ## 4. Texts: commits, PR body, comments
 
+- **Drafting or rewriting a PR title and body:** use `pr-writing` (`~/.agents/skills/pr-writing/SKILL.md`). Pass it the facts (what changed, why, dependencies, non-obvious choices, workaround links, exact verification commands/numbers/run links, plus the repo's title format, PR template, and AI disclosure rule) or an existing draft PR; `pr-writing` works strictly from that input alone.
 - **Voice:** Martin contributes alone. Everything posted in his name says "I", never "we", "us" or
   "our"; grep drafts for these words before showing them.
 - Style: conversational, casual, plain and to the point, TL;DR first. Write it like a message
