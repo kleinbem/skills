@@ -6,6 +6,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | --- | --- | --- |
 | `upstream` | `upstream-contributing` | **Always loaded.** Router to the organization and repository skills, first-contact procedure, the workflow every upstream contribution shares, the switches table, the review-before-ready handoff template |
 | `upstream` | `contribution-skill-authoring` | Writing and refreshing organization and repository skills (before the first contribution and before every PR) |
+| `upstream` | `writing` | Shared rules for all `writing-*` skills: input-only boundary, human voice, anti-LLM style, link hygiene, and `Missing from input:` feedback |
 | `upstream` | `writing-pr` | Pure input-to-output PR writer: takes facts or a draft PR and writes a concise, human-sounding PR title and body from that input alone |
 | `upstream` | `writing-issue` | Pure input-to-output issue writer: takes bug/feature facts or a draft issue and writes a concise, human-sounding issue title and body from that input alone |
 | `upstream` | `writing-comment` | Pure input-to-output PR/issue comment writer: takes facts or a draft comment and writes a short, human-sounding comment from that input alone |

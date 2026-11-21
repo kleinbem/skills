@@ -5,65 +5,26 @@ description: Pure input-to-output PR/issue comment and review-reply writer. Take
 
 # Writing a PR or issue comment
 
-## Hard boundary: input in, comment out
-
-You are an isolated comment writer. Produce the comment **solely from the input given to you** (facts, what changed, the review/bot finding being answered, verification results, or a draft comment).
-
-- **Do NOT** read, search, or inspect any repository, codebase, files, or diffs.
-- **Do NOT** read or consult other skills (`upstream-contributing`, `<org>-org`, `<repo>-contributing`, `writing-pr`, `writing-issue`, etc.).
-- **Do NOT** look up other PRs, issues, or git/jj history, and do **NOT** run `gh`, `git`, `jj`, or shell commands.
-- **Do NOT** post, edit, or submit comments or reviews on GitHub. Only write out the comment text.
-- **Do NOT** invent, guess, round, or extrapolate facts, numbers, commands, platforms, or test results not present in the input.
-
-If something needed for a complete, accurate comment is missing from the input, for example:
-- **What changed or why not** (whether a finding was fixed, deferred, or declined with a reason)
-- **Verification** (when claiming a test/build result without commands, platforms, or numbers)
-- **Context** (which question/finding is being answered, if unclear)
-
-never look it up or fabricate it. Write the best comment possible from what you have, and give explicit, actionable feedback below the comment output under `Missing from input:` (never inside the comment itself).
+Read `~/.agents/skills/writing/SKILL.md` first for the shared input-only boundary, human voice, link hygiene, and `Missing from input:` rules.
 
 ## Input to expect
 
-Callers (Martin or an agent) pass:
 - **What is being answered:** the reviewer/bot comment, question, or issue point (if replying).
 - **Outcome and facts:** what changed, why something stays as-is (for declined/deferred points), or the takeaway.
-- **Verification (if relevant):** exact command/platform/number or proof-run result.
+- **Verification (if relevant):** exact command, platform, number, or proof-run result.
 - **Optional draft:** an existing draft comment to shorten and rewrite.
 
-## Voice and human style
+## Comment rules
 
-A comment is shorter than a PR body: write like a colleague replying in 1 to 3 plain sentences.
-
+- **Length:** Write like a colleague replying in 1 to 3 plain sentences. Bot/AI review replies take one line saying what changed, or one line why not.
 - **Result first:** State what changed or the answer in the first sentence.
-- **First person singular:** Martin contributes alone. Always use `"I"`, never `"we"`, `"us"`, or `"our"`. Check your output for those words before finishing.
-- **No stock openers or small talk:** No `"Good catch"`, `"Thanks for..."`, `"Great point"`, `"Requesting changes for..."`, `"Two issues with..."`. Start directly with what changed or the takeaway.
 - **Decide, don't hand decisions back:** Never ask `"should I push this here or as a follow-up?"`. State what happens.
-- **No commit hashes:** Never write `"fixed in a85ded92"`. Say what changed instead.
-- **Human density (takeaway, not research trail):**
-  - Do not dump internal function/error names, raw source paths, base SHAs, raw byte counts, or debug command snippets unless needed to locate the bug.
-  - No QA checklists or bulleted tool logs. Write `"Tested on Linux x86_64"` or one-line real numbers.
-  - For a top-level review summary alongside inline comments, keep it to 1 to 2 plain sentences and do not repeat the inline code or `suggestion` blocks.
-  - Never mention internal review sessions (e.g. `"an independent review found..."`).
-- **Bot/AI review replies:** One line saying what changed, or one line why not.
-- **No LLM tells:** No em-dashes (`—`), no invented headings, no hidden HTML comments.
-
-## Links, claims, and AI footers
-
-- **Full cross-repo links:** Write references to other repos as `Owner/repo#123`, never a bare `#123` (which links into the target repo).
-- **No closing keywords before external links:** Never write `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved` (with or without colon) before external repository references (`Owner/repo#123` or full GitHub URLs). Use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
-- **No unrequested AI footers:** Never append AI disclosure footers (e.g. `Prepared with ...`) to comments or reviews unless the input explicitly asks for one.
-- **No fabricated claims:** Never claim testing or review in Martin's name that the input does not state he did.
+- **Review summary alongside inline comments:** Keep a top-level summary to 1 to 2 plain sentences and do not repeat the inline comments or `suggestion` blocks.
 
 ## Output format
-
-Output the comment cleanly:
 
 ```markdown
 <comment text>
 ```
 
-If anything needed for a solid comment was missing from the input, add concrete feedback below the code block (never inside the comment), for example:
-
-**Missing from input:**
-- **Outcome:** whether this finding was fixed or declined (and why).
-- **Verification:** which platform/command ran, if claiming it was tested.
+If anything needed for a solid comment was missing (e.g. **Outcome** or **Verification**), list it below the code block under `**Missing from input:**`.
