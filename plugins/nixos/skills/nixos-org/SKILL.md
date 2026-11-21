@@ -26,6 +26,8 @@ The org has no single policy file; the policies live in the repos, and they diff
   closed or hidden. **Default guard:** surface this policy to Martin, give him the facts (what
   changed, test runs, links) as notes, and let him write or shape the final text; if he provides
   text or asks for help refining it, accept his text without policing it (per `upstream-contributing` §0).
+  #589256 (2026-11-21) adds that AI feedback on his own prose (private review) is fine, as long as
+  no substantial amount of the AI's output ends up in the text.
   Code comments and docs in the diff are code, reviewed by him.
 - **Nix** (`NixOS/nix` `CONTRIBUTING.md`, same policy plus one line): "Human communication must
   remain human. Pull request / issue descriptions and comments, documentation, commit messages,

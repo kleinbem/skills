@@ -65,7 +65,7 @@ nixpkgs packages"; check it before starting.
 - **No artificial limits on skills or AI:** use AI and skills freely across every step (research, coding, testing, reviews, and drafting issues, PRs, comments, or commit messages).
 - **Always surface upstream's policy:** before committing, pushing, or posting, state what the upstream maintainer has defined (`AI attribution` and `Who writes texts` below, plus the repo skill) so Martin has full awareness of what is allowed or expected.
 - **Martin decides what goes public:** rules in the table or repo skills like *"Martin writes …"* or *"agent never …"* describe **upstream's stated preference / default guard**, not a ban on preparing drafts or assisting when Martin asks. Martin chooses whether to rewrite, edit, or post as-is, and how to attribute.
-- **Accept Martin's text without gatekeeping:** when Martin provides PR, issue, comment, or commit text, accept it as his text — never reject, refuse, or question it because parts resemble earlier session notes or discussion. Only flag verifiable factual errors (wrong run link, wrong version, unchecked box) or help refine the form if he asks.
+- **Accept Martin's text without gatekeeping:** when Martin provides PR, issue, comment, or commit text, accept it as his text: never reject, refuse, or question it because parts resemble earlier session notes or discussion. Only flag verifiable factual errors (wrong run link, wrong version, unchecked box) or help refine the form if he asks.
 
 These switches differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
 reviewed PR. Never carry an answer over from another project. As of 2026-10-22 (the repository skill
@@ -73,7 +73,7 @@ is authoritative; update this table when one changes):
 
 | | PRs from us | Issue first | Who writes texts | AI attribution | Sign-off | Title |
 |---|---|---|---|---|---|---|
-| nixpkgs | yes | no | **Martin writes PR descriptions, comments, reviews and commit bodies** (#581542); agent writes code, docs, commit summary lines and gives facts | `Assisted-by: <tool> (<model>)` trailer + PR disclosure in his words | no | `<attr>: …` |
+| nixpkgs | yes | no | upstream bans LLM output in PR descriptions, comments, reviews and commit bodies (#581542); AI feedback on Martin's own text is allowed (#589256). Agent writes code, docs, commit subject lines, gives facts and reviews his text | `Assisted-by: <tool> (<model>)` trailer + PR disclosure in his words | no | `<attr>: …` |
 | NixOS/nixos-hardware | yes | no | as nixpkgs (#581542 probably covers it; the nixpkgs-core repo list isn't public): **Martin writes the texts** | Nixpkgs policy: `Assisted-by: <tool> (<model>)` trailer + PR disclosure | no | `<path>: …` (`raspberry-pi/common/kernel: …`), merge commits |
 | NixOS/nix | yes; first PRs tightly scoped fixes | no; search, open one when unsure a change is wanted | **Martin writes every text** (issues, PRs, comments, commit messages, code comments, docs); agent gives facts and code | `Assisted-by: <tool> (<model>)` trailer on agent-written commits; one disclosure line in the issue or PR body | no | `<component>: …` (`libstore: …`), merge commits |
 | block/buzz | yes | beyond small fixes | agent drafts, Martin reviews | none needed | DCO, only after Martin reviewed | Conventional Commits |
