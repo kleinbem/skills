@@ -94,7 +94,7 @@ only these org checks show. That is normal, not a failure (buzz: maintainers clo
 | block/buzz | `buzz-contributing` | PRs accepted; DCO, agent reviewers, `buzz-review-completed` |
 | block/berd | `berd-contributing` | **issues only**, outside PRs auto-closed |
 | block/catch | `catch-contributing` | macOS Swift app, Berd's `catch` sidecar; idle since 2026-07, issue first |
-| block/buzz-app | `buzz-app-contributing` | Buzz 1.0 beta; PRs accepted but outside merges rare; DCO, `Co-authored-by` for agents, code-owner approval, `buzz-review-completed` |
+| block/buzz-app | `buzz-app-contributing` | Buzz 1.0; PRs accepted but outside merges rare; DCO, `Co-authored-by` for agents, code-owner approval, `buzz-review-completed` |
 | block/aittributor, ai-rules, lhm, agent-task-queue, braindump, codecrucible, review, trailblaze | none yet | write the repository skill before our first contribution (`upstream-contributing`, "First contact") |
 
 When a repository skill is added, update its row here and add its rows in `upstream-contributing`
