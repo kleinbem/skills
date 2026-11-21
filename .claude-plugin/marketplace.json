@@ -8,7 +8,7 @@
     {
       "name": "upstream",
       "source": "./plugins/upstream",
-      "description": "Upstream contribution router and shared workflow (always loaded), pure input-to-output PR writer, plus the procedure for writing and refreshing organization and repository skills"
+      "description": "Upstream contribution router and shared workflow (always loaded), pure input-to-output PR and comment writers, plus the procedure for writing and refreshing organization and repository skills"
     },
     {
       "name": "nixos",
