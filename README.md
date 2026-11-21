@@ -9,6 +9,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `upstream` | `writing-pr` | Pure input-to-output PR writer: takes facts or a draft PR and writes a concise, human-sounding PR title and body from that input alone |
 | `upstream` | `writing-issue` | Pure input-to-output issue writer: takes bug/feature facts or a draft issue and writes a concise, human-sounding issue title and body from that input alone |
 | `upstream` | `writing-comment` | Pure input-to-output PR/issue comment writer: takes facts or a draft comment and writes a short, human-sounding comment from that input alone |
+| `upstream` | `writing-commit` | Pure input-to-output commit message writer: takes what changed, why, and format/trailer rules and writes a concise commit message from that input alone |
+| `upstream` | `writing-review` | Pure input-to-output PR review writer: takes verdict and verified findings and writes a concise review summary and inline comments from that input alone |
 | `nixos` | `nixos-org` | NixOS organization: the nixpkgs and nix AI policies, security, RFCs, repo table |
 | `nixos` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks, review patterns |
 | `nixos` | `nixpkgs-maintaining` | Nixpkgs maintainer work: update PRs, merge bot, teams |
