@@ -80,7 +80,7 @@ adaptations with stated reasons (CUDA toolkit override, cargo config, archive re
    list grouped by cause, the facts sheet from a built binary.
 2. One tracking issue upstream with that list; Martin introduces himself on Discord. Pre-flight
    (`kleinbem/mesh-llm-ci`), review-gha darwin and the Orin ready before the first PR.
-3. 5–8 themed upstream PRs instead of ~30 small ones, at most 3–4 waiting at a time.
+3. 5–8 themed upstream PRs instead of ~30 small ones, opened as soon as each is ready.
 4. nixpkgs as three PRs from the start (packages, Skippy, module), ideally on a release.
 5. Every platform and the claimed hardware green in week 1–2, gaps stated in the PR.
 6. AUR and the fleet on the same findings, in parallel.
