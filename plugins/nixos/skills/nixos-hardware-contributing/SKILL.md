@@ -30,9 +30,10 @@ most Pi changes and reviews Pi PRs, but can't merge. Slow: outside PRs take days
   Nixpkgs orbit. (The `nixpkgs-core` team's repo list isn't public, so membership is unverified.)
   So: Martin reviews and understands everything before it's posted; agent-written commits carry
   `Assisted-by: <tool> (<model + version>)` (`Co-authored-by` doesn't count) and the PR text
-  discloses AI help separately (never append AI footers to comments or reviews). Since Nixpkgs
-  #581542 (2026-11-15) Martin writes PR descriptions, comments and commit bodies himself; the
-  agent gives him the facts.
+  discloses AI help separately (never append AI footers to comments or reviews). Under Nixpkgs
+  #581542 (2026-11-15), upstream bans LLM prose in PR descriptions, comments, and commit bodies:
+  default to giving Martin the facts so he can write the text, and if he provides text, accept it
+  without gatekeeping (`upstream-contributing` §0).
 - **The Pi owner spots and rejects LLM-style code.** doronbehar on #1894: "Useless LLM comment.",
   "Another LLM bad code.", "I don't like these LLM typical `2>/dev/null || true` endings", plus
   "the phrasing of the commit message and the PR description are pretty sloppy". No defensive

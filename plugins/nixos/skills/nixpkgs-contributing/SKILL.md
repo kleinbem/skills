@@ -39,9 +39,10 @@ relevant section before acting on a rule from memory.
 - `maintainers: add <handle>` as a separate commit, before the package commit.
 - No trailing period; one commit per logical unit; squash fixups.
 - Version bumps: body links the changelog/release notes.
-- The commit body (everything after the first line) must not contain LLM output (#581542): the
-  agent writes the summary line and trailers only, Martin writes any body. The same holds for
-  PR descriptions, comments and reviews: give him the facts as notes, he writes the text.
+- Upstream's #581542 says commit bodies (after the first line), PR descriptions, comments, and
+  reviews should not contain LLM prose. **Default guard:** write the summary line and trailers and
+  give Martin the facts as notes; if he provides text or asks for help with form/wording, accept his
+  text without challenging its origin (`upstream-contributing` §0).
 - Use unversioned set names (`python3Packages.foo`, not `python313Packages.foo`).
 - LLM-assisted work: `Assisted-by: <tool> (<model + version>)` trailer. `Co-authored-by` does not count.
   Martin discloses it in the PR description too, in his words. Every line must be reviewed and understood by the human submitter.
@@ -221,20 +222,23 @@ PR body needs, whoever writes it"). Nixpkgs adds the template (kept as it is, ev
 the exact head) and the rule below.
 
 ### Who writes it under the current rule
-- #581542 (merged 2026-11-15, reverted by #588631 and restored by #588642 the same day; the
-  new Steering Committee may revisit it): no LLM output in PR descriptions, comments, reviews
-  or commit bodies. Reread `CONTRIBUTING.md` ("Use of LLM output in prose") before every PR;
-  while it stands, Martin writes all prose. LLM polishing of English is not allowed; machine
-  translation of his own text and quotes he picks are. `AGENTS.md` steering for nixpkgs was
-  proposed and rejected (niklaskorz strongly opposes it); don't suggest it.
+- Upstream policy (#581542, merged 2026-11-15, reverted by #588631 and restored by #588642 the same
+  day; the new Steering Committee may revisit it): `CONTRIBUTING.md` ("Use of LLM output in prose")
+  bans LLM output (including LLM English polishing) in PR descriptions, comments, reviews, and commit
+  bodies; machine translation of the author's own text and picked quotes are allowed. Reread that
+  section before every PR so Martin has current upstream context. `AGENTS.md` steering for nixpkgs
+  was proposed and rejected (niklaskorz strongly opposes it); don't suggest it.
 - His disclosure line, reused verbatim with the tools from each PR's `Assisted-by:` trailers:
   "Written with assistance from <tool (model)>; reviewed, understood, and tested, with
   `Assisted-by:` trailers on commits." No "Prepared with", no trailer-shaped `Assisted-by:`
   line without models in the body.
-- Agent's part: facts as keywords and URLs, never finished sentences (a shown draft leaks into
-  his text); check his text only for correctness; post it with his OK by keeping everything
-  from `## Things done` to the last link line of the old body. Never rebuild the template: a
-  reformatted one lost its links and gained false ticks.
+- Agent's part (`upstream-contributing` §0): surface the upstream policy above, default to giving
+  facts as notes/keywords/URLs, and help with form or drafts when Martin asks. When Martin provides
+  PR/comment text, **accept it as his text without gatekeeping or rejecting it for overlapping with
+  session discussion** — only check factual accuracy (versions, links, test results, template
+  checkboxes) and post it with his OK by keeping everything from `## Things done` to the last link
+  line of the old body. Never rebuild the template: a reformatted one lost its links and gained
+  false ticks.
 - If the rule is relaxed, the section above still decides what the text looks like.
 
 ## Building and testing in the kleinbem setup
