@@ -20,12 +20,13 @@ The org has no single policy file; the policies live in the repos, and they diff
   development on Matrix and Discourse): a responsible human in the loop who reviews everything;
   non-trivial automation disclosed; for commits an `Assisted-by: <tool> (<model + version>)`
   trailer (`Co-authored-by` does not count) and a separate disclosure line in the PR description
-  (never append AI footers to PR/issue comments or reviews). Since #581542 (2026-11-15) prose in
-  PR descriptions, comments, reviews and commit bodies (after the first line) must not contain
-  LLM output, "in whole or in part, verbatim or edited"; violating PRs can be closed or hidden.
-  **Martin writes those texts**; the agent writes code, docs, commit summary lines and trailers,
-  and gives him the facts (what changed, test runs, links) as notes. Code comments and docs in
-  the diff are code, reviewed by him.
+  (never append AI footers to PR/issue comments or reviews). Upstream's #581542 (2026-11-15)
+  states that prose in PR descriptions, comments, reviews and commit bodies (after the first line)
+  must not contain LLM output, "in whole or in part, verbatim or edited", and violating PRs can be
+  closed or hidden. **Default guard:** surface this policy to Martin, give him the facts (what
+  changed, test runs, links) as notes, and let him write or shape the final text; if he provides
+  text or asks for help refining it, accept his text without policing it (per `upstream-contributing` §0).
+  Code comments and docs in the diff are code, reviewed by him.
 - **Nix** (`NixOS/nix` `CONTRIBUTING.md`, same policy plus one line): "Human communication must
   remain human. Pull request / issue descriptions and comments, documentation, commit messages,
   and code comments must be human-authored." **Martin writes every text there**, including code

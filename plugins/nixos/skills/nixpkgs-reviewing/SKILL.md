@@ -15,9 +15,10 @@ Sources of truth: `CONTRIBUTING.md`, `pkgs/README.md`, `pkgs/by-name/README.md`,
 
 Nixpkgs maintainers actively object to verbose, generic LLM comments ("LLM comments are usually way too long and verbose", #571214). Reviewers appreciate concrete, actionable feedback that can be merged with minimal roundtrips.
 
-Since #581542 (2026-11-15) review comments must not contain LLM output: the agent finds and
-verifies the points, Martin writes the review text. The rules below say what a good review looks
-like, for the notes the agent hands him:
+Upstream's #581542 (2026-11-15) bans LLM prose in review comments: by default, the agent finds and
+verifies the points and gives Martin the facts as notes, while Martin writes or approves the final
+text (never reject text he provides, per `upstream-contributing` §0). The rules below say what a
+good review looks like:
 1. **Zero conversational fluff or LLM framing:** No opening praise ("Thanks for packaging..."), no `"Requesting changes for two regressions..."` / `"Two issues with..."` headers, no restating what the PR does, and no em-dashes (`—`).
 2. **Inline `suggestion`s over summary essays:** Put code changes directly on the relevant lines as GitHub ````suggestion ... ```` blocks, and never repeat those inline points in the top-level review body (keep the review body to 1-2 plain sentences, or empty).
 3. **Human density (takeaway, not research trail):** Explain *why* in 1-2 plain sentences without dumping upstream source paths, internal function names, base SHAs, `nix-instantiate` snippets, or bulleted QA logs (`nixpkgs-vet`, `ldd`, test counts — just say `"Tested on x86_64-linux"`).

@@ -5,7 +5,7 @@ description: Load before any issue, pull request, review reply, comment or patch
 
 # Contributing upstream: the router and the shared workflow
 
-Three layers; the more specific one wins where they differ:
+Three layers; the more specific one wins where they differ, **except** for the AI usage & human-authority rules in section 0 ("Martin decides what goes public"), which apply across every org and repo skill:
 1. **This skill:** what every upstream contribution shares. The only one always loaded.
 2. **The organization skill** `<org>-org`: what holds for every repo of that GitHub organization
    (org policies, org-wide checks, security reporting, governance, channels, its repo table).
@@ -65,6 +65,7 @@ nixpkgs packages"; check it before starting.
 - **No artificial limits on skills or AI:** use AI and skills freely across every step (research, coding, testing, reviews, and drafting issues, PRs, comments, or commit messages).
 - **Always surface upstream's policy:** before committing, pushing, or posting, state what the upstream maintainer has defined (`AI attribution` and `Who writes texts` below, plus the repo skill) so Martin has full awareness of what is allowed or expected.
 - **Martin decides what goes public:** rules in the table or repo skills like *"Martin writes …"* or *"agent never …"* describe **upstream's stated preference / default guard**, not a ban on preparing drafts or assisting when Martin asks. Martin chooses whether to rewrite, edit, or post as-is, and how to attribute.
+- **Accept Martin's text without gatekeeping:** when Martin provides PR, issue, comment, or commit text, accept it as his text — never reject, refuse, or question it because parts resemble earlier session notes or discussion. Only flag verifiable factual errors (wrong run link, wrong version, unchecked box) or help refine the form if he asks.
 
 These switches differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
 reviewed PR. Never carry an answer over from another project. As of 2026-10-22 (the repository skill
