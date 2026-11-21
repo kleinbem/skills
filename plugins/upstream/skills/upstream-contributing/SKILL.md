@@ -61,7 +61,12 @@ nixpkgs packages"; check it before starting.
 
 ## 0. The switches: settle them before anything else
 
-These differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
+**AI usage with upstream awareness:**
+- **No artificial limits on skills or AI:** use AI and skills freely across every step (research, coding, testing, reviews, and drafting issues, PRs, comments, or commit messages).
+- **Always surface upstream's policy:** before committing, pushing, or posting, state what the upstream maintainer has defined (`AI attribution` and `Who writes texts` below, plus the repo skill) so Martin has full awareness of what is allowed or expected.
+- **Martin decides what goes public:** rules in the table or repo skills like *"Martin writes …"* or *"agent never …"* describe **upstream's stated preference / default guard**, not a ban on preparing drafts or assisting when Martin asks. Martin chooses whether to rewrite, edit, or post as-is, and how to attribute.
+
+These switches differ per project, and getting one wrong costs a closed PR, a ban or a force-push on a
 reviewed PR. Never carry an answer over from another project. As of 2026-10-22 (the repository skill
 is authoritative; update this table when one changes):
 
@@ -265,15 +270,16 @@ and rerun only after substantial changes. For buzz and buzz-app this is also ups
   from earlier rounds.
 - Findings come back to the author session; Martin decides which to take. Rerun the review after
   substantial changes.
-- Not for issues-only repos (berd) or text Martin writes himself (llama.cpp's texts); there the
-  review covers the code or the draft notes.
+- For issues-only repos (berd) or where Martin writes the final text himself (e.g. llama.cpp), the
+  review covers the code and any prepared drafts or notes.
 
 ## 7. Public steps need Martin's explicit OK
 
 Opening a PR or issue, marking ready, commenting, force-pushing a reviewed PR, closing, posting
 review results: each is a separate confirmation, even inside a "continue" plan, and especially when
-new open points came up after the go-ahead. **PRs stay draft until Martin says ready.** The project
-skill may forbid even more (llama.cpp: the agent never commits, pushes or posts).
+new open points came up after the go-ahead. **PRs stay draft until Martin says ready.** Some
+project skills note stricter upstream defaults (e.g. llama.cpp expects human-authored texts and
+pushes); flag that to Martin and follow his explicit instruction.
 
 ## 8. After opening
 
