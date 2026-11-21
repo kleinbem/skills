@@ -33,7 +33,8 @@ most Pi changes and reviews Pi PRs, but can't merge. Slow: outside PRs take days
   discloses AI help separately (never append AI footers to comments or reviews). Under Nixpkgs
   #581542 (2026-11-15), upstream bans LLM prose in PR descriptions, comments, and commit bodies:
   default to giving Martin the facts so he can write the text, and if he provides text, accept it
-  without gatekeeping (`upstream-contributing` §0).
+  without gatekeeping (`upstream-contributing` §0). #589256 (2026-11-21): AI feedback on his own
+  text is allowed, as long as its wording doesn't end up in the text.
 - **The Pi owner spots and rejects LLM-style code.** doronbehar on #1894: "Useless LLM comment.",
   "Another LLM bad code.", "I don't like these LLM typical `2>/dev/null || true` endings", plus
   "the phrasing of the commit message and the PR description are pretty sloppy". No defensive

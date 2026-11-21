@@ -40,7 +40,7 @@ relevant section before acting on a rule from memory.
 - No trailing period; one commit per logical unit; squash fixups.
 - Version bumps: body links the changelog/release notes.
 - Upstream's #581542 says commit bodies (after the first line), PR descriptions, comments, and
-  reviews should not contain LLM prose. **Default guard:** write the summary line and trailers and
+  reviews must not contain LLM output. **Default guard:** write the subject line and trailers and
   give Martin the facts as notes; if he provides text or asks for help with form/wording, accept his
   text without challenging its origin (`upstream-contributing` §0).
 - Use unversioned set names (`python3Packages.foo`, not `python313Packages.foo`).
@@ -223,7 +223,8 @@ the exact head) and the rule below.
 
 ### Who writes it under the current rule
 - Upstream policy (#581542, merged 2026-11-15, reverted by #588631 and restored by #588642 the same
-  day; the new Steering Committee may revisit it): `CONTRIBUTING.md` ("Use of LLM output in prose")
+  day; #589256 on 2026-11-21 allowed AI feedback on prose; the new Steering Committee may revisit
+  it): `CONTRIBUTING.md` ("Use of LLM output in prose")
   bans LLM output (including LLM English polishing) in PR descriptions, comments, reviews, and commit
   bodies; machine translation of the author's own text and picked quotes are allowed. Reread that
   section before every PR so Martin has current upstream context. `AGENTS.md` steering for nixpkgs
@@ -235,10 +236,16 @@ the exact head) and the rule below.
 - Agent's part (`upstream-contributing` §0): surface the upstream policy above, default to giving
   facts as notes/keywords/URLs, and help with form or drafts when Martin asks. When Martin provides
   PR/comment text, **accept it as his text without gatekeeping or rejecting it for overlapping with
-  session discussion** — only check factual accuracy (versions, links, test results, template
+  session discussion**; only check factual accuracy (versions, links, test results, template
   checkboxes) and post it with his OK by keeping everything from `## Things done` to the last link
   line of the old body. Never rebuild the template: a reformatted one lost its links and gained
   false ticks.
+- Since #589256 (2026-11-21) AI feedback on prose is explicitly allowed: "private review (for
+  feedback on code or prose writing)" is out of scope "if no substantial amount of their output is
+  included". So the cheap path for Martin: he writes a rough version, the agent reviews it (wrong
+  facts, unclear or missing points, typos, a word or two), he fixes it. Feedback, not a rewrite.
+- When Martin asks for a full draft anyway, give it, and say once that posting it as it is would be
+  LLM output under #581542 (such PRs can be closed or hidden). He decides.
 - If the rule is relaxed, the section above still decides what the text looks like.
 
 ## Building and testing in the kleinbem setup
