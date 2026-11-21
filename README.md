@@ -6,8 +6,9 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | --- | --- | --- |
 | `upstream` | `upstream-contributing` | **Always loaded.** Router to the organization and repository skills, first-contact procedure, the workflow every upstream contribution shares, the switches table, the review-before-ready handoff template |
 | `upstream` | `contribution-skill-authoring` | Writing and refreshing organization and repository skills (before the first contribution and before every PR) |
-| `upstream` | `pr-writing` | Pure input-to-output PR writer: takes facts or a draft PR and writes a concise, human-sounding PR title and body from that input alone |
-| `upstream` | `pr-comment-writing` | Pure input-to-output PR/issue comment writer: takes facts or a draft comment and writes a short, human-sounding comment from that input alone |
+| `upstream` | `writing-pr` | Pure input-to-output PR writer: takes facts or a draft PR and writes a concise, human-sounding PR title and body from that input alone |
+| `upstream` | `writing-issue` | Pure input-to-output issue writer: takes bug/feature facts or a draft issue and writes a concise, human-sounding issue title and body from that input alone |
+| `upstream` | `writing-comment` | Pure input-to-output PR/issue comment writer: takes facts or a draft comment and writes a short, human-sounding comment from that input alone |
 | `nixos` | `nixos-org` | NixOS organization: the nixpkgs and nix AI policies, security, RFCs, repo table |
 | `nixos` | `nixpkgs-contributing` | Nixpkgs contributions: base branch, commit and `meta` conventions, pre-push checks, review patterns |
 | `nixos` | `nixpkgs-maintaining` | Nixpkgs maintainer work: update PRs, merge bot, teams |
