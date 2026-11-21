@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # block/buzz-app Contribution & PR Workflow
 
-Summary as of 2026-11-01 (main `7878f060`); current PR status in section 9.
+Summary as of 2026-11-21 (main `352f46e7`); current PR status in section 9.
 
 Layer 3 of 3: read `upstream-contributing` and `block-org` first (as files, `~/.agents/skills/<name>/SKILL.md`).
 This skill holds only what is specific to block/buzz-app and wins where they differ.
@@ -16,11 +16,11 @@ CI, test layers), `src/shared/design-system/AGENTS.md` (UI work), `CODEOWNERS`, 
 the `main` rulesets. There is **no** `CONTRIBUTING.md`, **no** PR template, and `GOVERNANCE.md` only
 links Block's org governance. Read them before acting on a rule from memory; they change daily.
 
-Shape: Buzz 1.0 beta ("Buzz 0.X is still available and supported in block/buzz"). Created
-2026-09-10; about 1,780 PRs and issues in seven weeks, a dozen Block engineers merging many PRs a
-day, most PRs written and reviewed by agents. The app and Cargo package are now named `Buzz`
-(#789), identifier `xyz.block.buzz.desktop` (#1656), version 0.7.0 (#1643). It is a client of
-block/buzz's relay; only `buzz-audio-client` is shared code. Not the same repo as block/buzz:
+Shape: Buzz 1.0 (`v1.0.6` on 2026-11-20; Buzz 0.X stays in `block/buzz`). Created 2026-09-10;
+over 4,170 PRs and issues in ten weeks, a dozen Block engineers merging many PRs a day, most PRs
+written and reviewed by agents. The app and Cargo package are named `Buzz` (#789), identifier
+`xyz.block.buzz.desktop` (#1656). It is a client of `block/buzz`'s relay; Shared compute embeds
+`Mesh-LLM/mesh-llm` (`src/bundled/mesh-compute/compute/`). Not the same repo as `block/buzz`:
 different files, rules, toolchain and reviewers.
 
 ## 0. Hard rules that decide the agent's role
@@ -38,7 +38,14 @@ different files, rules, toolchain and reviewers.
 - **`FOUNDATION` files** (source comment `FOUNDATION: <responsibility>`, ~15 of them): "require
   explicit human guidance before editing". From outside: don't touch them in a PR; raise it in
   an issue.
-- **Human testing is Martin's** (ready checklist, section 5). Never mark it done for him.
+- **Open-source boundary** (`AGENTS.md`, blocking finding): never put Block-internal hosts
+  (`block.builderlab.xyz`, `buzz.block.builderlab.xyz`, `*.communities.block.xyz`), private orgs
+  or repos, internal tickets, `go/` links, Slack channels or private chat paraphrases in code,
+  tests, docs, commits, PRs or comments. Public Builderlab (`app.builderlab.xyz`,
+  `*.communities.builderlab.xyz`) and `example.org` in fixtures are fine; distributor values use
+  `BUZZ_*` build-time env vars (`docs/configuration.md`).
+- **Human testing is Martin's** (ready checklist, section 5). Never mark it done for him. Agents
+  run plain `just desktop`, never `just desktop me` (which signs in with the owner's release key).
 - Texts: agent drafts, Martin reviews (repo has no rule against agent-written texts).
   Observed convention: comments an agent writes through a human account start with `🤖`
   (e.g. "🤖 Fixed in <sha>: …", #1325, #1498). Martin decides whether his replies follow it.
@@ -54,6 +61,11 @@ different files, rules, toolchain and reviewers.
   expected files, rough production diff budget). Put it in the PR description.
 - **9/10 bar for minimalness, elegance, correctness.** "No opportunistic refactors, speculative
   abstractions, or new features disguised as fixes." Reviewers score PRs against it.
+- **Plugins & relay scale** (`AGENTS.md`): new public features that fit the plugin API go to
+  `block/buzz-plugins` first (bundling a new plugin needs core-maintainer agreement each time);
+  default-off changes follow `docs/plugin-defaults.md`. Relay connect/reconnect/poll/catch-up
+  changes must state relay reads per client, reconnect from a cursor (#2308), jitter + capped
+  backoff, and prefer event-driven refresh with a long backstop over short polls (#2215).
 - UI changes: read `src/shared/design-system/DESIGN.md` (decision table, whole-surface recipes)
   first and name the shared component/recipe you reuse. Icons only via
   `src/shared/design-system/icons` (Tabler); "icon and weight choices belong to the designer".
@@ -153,22 +165,23 @@ network, answering an ACP `initialize`); pre-run it first so his run has no surp
 Marking ready also triggers the Codex review (section 6).
 
 ## 6. CI, bots and reviewers
-- Required to merge (`main-2` ruleset): `CI required` (aggregate of JS ×3, Rust and tool
-  integration, browser measurements, 21 browser-journey shards, native fixture), `DCO Check`,
+- Required to merge (`main` ruleset): `CI required` (aggregate of JS ×3, Rust and tool
+  integration, browser measurements, browser-journey shards, native fixture), `DCO Check`,
   **1 approving review from a code owner** (`@block/buzz-oss-team`; Builderlab plugin also
   `@block/buzz-builderlab-oss-team`). `require_extra_approval_for_unattributed_changes` is set
-  (meaning unverified). Stale approvals are not dismissed on push. Unchanged on 2026-10-28.
+  (meaning unverified). Stale approvals are not dismissed on push. Unchanged on 2026-11-21.
+  `mesh-cross-node.yml` runs `cargo test --locked -p buzz-mesh-compute` plus
+  `scripts/ci-mesh-cross-node.sh` when Shared compute paths change.
 - Fork PRs: only `DCO Check`, `Semgrep OSS`, `zizmor` run at first; `CI` sits in
-  `action_required` until a maintainer approves the run (#1556, #1571, #1576 on 2026-10-23).
-  Normal, not a failure. An approval alone doesn't unblock it: #1556 and #881 were approved
-  (10-25, 10-26) and still had no `CI` run on 10-28. Windows validation is manual dispatch only;
-  Linux CI is not Windows evidence (#1247 fixed tests that failed there). main fails that Windows
-  job (9 findings on 2026-11-09), so check a change with `clippy-diff.yml` in kleinbem/mesh-llm-ci:
+  `action_required` until a maintainer approves the run (#1556, #1571, #1576).
+  Normal, not a failure. An approval alone doesn't unblock it (#1556, #881). Windows validation is
+  manual dispatch only; Linux CI is not Windows evidence (#1247 fixed tests that failed there).
+  `main` fails that Windows job (9 findings on 2026-11-09), so check a change with `clippy-diff.yml`
+  in `kleinbem/mesh-llm-ci`:
   `-f repo=kleinbem/buzz-app -f platform=windows -f toolchain=repo
   -f packages='Buzz buzz-agent-controller buzz-credential-store buzz-mesh-compute'` plus the
-  merge base and head SHAs, adding any changed crate the list doesn't reach (e.g.
-  `buzz-agent-command`; a crate the change adds is skipped in the base scan); it fails only on findings the change adds (#1778, #1779, #1780, #1961:
-  0 new each).
+  merge base and head SHAs, adding any changed crate the list doesn't reach; it fails only on
+  findings the change adds (#1778, #1779, #1780, #1961: 0 new each).
 - Advisory flake check reruns changed tests 10× per engine; a flaky new test shows up there.
 - **Reviewers are mostly agents** run through maintainers' accounts:
   `chatgpt-codex-connector[bot]` (on open, ready, or `@codex review`; P1–P3 badges; reviews
@@ -176,9 +189,9 @@ Marking ready also triggers the Codex review (section 6).
   reviewed head and base) and "Carl", kalvinnchau's, salman1993's and morgmart's agents
   (`🤖 [P2] …`), plus direct human comments (loganj, wesbillman). Per `AGENTS.md` they comment,
   rarely Request Changes; "recommend blocking" / unresolved P1/P2 is a blocker either way.
-  Approvers on the last 150 merged (2026-10-28): kalvinnchau 38, wesbillman 32, loganj 32,
-  baxen 18, salman1993 11, wpfleger96 7, ngoodger-block 5. Triage/merge of outside PRs seen from
-  wesbillman, ngthuydiem (#1247), loganj (#1528).
+  Approvers on the last 100 merged (2026-11-21): baxen 24, kalvinnchau 23, wesbillman 18,
+  gilgtm 16, jedwards27 12, dr0uleau 4, kazemek21 3, joahg 3. Triage/merge of outside PRs seen
+  from wesbillman, ngthuydiem (#1247), loganj (#1528).
 - Recurring findings (sample of 60 merged PRs, 2026-10-23):
   - **Async/lifecycle ordering**: stale results after cancel/replace, state lost across
     remount or tab close, deferred visibility (#1527, #1521, #1325, #844, #1556).
@@ -193,64 +206,55 @@ Marking ready also triggers the Codex review (section 6).
 - Answer every finding in its thread: "Fixed in `<sha>`: <what>; <test> fails before, passes
   after" (#1556, #1527), or one line why not.
 
-## 7. What the history shows (2026-10-28)
-- 1,298 merged PRs since 2026-09-10; 43 from forks, almost all by Block/Square/Cash staff
-  (company field, own-branch PRs, self-merges; the new ones since 10-23 are staff too, e.g. #1524
-  merged by the author's `-square` account). At most three merged fork PRs from accounts
-  without such signs: #93 (54 h), #1247 (109 h), #1528 (19 h). Internal PRs: median 11 h,
-  p90 71 h to merge. GitHub's `CONTRIBUTOR` label means nothing here (staff keep membership
-  private).
-- Outside PRs still open on 2026-10-28: #35 (since 09-12, changes requested), #881 and #1556
-  (approved, CI never run), #1571, #1576 (awaiting CI approval), #1051, #1052, drafts #448,
-  #553, #1053, #1064, #1156.
+## 7. What the history shows (2026-11-21)
+- Over 4,170 PRs and issues since 2026-09-10; fork merges remain almost entirely Block/Square/Cash
+  staff (e.g. `joahg` #4055–#4118, `LordMelkor` #4014). Non-staff fork merges stay rare (#93, #1247,
+  #1528). Internal PRs: median 11 h, p90 71 h to merge. GitHub's `CONTRIBUTOR` label means nothing
+  here (staff keep membership private).
 - Closures without merge are mostly self-closures (retargeted, cherry-picked into a bigger PR:
   #946 into #941 with authorship kept, #1063).
-- Releases: `Desktop previews` builds `main` every 6 h (00:17/06:17/12:17/18:17 UTC) into
-  prereleases `v0.7.0-preview.<run>.<attempt>` (`v0.0.0-…` before #1643; 37 kept on 10-28, old
-  ones and their tags pruned). Release tags `desktop-vX.Y.Z[-beta.N]` come from the
-  "Desktop release tag" workflow (dispatched from `main`, annotated tag on a given `main` SHA):
-  `desktop-v0.7.0-beta.1` (`d2f80496`) and `-beta.2` (`b0c92eae`), both 2026-10-27 by Kalvin
-  Chau. They are tags only, no GitHub release. README still says "Builds come straight from
-  `main`; there's no stable release channel yet."
+- Releases: Buzz 1.0 ships stable GitHub Releases (`release.yml`, `desktop-stable.yml`,
+  `desktop-stable-feed.yml`) on annotated `vX.Y.Z` tags (`v1.0.5`, `v1.0.6` on 2026-11-20), and
+  pre-releases on `vX.Y.Z-preview.N` tags (`v1.0.7-preview.2`). Earlier beta `desktop-v*` tags are
+  superseded.
 
 Measurement commands (rerun on refresh):
 ```bash
 gh api --paginate 'repos/block/buzz-app/pulls?state=all&per_page=100' --jq '.[] | {number, user: .user.login, assoc: .author_association, created: .created_at, merged: .merged_at, state, fork: (.head.repo.full_name != "block/buzz-app")}' | jq -s . > pulls.json
 jq -r '.[]|select(.merged and .fork)|"\(.number) \(.user) \((((.merged|fromdate)-(.created|fromdate))/3600)|floor)h"' pulls.json
 gh api repos/block/buzz-app/rules/branches/main
-gh pr list -R block/buzz-app --state merged --limit 150 --json reviews --jq '[.[]|.reviews[]|select(.state=="APPROVED")|.author.login]|group_by(.)|map("\(.[0])=\(length)")|join(" ")'
+gh pr list -R block/buzz-app --state merged --limit 100 --json reviews --jq '[.[]|.reviews[]|select(.state=="APPROVED")|.author.login]|group_by(.)|map("\(.[0])=\(length)")|join(" ")'
 ```
 
 ## 8. After opening
 - Expect silence until a maintainer approves CI; don't ping. If nothing moves for a week or
-  two, one short message in the Buzz feedback community (invite in `README.md`, "Project
-  resources"), sent by Martin. The bug template's Discord link is Block's dead invite.
+  two, one short message in the Buzz feedback community (invite in `README.md`), sent by Martin.
+  The bug template's Discord link is Block's dead invite.
 - Keep the PR rebased on `main`; reviewers check integration with current main.
 - Issues: `.github/ISSUE_TEMPLATE/bug-report.md` (Block boilerplate, title `[Bug] …`; fill
   reproduce/expected/environment). Martin files them in the browser.
 
 ## 9. Our setup and current threads
-- Fork `kleinbem/buzz-app` (remote `fork`); clone `~/Develop/github.com/block/buzz-app` (jj
-  colocated), workspaces in `~/Develop/github.com/block/buzz-app.ws/`.
-- PRs, all ready since 2026-10-30, no force-push from now on: #1778 (wipe refusal per profile),
-  #1779 (test tools and `PATH` from the environment), #1780 (git shim fixture; macOS-only, no
-  attestation), #1781 (`BUZZ_GOOSE_ACP_BINARY`, rebuilt on top of #1864's download), #1961 (test
-  doesn't depend on the temporary directory's parents). Martin's test scripts:
-  `~/.cache/buzz-app-upstream/pr-checks.sh` and `check-1781.sh`. The Linux `buzz://`
-  self-registration patch stays Nix-only (decided 2026-10-29, no issue).
+- Fork `kleinbem/buzz-app` (remote `fork`, Actions disabled; run pre-flights via
+  `kleinbem/mesh-llm-ci` `run.yml` with `repo=kleinbem/buzz-app`, `toolchain=1.98.1`); clone
+  `~/Develop/github.com/block/buzz-app` (jj colocated), workspaces in
+  `~/Develop/github.com/block/buzz-app.ws/`.
+- Open PRs: ready (#1778 wipe refusal per profile, #1779 test tools on `PATH`, #1780 macOS git
+  shim fixture, #1781 `BUZZ_GOOSE_ACP_BINARY`, #1961 temp dir parents, #2089 desktop menu category);
+  drafts (#2376 `BUZZ_CLI_BINARY`, #2417 `SSH_AUTH_SOCK` without `/usr/bin/printenv`), plus
+  `mesh-llm-0.80` and `cli-link-test-profile` prepared 2026-11-21. The Linux `buzz://`
+  self-registration and `~/.local/bin/buzz` (#3386) patches stay Nix-only.
 - Packaging facts: [references/packaging.md](references/packaging.md).
-- Downstream: NixOS/nixpkgs#577918 (`buzz-app: init at 0.7.0`, ready since 2026-10-30; the
-  `desktop-v*` tags; goose-acp is a wrapper for nixpkgs' `goose acp`). Our
-  block/buzz relay package serves 1.0 clients too (1.0 needs a relay from 2026-09-23 or later
-  for `consistency: "strong"` reads).
-- Thread: the Mesh-LLM SDK change (Mesh-LLM/mesh-llm#2241) also hits #941 (out of draft since;
-  it uses `client::start`/`serve::start` and `disable_iroh_relays` on 0.78.1); the relay-switch
-  draft Mesh-LLM/mesh-llm#2564 was closed. block/buzz#8557 is the 0.X side.
+- Downstream: NixOS/nixpkgs#577918 (`buzz-app: init at 1.0.6`, tracking `vX.Y.Z` release tags;
+  Shared compute uses `skippy-native-runtime` 0.80 from merged NixOS/nixpkgs#571722; bundled
+  `goose-acp` wraps `goose-cli`; bundled `buzz` uses `buzz-cli`; relay in NixOS/nixpkgs#574877).
 
 ## Review checklist
 For the review before ready (`upstream-contributing`, section 6; `AGENTS.md` "Reviewing"
 requires it, and its findings are step 1 of section 5):
 - Run the review as `AGENTS.md` "Reviewing" describes, on the merged tree against fetched `main`.
+- Open-source boundary: no Block-internal hosts, orgs, tickets, links or private chat references
+  in code, tests, docs, commits or PR text (section 0).
 - Tests at the cheapest layer that observes the failure, deterministic (no sleeps,
   `waitForTimeout`, retries), fail-then-pass evidence (section 3).
 - The pre-push gate ran by hand, since jj skips Lefthook (section 4), with host and mode stated.
