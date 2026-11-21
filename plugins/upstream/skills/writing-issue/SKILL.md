@@ -60,14 +60,14 @@ Write the way a human maintainer files an issue by hand, not like an LLM report:
 1. **Problem first:** Lead with what problem exists today, not the implementation you want.
 2. **Current workaround:** What you do today (or `"none"`).
 3. **Proposal:** What you would like to see and why it belongs in this project.
-4. **Non-goals:** Explicitly state what you are not asking for (e.g. not asking upstream to maintain a distro package).
+4. **Non-goals:** Explicitly state what you are not asking for (e.g. out-of-scope environments or workflows).
 
 ## Links, claims, and AI disclosure
 
 - **Full cross-repo links:** Write references to other repos in full (`Owner/repo#123`), never a bare `#123`.
 - **No closing keywords before external links:** Never write `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved` (with or without colon) before external repository references (`Owner/repo#123` or full GitHub URLs). Use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
 - **No fabricated claims:** Never claim testing on a release, `main`, or platform not stated in the input.
-- **AI disclosure:** Only add an AI disclosure line if the repo rule in the input asks for it in issues (most repos do not). If the input says the repo requires human-authored text only, state that Martin writes the final text himself and provide a concise factual summary/checklist instead.
+- **AI disclosure:** Only include an AI disclosure line if the input explicitly asks for one.
 
 ## Output format
 
