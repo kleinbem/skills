@@ -21,7 +21,7 @@ Strategic check against tactical "vibe-coded" drift in application repos (not ne
 
 Look at files touched most often recently:
 ```bash
-jj log -r 'ancestors(@, 30)' --no-graph -T 'change_id.short() ++ " " ++ description.first_line() ++ "\n"'
+jj log -r 'ancestors(@, 30)' --no-graph --summary | awk '/^[AMD] / {print $2}' | sort | uniq -c | sort -rn | head -n 20
 ```
 Inspect high-churn modules for three smells:
 1. **Shallow / pass-through modules:** wrappers that add indirection without hiding complexity.

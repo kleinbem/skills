@@ -37,4 +37,4 @@ Prefer deterministic enforcement over prose:
 
 - Propose the exact diffs before applying unless asked to land them directly.
 - Never add debugging stories, dates, or "was X, now Y" history to code comments.
-- If updating `kleinbem/skills` or a repo doc, work in your own `jj` workspace (`just jj::ws-new <repo> <name>`) and run the repo's check (`just check` in `skills`).
+- If updating `kleinbem/skills` or a repo doc, create your own `jj` workspace from the workspace root or a conductor (`cd ~/Develop/github.com/kleinbem && just jj::ws-new <repo> <name>`), work in `<repo>.ws/<name>/`, and run the repo's check (`just check` in `skills`).

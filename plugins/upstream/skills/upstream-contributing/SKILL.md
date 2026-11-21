@@ -270,8 +270,8 @@ and rerun only after substantial changes. For buzz and buzz-app this is also ups
   from earlier rounds.
 - Findings come back to the author session; Martin decides which to take. Rerun the review after
   substantial changes.
-- Not for issues-only repos (berd); where Martin writes the final text himself (e.g. llama.cpp), the
-  review still covers the code and any prepared drafts or notes.
+- For issues-only repos (berd) or where Martin writes the final text himself (e.g. llama.cpp), the
+  review covers the code and any prepared drafts or notes.
 
 ## 7. Public steps need Martin's explicit OK
 
