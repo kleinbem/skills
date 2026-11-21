@@ -40,8 +40,8 @@ A comment is shorter than a PR body: write like a colleague replying in 1 to 3 p
 - **Decide, don't hand decisions back:** Never ask `"should I push this here or as a follow-up?"`. State what happens.
 - **No commit hashes:** Never write `"fixed in a85ded92"`. Say what changed instead.
 - **Human density (takeaway, not research trail):**
-  - Do not dump internal function/error names, raw source paths, base SHAs, raw byte counts, or `nix-instantiate` snippets unless needed to locate the bug.
-  - No QA checklists or bulleted tool logs (`nixpkgs-vet`, `ldd`, test counts). Write `"Tested on x86_64-linux"` or one-line real numbers (`"the old code gave [Recorded, Other, Unknown]"`).
+  - Do not dump internal function/error names, raw source paths, base SHAs, raw byte counts, or debug command snippets unless needed to locate the bug.
+  - No QA checklists or bulleted tool logs. Write `"Tested on Linux x86_64"` or one-line real numbers.
   - For a top-level review summary alongside inline comments, keep it to 1 to 2 plain sentences and do not repeat the inline code or `suggestion` blocks.
   - Never mention internal review sessions (e.g. `"an independent review found..."`).
 - **Bot/AI review replies:** One line saying what changed, or one line why not.
@@ -51,7 +51,7 @@ A comment is shorter than a PR body: write like a colleague replying in 1 to 3 p
 
 - **Full cross-repo links:** Write references to other repos as `Owner/repo#123`, never a bare `#123` (which links into the target repo).
 - **No closing keywords before external links:** Never write `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved` (with or without colon) before external repository references (`Owner/repo#123` or full GitHub URLs). Use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
-- **No AI disclosure footers on comments/reviews:** Never append `Prepared with ...`, `Assisted-by: ...`, or similar footers to PR/issue comments or reviews.
+- **No unrequested AI footers:** Never append AI disclosure footers (e.g. `Prepared with ...`) to comments or reviews unless the input explicitly asks for one.
 - **No fabricated claims:** Never claim testing or review in Martin's name that the input does not state he did.
 
 ## Output format

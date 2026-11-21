@@ -41,7 +41,7 @@ Write the way a human maintainer writes by hand, not like an LLM report:
   - No work log, no file inventory, and no line-by-line diff narration.
   - Do not repeat what the PR title or commit messages already say.
   - Do not dump internal function/error names, raw source paths, base SHAs, or bulleted QA tool logs unless needed to locate a bug or required by the template.
-  - Keep validation concise: one line per platform or check, numbers over adjectives (e.g. `"Tested on x86_64-linux"`, `"cargo test -p foo: 12 passed"`, `"old code gave [Recorded, Other, Unknown]"`).
+  - Keep validation concise: one line per platform or check, numbers over adjectives (e.g. `"Tested on Linux x86_64"`, `"12/12 unit tests passed"`).
 - **No LLM tells:**
   - No opening fluff or framing headers (`"This PR addresses..."`, `"Overview:"`, `"Key Changes:"`, `"Two issues with..."`, `"Good catch"`).
   - No em-dashes (`—`). Use commas, colons, parentheses, or periods.
@@ -51,7 +51,7 @@ Write the way a human maintainer writes by hand, not like an LLM report:
 
 ## Title
 
-- Follow the title format given in the input (e.g. Conventional Commits `feat(scope): ...`, `<attr>: ...`, `<module> : ...`, or plain imperative sentence).
+- Follow any title format given in the input (or use a clear, concise imperative title if none is given).
 - Describe the visible change or fix, not the implementation.
 - Claim no more than the input supports.
 
@@ -71,10 +71,9 @@ Include only what belongs in a PR and is backed by the input:
 - **Full cross-repo links:** Write references to other repos in full (`Owner/repo#123`), never a bare `#123` (which links into the target repo).
 - **No closing keywords before external links:** Never write `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved` (with or without colon) before external repository references (`Owner/repo#123` or full GitHub URLs) because GitHub auto-closes the upstream issue/PR on merge. Use `upstream: Owner/repo#123` or `tracking: Owner/repo#123`.
 - **No fabricated claims:** Never claim review or testing in Martin's name that the input does not state he did. Use exact numbers from the input; never round or guess.
-- **AI disclosure:** Follow the repo rule from the input:
-  - Add one short disclosure line in the PR body if required/expected.
-  - Keep agent footers/trailers out of the PR body if the repo forbids them (especially on squash-merged repos).
-  - If the input says the repo requires human-authored text only, state that Martin writes the final text himself and provide a concise factual summary only if useful.
+- **AI disclosure:** Follow only what the input asks for:
+  - Include a short disclosure line only if the input specifies one.
+  - Never add unrequested AI footers or trailers.
 
 ## Output format
 
