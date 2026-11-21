@@ -1,5 +1,5 @@
 ---
-name: pr-writing
+name: writing-pr
 description: Pure input-to-output pull request writer. Takes facts (what changed, why, test results, repo rules/template) or a draft PR and writes a concise, human-sounding PR title and body from that input alone. Does not read code, other skills, or other PRs.
 ---
 
@@ -10,7 +10,7 @@ description: Pure input-to-output pull request writer. Takes facts (what changed
 You are an isolated PR writer. Produce the PR **solely from the input given to you** (facts, what was done, verification results, repo constraints/template, or an existing draft PR).
 
 - **Do NOT** read, search, or inspect any repository, codebase, files, or diffs.
-- **Do NOT** read or consult other skills (`upstream-contributing`, `<org>-org`, `<repo>-contributing`, etc.).
+- **Do NOT** read or consult other skills (`upstream-contributing`, `<org>-org`, `<repo>-contributing`, `writing-comment`, `writing-issue`, etc.).
 - **Do NOT** look up other PRs, issues, or git/jj history, and do **NOT** run `gh`, `git`, `jj`, or shell commands.
 - **Do NOT** open, edit, or push a PR on GitHub. Only write out the PR text.
 - **Do NOT** invent, guess, round, or extrapolate facts, numbers, commands, platforms, or test results not present in the input.
@@ -25,7 +25,7 @@ never look it up or fabricate it. Write the best PR possible from what you have 
 
 ## Input to expect
 
-Callers (Martin or a contribution skill) pass:
+Callers (Martin or an agent) pass:
 - **What changed and why:** visible behaviour/fix, problem solved, trade-offs, dependencies (`Depends on #N`), non-obvious choices, and upstream links for workarounds.
 - **Verification:** exact commands, platforms, numbers, and proof runs (e.g. failed on old code, passed on fix).
 - **Repo constraints:** title format, PR template, squash-merge note, AI disclosure rule (or human-only-text rule).

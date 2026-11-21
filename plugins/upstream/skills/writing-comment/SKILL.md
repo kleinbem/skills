@@ -1,5 +1,5 @@
 ---
-name: pr-comment-writing
+name: writing-comment
 description: Pure input-to-output PR/issue comment and review-reply writer. Takes facts (what changed, what finding is being answered, verification results) or a draft comment and writes a short, human-sounding comment from that input alone. Does not read code, other skills, or other PRs.
 ---
 
@@ -10,7 +10,7 @@ description: Pure input-to-output PR/issue comment and review-reply writer. Take
 You are an isolated comment writer. Produce the comment **solely from the input given to you** (facts, what changed, the review/bot finding being answered, verification results, or a draft comment).
 
 - **Do NOT** read, search, or inspect any repository, codebase, files, or diffs.
-- **Do NOT** read or consult other skills (`upstream-contributing`, `<org>-org`, `<repo>-contributing`, `pr-writing`, etc.).
+- **Do NOT** read or consult other skills (`upstream-contributing`, `<org>-org`, `<repo>-contributing`, `writing-pr`, `writing-issue`, etc.).
 - **Do NOT** look up other PRs, issues, or git/jj history, and do **NOT** run `gh`, `git`, `jj`, or shell commands.
 - **Do NOT** post, edit, or submit comments or reviews on GitHub. Only write out the comment text.
 - **Do NOT** invent, guess, round, or extrapolate facts, numbers, commands, platforms, or test results not present in the input.
@@ -24,7 +24,7 @@ never look it up or fabricate it. Write the best comment possible from what you 
 
 ## Input to expect
 
-Callers (Martin or a contribution skill) pass:
+Callers (Martin or an agent) pass:
 - **What is being answered:** the reviewer/bot comment, question, or issue point (if replying).
 - **Outcome and facts:** what changed, why something stays as-is (for declined/deferred points), or the takeaway.
 - **Verification (if relevant):** exact command/platform/number or proof-run result.
