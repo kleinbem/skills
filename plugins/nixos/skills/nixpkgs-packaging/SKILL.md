@@ -134,10 +134,10 @@ the package claims (fleet.md). MeshLLM got these gradually, after avoidable red 
    setting that makes the test pass (a `sandboxProfile`, a config file from the store, a missing
    check input)? Only then skip, by name, with the link or the Nix-only reason. buzz-app's 17 Linux
    skips become 2 once BA#1778–#1781 ship.
-   **Send themed PRs and cap the queue.** One PR per cause group from the audit, not per test.
-   Keep about 3–4 of Martin's PRs waiting on a maintainer at a time and refill as they merge:
-   where fork CI needs approval per push, a dozen open PRs saturate a small team (MeshLLM had 12
-   open at once). Ready fixes wait locally with their pre-flight and body.
+   **Send themed PRs right away (no self-imposed queue cap).** Group fixes by cause (one PR per
+   cause group from the audit, not per test), and open ready PRs upstream as soon as they pass
+   pre-flight and review rather than letting finished fixes sit locally where they get lost when
+   sessions close (only throttle if an upstream maintainer explicitly asks for one-at-a-time).
    A third-party upstream PR the package depends on that stalls (llama.cpp#26103, no activity for
    weeks) gets taken over under that repo's rules (a review, a comment, or Martin's own PR), not
    waited on.
