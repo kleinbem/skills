@@ -59,6 +59,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `kleinbem-fleet` | `kleinbem-fleet` | Orientation for the kleinbem NixOS + OpenWrt fleet workspace |
 | `kleinbem-fleet` | `agent-ops` | Long-running work: watching builds and CI, polling without rate limits or YubiKey popups, waiting productively |
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
+| `kleinbem-fleet` | `retro` | Post-session or post-PR retrospective: route corrections and CodeRabbit catches into AGENTS.md, ADRs, glossary, skills, or checks |
+| `kleinbem-fleet` | `arch-review` | Strategic architecture and domain-alignment review: glossary/ADRs, hotspot scan for deep modules, boundary tests, merge-danger triage |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
 
 Contribution skills have three layers: `upstream-contributing` (always loaded) routes to the
