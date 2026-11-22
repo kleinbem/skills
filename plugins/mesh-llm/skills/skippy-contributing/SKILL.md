@@ -23,7 +23,7 @@ and `michaelneale`.
   (`Co-Authored-By: Claude …`, `[bot]` accounts) in commits or the squashed PR message. AI help may
   be stated in the PR text. Agent drafts, Martin reviews.
 - **No DCO sign-off**, but the PR template's **Acceptance criteria** checkbox includes an explicit
-  Apache-2.0 contribution license agreement (`- [x] I agree to license my contributions under the Apache License, Version 2.0.`). Only Martin approves ticking it before ready.
+  Apache-2.0 contribution license agreement (`- [x] I agree to license my contributions under the Apache License, Version 2.0.`). Martin generally agrees to this license grant (2026-11-22), so it may be ticked on draft PRs prepared for him.
 - **No issue required:** `AGENTS.md` and the PR template explicitly state "An issue is not required."
   Search open/closed issues and PRs first as usual (`upstream-contributing`, section 1).
 - **External fork PRs:** Martin does not have write access to `Mesh-LLM/skippy` (unlike
@@ -119,12 +119,15 @@ Measured 2026-11-22 (`gh pr list -R Mesh-LLM/skippy --state merged --limit 40 --
 
 ## 8. Our setup and current threads
 
+- **Fork & clone:** fork `kleinbem/skippy`, clone `/home/martin/Develop/github.com/Mesh-LLM/skippy`
+  (`origin` upstream, `fork` ours), jj workspaces under `../skippy.ws/`.
 - **Downstream packaging:** `kleinbem/nixpkgs` (`mesh-llm-dev`, `NixOS/nixpkgs#571722` stack) carries
   `skippy-native-runtime`, `skippy`, and `skippy-tools`; `kleinbem/nix-packages` watches `main`
   nightly via `canary/skippy/` (`Canary: skippy`).
-- **Carryover items from `Mesh-LLM/mesh-llm`:** sibling binary lookup (`Mesh-LLM/mesh-llm#3134`,
-  `#3025`) and CA-less HTTP tests in `skippy-correctness` (`Mesh-LLM/mesh-llm#3138`) still reproduce
-  on `Mesh-LLM/skippy` `main` as of 2026-11-22.
+- **Carryover PRs from `Mesh-LLM/mesh-llm`:** sibling binary lookup (#170, from
+  `Mesh-LLM/mesh-llm#3134`/`#3025`) and CA-less HTTP tests in `skippy-analytics` and
+  `skippy-correctness` (#171, from `Mesh-LLM/mesh-llm#3138`/`#2740`), both opened as drafts on
+  2026-11-22 and tracked in `kleinbem/nix-packages` `watch/upstream-prs/prs.txt`.
 
 ## Review checklist
 
