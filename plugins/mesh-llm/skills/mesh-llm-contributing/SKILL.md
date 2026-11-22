@@ -212,6 +212,15 @@ merged PRs; numbers are examples):
   caller of what you gate (the startup update check had a second caller in the console API). To
   check outgoing requests, run it behind a logging `HTTPS_PROXY` (reqwest honours it) and compare
   with and without the change.
+- **Live proxy, routing, timeout, hook and plugin repros:** use `kleinbem/mesh-dev-plugin`
+  (`mesh-dev`, also packaged in `kleinbem/nix-packages` and runnable via `mesh-dev test-suite`)
+  instead of real GGUFs or hand-rolled mock HTTP servers. It provides deterministic zero-GPU
+  `dev/*` models (`dev/echo`, `dev/slow-ttft-{15,45,75}s`, `dev/slow-sse-1tps`,
+  `dev/mid-stream-drop`, `dev/http-{429,503}`, `dev/malformed-sse`, `dev/tool-call-edge`,
+  `dev/mem-probe[-hold-5s]`, `dev/env-probe`, `dev/virtual-echo`), fault injection ops
+  (`inject_health`, `inject_crash`, `inject_http_fault`, `set_model_override`), a bounded
+  HTTP/observation/exchange inspector, and 5 declarative live E2E suites covering the full v3
+  plugin contract (MCP, stapled HTTP, hooks, backpressure, security boundaries).
 - When a change replaces a mechanism (a command → a system call), grep for comments, doc comments,
   docs and error messages that describe the old one (a maintainer had to fix `parse_hostname`'s doc
   on #2444). Also compare the old mechanism's behaviour in edge cases: `ps -o comm=` kept the name
