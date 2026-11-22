@@ -29,9 +29,11 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   (`https://docs.google.com/document/d/101iitJTVFba6wpcBFXfdwYQngPV5gEliYOy-Hq4NbVo`, readable via
   `/export?format=txt`), with an async "Suggested/requested items" section. Read-only:
   it's their document, and Martin doesn't add items there (2026-10-22).
-- **How the repos relate:** `mesh-llm` is the product (MeshLLM host + Skippy runtime) and moves
-  several times a day. Skippy pins an upstream `ggml-org/llama.cpp` commit in
-  `skippy/llama_cpp/upstream.txt` and applies its own patch queue; the `Mesh-LLM/llama.cpp` fork
+- **How the repos relate:** `mesh-llm` is the product host and moves several times a day. Skippy
+  (the inference runtime, CLI, and `llama.cpp` patch queue) now lives in its own public repository
+  `Mesh-LLM/skippy` (transferred in `Mesh-LLM/skippy#108`, consumed externally by `mesh-llm` in
+  `Mesh-LLM/mesh-llm#3193`). Skippy pins an upstream `ggml-org/llama.cpp` commit in
+  `llama_cpp/upstream.txt` and applies its own patch queue; the `Mesh-LLM/llama.cpp` fork
   holds experiment branches (last pushed 2026-08-30) and is not where fixes go. `mesh-packaging`
   owns distribution (Docker images, native packages, Homebrew via `homebrew-tap`); its scripts are
   TypeScript/Node. Distribution-specific changes (Nix, Arch/AUR) belong downstream unless they
@@ -48,6 +50,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 | Repo | Repository skill | Notes |
 |---|---|---|
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
+| Mesh-LLM/skippy | `skippy-contributing` | Skippy inference runtime, CLI, `llama.cpp` patch queue; public fork PRs need workflow approval and must pass the `PR checks` acceptance-criteria gate |
 | Mesh-LLM/mesh-packaging | `mesh-packaging-contributing` | repackages release archives only (deb, Arch, OCI, Homebrew, npm); bundle contents are fixed in mesh-llm |
 | Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every other tracked file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
 | Mesh-LLM/capsules-plugin | `capsules-plugin-contributing` | the capsules plugin; run by Ethan Zhang's agent through issue claims; DCO required |

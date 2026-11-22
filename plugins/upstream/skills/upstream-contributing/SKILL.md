@@ -25,7 +25,7 @@ model invocation of manual skills.
 | block | `block-org` | `buzz-contributing`, `buzz-app-contributing`, `berd-contributing`, `catch-contributing` |
 | ggml-org | `ggml-org` | `llama-cpp-contributing` |
 | aaif-goose | `aaif-goose-org` | `goose-contributing` |
-| Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing`, `mesh-llm-python-sdk-contributing`, `mesh-packaging-contributing`, `capsules-plugin-contributing`, `openai-endpoint-plugin-contributing` |
+| Mesh-LLM | `mesh-llm-org` | `mesh-llm-contributing`, `skippy-contributing`, `mesh-llm-python-sdk-contributing`, `mesh-packaging-contributing`, `capsules-plugin-contributing`, `openai-endpoint-plugin-contributing` |
 | Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
 | Noooste (personal account) | `noooste-org` | `garage-ui-contributing` |
 | tao12345666333 (personal account) | `tao12345666333-org` | `amp-acp-contributing` |
@@ -80,6 +80,7 @@ is authoritative; update this table when one changes):
 | block/buzz-app | yes, rarely merged; fork CI needs approval | no; scope checkpoint in the PR | agent drafts, Martin reviews | `Co-authored-by:` trailer for the agent | DCO, only after Martin reviewed | free-form (Conventional Commits common), squash |
 | aaif-goose/goose | only for a **Ready** issue | always | Martin writes the issue | `Co-Authored-By` accepted, no disclosure needed | no | Conventional Commits |
 | Mesh-LLM/mesh-llm | yes | search only | agent drafts, Martin reviews | **no agent trailers anywhere**; may be stated in PR text | no | Conventional Commits by habit (optional since 2026-11) |
+| Mesh-LLM/skippy | yes (fork PRs need CI approval) | no | agent drafts, Martin reviews | no agent trailers (org rule); Apache-2.0 checkbox in PR template | no | plain imperative sentence, squash |
 | Mesh-LLM/mesh-packaging | yes; maintainers may fold it into their own PR | no; an issue with evidence works as well | agent drafts, Martin reviews | no agent trailers (org rule) | no | Conventional Commits, squash |
 | Mesh-LLM/mesh-llm-python-sdk | yes (none from outside yet) | no | agent drafts, Martin reviews | no agent trailers (org rule) | no | Conventional Commits, `(sdk)` scope, squash |
 | Mesh-LLM/capsules-plugin | yes, rare (#290 merged) | no rule; name the issue, check its live claim | agent drafts, Martin reviews | no agent trailers (org rule) | **DCO** (`dco` check), only after Martin reviewed | Conventional Commits with scope, squash |
