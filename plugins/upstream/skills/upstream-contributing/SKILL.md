@@ -310,6 +310,14 @@ pushes); flag that to Martin and follow his explicit instruction.
 - **Upstream first, in parallel:** our packages never wait for upstream. Carry the fix downstream
   (patch, `checkFlags` skip, `substituteInPlace`) with a comment linking the upstream PR or issue,
   and drop it in the update that ships the fix.
+- **Pin every upstream issue or PR downstream immediately (mandatory):** whenever you create an
+  upstream issue or PR, pin it in every affected downstream/repro/workaround repo in the same
+  session — never leave it for later. Add `WORKAROUND(<project>): upstream: Owner/repo#N` on
+  downstream workarounds (e.g. `kleinbem/nix-packages`), and record the link in the repro/test
+  harness (e.g. `kleinbem/mesh-dev-plugin`'s `docs/CAPABILITY_AUDIT.md`, XFAIL `suites/*.toml`,
+  or regression `tests/*.rs`). Always use `upstream: Owner/repo#N` or `tracking: Owner/repo#N`
+  (never closing keywords before external links) so every workaround and XFAIL stays traceable
+  and gets dropped once upstream ships the fix.
 - Feed what reviewers taught back into the repository skill (one bullet with the PR number),
   what holds for the whole organization into the org skill, and cross-project lessons into this
   one: each fact at the highest layer where it is true.

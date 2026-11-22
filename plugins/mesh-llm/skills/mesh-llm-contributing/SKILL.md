@@ -220,7 +220,11 @@ merged PRs; numbers are examples):
   `dev/mem-probe[-hold-5s]`, `dev/env-probe`, `dev/virtual-echo`), fault injection ops
   (`inject_health`, `inject_crash`, `inject_http_fault`, `set_model_override`), a bounded
   HTTP/observation/exchange inspector, and 5 declarative live E2E suites covering the full v3
-  plugin contract (MCP, stapled HTTP, hooks, backpressure, security boundaries).
+  plugin contract (MCP, stapled HTTP, hooks, backpressure, security boundaries). Every upstream
+  `Mesh-LLM/mesh-llm` issue or PR uncovered or reproduced with `mesh-dev` must be pinned
+  immediately in `kleinbem/mesh-dev-plugin` (`docs/CAPABILITY_AUDIT.md` plus matching
+  `suites/*.toml` / `tests/*.rs`) and in any downstream `WORKAROUND` (e.g. `kleinbem/nix-packages`)
+  using `upstream: Mesh-LLM/mesh-llm#N` or `tracking: Mesh-LLM/mesh-llm#N`.
 - When a change replaces a mechanism (a command → a system call), grep for comments, doc comments,
   docs and error messages that describe the old one (a maintainer had to fix `parse_hostname`'s doc
   on #2444). Also compare the old mechanism's behaviour in edge cases: `ps -o comm=` kept the name
