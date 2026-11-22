@@ -39,6 +39,7 @@ The main ones; `kleinbem/repos.nix` lists every repo.
 | `nix-toolbox` | Generic flake tools (`nix-check-versions`, `nix-audit-deps`, `nix-audit-locks`, `nix-verify-devshells`, `nix-check-lock`, `nix-check-workarounds`, `bash-test-lib.sh`) |
 | `actions` | Shared composite GitHub Actions; `nix-setup` installs Determinate Nix and, with the secrets, joins NetBird for the mesh-only Attic cache. Pinned by sha, Dependabot bumps it |
 | `skills` | These agent skills (Claude Code plugin marketplace) |
+| `mesh-dev-plugin` | Zero-GPU pure-Rust Mesh-LLM v3 developer/test plugin (`mesh-dev`) with programmable fake models, fault ops, inspector, and declarative E2E test suites |
 | `kleinbem-site` | kleinbem.dev |
 
 `nix-secrets` and `openwrt-secrets` are retired (not in `repos.nix`, not on disk).
