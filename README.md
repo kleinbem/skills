@@ -30,6 +30,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `aaif-goose` | `goose-contributing` | aaif-goose/goose: issues first, Ready before a PR, NixOS build without Hermit |
 | `mesh-llm` | `mesh-llm-org` | Mesh-LLM organization: attribution, security, how the repos relate |
 | `mesh-llm` | `mesh-llm-contributing` | Mesh-LLM/mesh-llm: builds, validation, commit and PR rules, pre-flight CI |
+| `mesh-llm` | `skippy-contributing` | Mesh-LLM/skippy: Skippy runtime & CLI builds, offline tests, `PR checks` acceptance-criteria gate, fork CI |
 | `mesh-llm` | `mesh-packaging-contributing` | Mesh-LLM/mesh-packaging: composition-only rules, package matrix, tests, commit and PR rules |
 | `mesh-llm` | `mesh-llm-python-sdk-contributing` | Mesh-LLM/mesh-llm-python-sdk: checksum manifest, tests per Python version, commit and PR rules |
 | `mesh-llm` | `capsules-plugin-contributing` | Mesh-LLM/capsules-plugin: DCO, fork CI, changelog, lock hygiene, commit and PR rules |

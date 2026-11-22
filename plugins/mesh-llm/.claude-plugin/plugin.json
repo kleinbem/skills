@@ -1,6 +1,6 @@
 {
   "name": "mesh-llm",
-  "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing, mesh-llm-python-sdk-contributing, mesh-packaging-contributing, capsules-plugin-contributing, openai-endpoint-plugin-contributing",
+  "description": "Mesh-LLM organization: mesh-llm-org (attribution, security, how the repos relate), mesh-llm-contributing, skippy-contributing, mesh-llm-python-sdk-contributing, mesh-packaging-contributing, capsules-plugin-contributing, openai-endpoint-plugin-contributing",
   "author": {
     "name": "Martin Kleinberger"
   }
