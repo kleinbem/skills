@@ -118,16 +118,23 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
   or secret, SSH, firewall, network, auth or TLS paths without the label: add it and re-run.
 - In a busy repo, fold small related changes into one labelled PR, and don't label a second one
   there while the first review is still running.
-- A labelled PR doesn't get `gh pr merge --auto` at creation: arm it only after the review body
-  and every thread are handled. If CodeRabbit says "Review rate limited", wait for the time it
-  gives and comment `@coderabbitai review`.
-- Pushes after the review aren't reviewed (incremental reviews are off, the check reports
-  `skipped`). Before a push that changes more than the review's own fixes, run
-  `gh pr merge <n> --disable-auto`; then push, comment `@coderabbitai review`, and re-arm once
-  that review is handled. Adding the label to an armed PR later: disarm it first the same way.
-- After opening a PR, watch for the review (1-8 minutes) like any other check. Then handle every
-  thread: fix it and reply with the commit, or reply with the evidence why not. Resolve it either
-  way. Your replies teach CodeRabbit, so it doesn't repeat the same false alarm.
+- A labelled PR doesn't get `gh pr merge --auto` at creation: run `pr-wait <n>` (`kleinbem/coderabbit`
+  `bin/`, on `PATH` in the workspace devshell) as the background watcher instead of a hand-rolled
+  `gh pr view` loop. Rate-limited (`NEUTRAL`) and zero-finding reviews never create a `.reviews[]`
+  entry; `pr-wait` inspects the CheckRun and `.comments[]`, sleeps out any rate-limit window
+  (waking early if CI fails), posts `@coderabbitai review` when the slot resets, and exits once the
+  review finishes.
+- Pushes after the review aren't reviewed by CodeRabbit (incremental reviews are off, the check
+  reports `skipped`), though Revue still reviews them. Before a push that changes more than the
+  review's own fixes, run `gh pr merge <n> --disable-auto`; then push, comment
+  `@coderabbitai review`, run `pr-wait <n>`, and re-arm once that review is handled. Adding the
+  label to an armed PR later: disarm it first the same way.
+- Once `pr-wait <n>` reports the review finished, handle every thread: fix it and reply with the
+  commit, or reply with the evidence why not. Resolve it either way. Your replies teach CodeRabbit,
+  so it doesn't repeat the same false alarm. Then arm `gh pr merge <n> --auto` and watch it to
+  completion with `pr-wait --until-merged <n>` (use `pr-wait --until-merged <n>` directly on
+  unlabelled PRs): it exits right away on red CI, new unresolved threads (e.g. Revue on a fix
+  push), or a PR stuck `BLOCKED` after green checks.
 - Push the fix and check the PR head is that commit or a descendant of it
   (`gh pr view <n> --json headRefOid`; GitHub can lag a few seconds) before you resolve anything. The last resolved thread clears the gate, so an armed PR merges right then,
   without the fix (nix-config#466: fixes had to follow in #468).
