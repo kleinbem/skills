@@ -40,6 +40,8 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `noooste` | `noooste-org` | Noooste (personal account): security reports, repo table |
 | `tao12345666333` | `tao12345666333-org` | tao12345666333 (personal account): security reports, repo table |
 | `tao12345666333` | `amp-acp-contributing` | tao12345666333/amp-acp: AGENTS.md doc table, Bun CI, fake-CLI tests, racy steering test, nixpkgs angle |
+| `nlewo` | `nlewo-org` | nlewo (personal account): security reports, channels, repo table |
+| `nlewo` | `comin-contributing` | nlewo/comin: maintainer's stance on signature code and go-git bumps, go test + flake check, vendorHash, merge-commit style |
 | `noooste` | `garage-ui-contributing` | Noooste/garage-ui: Conventional Commits PR titles, coverage gate, maintainer's review style, nixpkgs angle |
 | `tifyr` | `tifyr-org` | tifyr organization: security reports, repo table |
 | `tifyr` | `gimp3-mcp-contributing` | tifyr/gimp3-mcp: CLAUDE.md as guide, ruff-only CI, CodeRabbit, GIMP-bound tests, mcp version cap |
