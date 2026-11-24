@@ -117,7 +117,10 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
   reviewed. When unsure, label it. fleet-lint fails a PR that touches `.github/`, `*.tf`, sops,
   or secret, SSH, firewall, network, auth or TLS paths without the label: add it and re-run.
 - In a busy repo, fold small related changes into one labelled PR, and don't label a second one
-  there while the first review is still running.
+  there while the first review is still running. Check `cr-steward free <owner>/<repo>` (on `PATH`
+  in the workspace devshell; dashboard at `https://steward.kleinbem.dev`) before labelling if
+  unsure. When a `cr-review` PR is rate-limited, `coderabbit-steward` auto-enqueues it, re-applies
+  `cr-review` once budget frees up, and posts an advisory `cr-steward` check run on the PR head.
 - A labelled PR doesn't get `gh pr merge --auto` at creation: run `pr-wait <n>` (`kleinbem/coderabbit`
   `bin/`, on `PATH` in the workspace devshell) as the background watcher instead of a hand-rolled
   `gh pr view` loop. Rate-limited (`NEUTRAL`) and zero-finding reviews never create a `.reviews[]`
