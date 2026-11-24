@@ -124,9 +124,9 @@ opt-in: only PRs labelled `cr-review` get one, the rest report `skipped` and mer
 - A labelled PR doesn't get `gh pr merge --auto` at creation: run `pr-wait <n>` (`kleinbem/coderabbit`
   `bin/`, on `PATH` in the workspace devshell) as the background watcher instead of a hand-rolled
   `gh pr view` loop. Rate-limited (`NEUTRAL`) and zero-finding reviews never create a `.reviews[]`
-  entry; `pr-wait` inspects the CheckRun and `.comments[]`, sleeps out any rate-limit window
-  (waking early if CI fails), posts `@coderabbitai review` when the slot resets, and exits once the
-  review finishes.
+  entry; `pr-wait` inspects the CheckRun and `.comments[]` and exits once the review finishes
+  (`coderabbit-steward` handles the rate-limit re-trigger automatically via `cr-review`, while
+  `pr-wait` remains the local watcher and fallback if the steward is unavailable).
 - Pushes after the review aren't reviewed by CodeRabbit (incremental reviews are off, the check
   reports `skipped`), though Revue still reviews them. Before a push that changes more than the
   review's own fixes, run `gh pr merge <n> --disable-auto`; then push, comment
