@@ -29,7 +29,8 @@ Shape: DHH's project, very busy. About 4000 open PRs, 6900 open issues and PRs t
 - **AI:** no ban. Omarchy's own agent guides tell agents to file with `gh`, and
   `diagnose-crash/reporting.md` asks an agent-filed issue or comment to end with "Filed by <model>
   via <harness>." Outside PRs with `🤖 Generated with [Claude Code]` get reviewed normally
-  (omacom/omarchy#16260). So: agent drafts, Martin reviews and posts; one disclosure line at the end.
+  (omacom/omarchy#16260). So: agent drafts, Martin reviews and posts; issues and comments end with the "Filed by" line
+  that guide asks for, PRs get no disclosure (not required).
 - **Branch:** PRs target `quattro` (default). `master` (Omarchy 3.x, last commit 2026-08-14) and
   `dev` (last 2026-09-28) are dead for contributions.
 - **One problem per PR** (template comment, `AGENTS.md` "Git": atomic commits).
@@ -125,4 +126,4 @@ As of 2026-11-14 (last 100 merged PRs):
 - Template sections kept; Screenshots filled or `No visible change: <why>` (section 5).
 - Verification lists what ran and what was seen, not "tests pass".
 - Bash follows `AGENTS.md` style; tests only where they catch a regression.
-- Disclosure line at the end of the issue or PR body (section 0).
+- Issues and comments end with the "Filed by" line; PRs carry no disclosure (section 0).

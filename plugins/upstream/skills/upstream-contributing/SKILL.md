@@ -66,6 +66,7 @@ nixpkgs packages"; check it before starting.
 **AI usage with upstream awareness:**
 - **No artificial limits on skills or AI:** use AI and skills freely across every step (research, coding, testing, reviews, and drafting issues, PRs, comments, or commit messages).
 - **Always surface upstream's policy:** before committing, pushing, or posting, state what the upstream maintainer has defined (`AI attribution` and `Who writes texts` below, plus the repo skill) so Martin has full awareness of what is allowed or expected.
+- **Disclose only where required:** add an AI disclosure line, footer or trailer only where the project's rules ask for one (nixpkgs, NixOS/nix, llama.cpp, hyprwm, omarchy's agent-filed issues and comments); where there is no rule, add none (Martin, 2026-11-25).
 - **Martin decides what goes public:** rules in the table or repo skills like *"Martin writes …"* or *"agent never …"* describe **upstream's stated preference / default guard**, not a ban on preparing drafts or assisting when Martin asks. Martin chooses whether to rewrite, edit, or post as-is, and how to attribute.
 - **Accept Martin's text without gatekeeping:** when Martin provides PR, issue, comment, or commit text, accept it as his text: never reject, refuse, or question it because parts resemble earlier session notes or discussion. Only flag verifiable factual errors (wrong run link, wrong version, unchecked box) or help refine the form if he asks.
 
@@ -90,20 +91,20 @@ is authoritative; update this table when one changes):
 | ggml-org/llama.cpp | yes; features issue first | features | **Martin writes every text, commits and pushes** | template disclosure line; `Assisted-by:` only if he asks for a commit | no | `<module> : …` |
 | block/berd | **no** (closed automatically) | issues only | Martin files | n/a | n/a | n/a |
 | block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
-| Noooste/garage-ui | yes; features issue first | features | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (PR title only, squash) |
-| tao12345666333/amp-acp | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (squash) |
-| Brendonovich/swift-rs | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line | no | free-form (merge commits) |
-| nlewo/comin | yes; maintainer has little review time | no | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | `<component>: …`, merge commits |
-| tifyr/gimp3-mcp | yes | no | agent drafts, Martin reviews | no policy; repo itself uses `Co-Authored-By: Claude …`; one disclosure line in the PR | no | plain sentence, no prefix |
-| anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; one disclosure line in the PR | no | `<component>: …`, merge commits |
+| Noooste/garage-ui | yes; features issue first | features | agent drafts, Martin reviews | no policy; no disclosure | no | Conventional Commits (PR title only, squash) |
+| tao12345666333/amp-acp | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; no disclosure | no | Conventional Commits (squash) |
+| Brendonovich/swift-rs | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; no disclosure | no | free-form (merge commits) |
+| nlewo/comin | yes; maintainer has little review time | no | agent drafts, Martin reviews | no policy; no disclosure | no | `<component>: …`, merge commits |
+| tifyr/gimp3-mcp | yes | no | agent drafts, Martin reviews | no policy; repo itself uses `Co-Authored-By: Claude …`; no disclosure | no | plain sentence, no prefix |
+| anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; no disclosure | no | `<component>: …`, merge commits |
 | hyprwm/aquamarine | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<component>: …`, squash |
 | hyprwm/Hyprland | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<component>: …`, squash |
 | hyprwm/hyprland-plugins | only when vouched; unvouched PRs auto-closed | yes (discuss on issue first) | **Martin writes every text, commits and pushes** | strict `AI_USAGE.md`: detailed disclosure in PR text; no agent trailers | no | `<plugin>: …`, squash |
-| alsa-project/alsa-ucm-conf | yes | no | agent drafts, Martin reviews | standard disclosure line in PR | DCO (`Signed-off-by:`) | `ucm2: <component>: …`, squash |
-| quickshell-mirror/quickshell | yes | features/complex bugs | agent drafts, Martin reviews | standard disclosure line in PR | no | `<subsystem>: …` |
-| omacom/omarchy | yes, base `quattro`; duplicates closed | issues for verified bugs only; ideas in Discussions | agent drafts, Martin reviews | no policy; one disclosure line | no | plain imperative sentence, squash |
-| omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | one disclosure line in the PR | no | `<package>: …` |
-| omacom/hype | yes; small fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line | no | plain imperative sentence |
+| alsa-project/alsa-ucm-conf | yes | no | agent drafts, Martin reviews | no policy; no disclosure | DCO (`Signed-off-by:`) | `ucm2: <component>: …`, squash |
+| quickshell-mirror/quickshell | yes | features/complex bugs | agent drafts, Martin reviews | no policy; no disclosure | no | `<subsystem>: …` |
+| omacom/omarchy | yes, base `quattro`; duplicates closed | issues for verified bugs only; ideas in Discussions | agent drafts, Martin reviews | agent-filed issues and comments end with "Filed by <model> via <harness>." (its agent guide); PRs none | no | plain imperative sentence, squash |
+| omacom/omarchy-pkgs | yes | no | agent drafts, Martin reviews | no policy; no disclosure | no | `<package>: …` |
+| omacom/hype | yes; small fixes straight to a PR | no | agent drafts, Martin reviews | no policy; no disclosure | no | plain imperative sentence |
 | charmbracelet/gum | yes; features need an approved Discussion first | features (Discussion); bugs no | agent drafts, Martin reviews | no policy; no disclosure in issues, one line in a PR | no | Conventional Commits, `feat(table): …`, squash |
 | SPTApyo/nix-app-center | yes; within 400 lines and 10 files | beyond a small fix | agent drafts, Martin reads the whole diff | none asked; "you understand every line you submit" | no | Conventional Commits, 72 chars, squash |
 | wimpysworld/nothing-but-nix | yes; outside PRs merge slowly | no; bugs via the issue form | agent drafts, Martin reviews and answers reviews himself | optional `Assisted-by: tool:model`; no AI in `Co-authored-by`/`Signed-off-by` | no | Conventional Commits, squash |

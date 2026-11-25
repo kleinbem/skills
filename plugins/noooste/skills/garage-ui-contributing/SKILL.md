@@ -23,7 +23,7 @@ ship as a Docker image (docker.io) and a Helm chart; there are no release binari
 
 - **No AI policy.** Nothing in the repo addresses AI use or agent attribution, and no merged PR
   mentions it. So: the agent drafts, Martin reviews and posts. Commit trailers don't matter
-  (squash merge, below); disclose AI help in the PR text in one line.
+  (squash merge, below); no disclosure (not required).
 - **Legal notice** (`CONTRIBUTING.md`): "you must agree that you have authored 100% of the content,
   that you have the necessary rights to the content and that the content you contribute may be
   provided under the project licence." No CLA or sign-off check enforces it.

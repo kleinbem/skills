@@ -23,8 +23,8 @@ outside PRs.
 
 ## 0. Hard rules that decide the agent's role
 
-- **No AI policy** (org or repo). The agent drafts, Martin reviews and posts. Issues carry no
-  disclosure; a PR gets one line in its text. Don't send several agent PRs at once (the org
+- **No AI policy** (org or repo). The agent drafts, Martin reviews and posts. No disclosure in
+  issues or PRs (not required). Don't send several agent PRs at once (the org
   skill's closed batch, charmbracelet/gum#1044 to #1053).
 - **Features:** a feature request may be an issue (org form "Feature Request"); a feature PR
   needs a maintainer-approved Discussion first (org `CONTRIBUTING.md`). Bug fixes go straight to

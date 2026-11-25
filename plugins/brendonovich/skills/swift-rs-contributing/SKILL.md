@@ -22,7 +22,7 @@ all of the last 20 PRs. Used through Tauri apps, so most traffic is macOS/iOS bu
 ## 0. Hard rules that decide the agent's role
 
 - **No AI policy.** Nothing in the repo addresses AI use or attribution. So: the agent drafts,
-  Martin reviews and posts; disclose AI help in one line.
+  Martin reviews and posts; no disclosure (not required).
 - **No issue-first rule.** Outside fixes arrive as PRs directly (#76, #77, #85); feature-sized
   questions sit as issues, often without an answer (#62, #71).
 

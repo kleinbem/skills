@@ -79,7 +79,7 @@ own branches. It continues maorcc/gimp-mcp, whose history it keeps. Active 2026-
 ## 5. Pull request
 
 - No template. Follow #1's shape: `## Summary` (what and why, with a short example), then how it
-  was tested. Short, "I", one line of AI disclosure.
+  was tested. Short, "I", no AI disclosure (not required).
 
 ## 6. CI and bots
 

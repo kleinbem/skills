@@ -22,7 +22,7 @@ Releases are frequent (v0.11.0 and v0.12.0 two days apart) and publish to npm.
 ## 0. Hard rules that decide the agent's role
 
 - **No AI policy.** Nothing in the repo addresses AI use or attribution; the maintainer works with
-  agents himself. So: the agent drafts, Martin reviews and posts; disclose AI help in one line.
+  agents himself. So: the agent drafts, Martin reviews and posts; no disclosure (not required).
 - **No issue-first rule.** Outside contributors open fix PRs directly (#97–#100); issues with a
   precise problem/cause analysis get thanked and an invitation to open the PR (#61).
 

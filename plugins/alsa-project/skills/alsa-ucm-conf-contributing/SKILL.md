@@ -14,7 +14,7 @@ Sources of truth: `README.md`, `ucm2/README.md`, recent PRs #900, #905, #906. As
 
 ## 0. Hard rules that decide the agent's role
 
-- **AI Policy:** Standard workflow. Agent drafts, Martin reviews and approves. One disclosure line in the PR.
+- **AI Policy:** Standard workflow. Agent drafts, Martin reviews and approves. No disclosure (not required).
 - **Commits:** One logical machine/profile per commit: `ucm2: Qualcomm: x1e80100: add <Model> profile`.
   Sign-off (`Signed-off-by: Martin Kleinberger <martin.kleinberger@gmail.com>`) included.
 - **PR Titles:** Clear imperative summary: `ucm2: Qualcomm: x1e80100: add Acer Aspire 16 AI, ASUS ProArt PZ13 and Surface Laptop 13 profiles`.
