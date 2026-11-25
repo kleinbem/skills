@@ -60,6 +60,9 @@ when he can't review (#216).
   - `nix.yml`: `nix flake check` (package build, `golangci-lint` via `nix/lint.nix`, nixfmt via
     treefmt, module options doc).
 - Run both locally before a PR: `go test -race ./...` in `nix develop`, then `nix flake check`.
+- Several tests (deployer, manager) read state from `EventuallyWithT` without locks. testify v1.11
+  runs that condition in its own goroutine, so they fail under `-race`; go-git v5.19+ requires
+  testify v1.11, which is why #241 stopped at go-git v5.18.0. Compare any failure with `main`.
 - `nix/go-test.nix` runs the Go tests in the Nix sandbox (`doCheck`); it is not in `checks`.
 - Test against our hosts: point nix-config's `comin` input at the branch
   (`--override-input comin path:../../nlewo/comin`) and build a host's toplevel.
@@ -96,13 +99,14 @@ when he can't review (#216).
 - Known bug (2026-11-24): comin rejects commits made by jj, because go-git v5.11.0 drops the
   `change-id` header when re-encoding the commit for verification. go-git v5.16+ keeps extra
   headers (go-git/go-git#1578). Affects our `testing-<host>` canaries; production commits are
-  GitHub squashes without `change-id`. Open fix in comin's own code: #216 (stalled, see section 0).
+  GitHub squashes without `change-id`. Open fix in comin's own code: #216 (stalled, see section 0). Ours: #241 (go-git v5.18.0,
+  ready since 2026-11-25), which fixes it without new signature code.
 - No clone or fork yet: clone to `~/Develop/github.com/nlewo/comin` with jj, remotes `origin`
   and `fork` (`kleinbem/comin`).
 
 ## Review checklist
 
-- Search found #216 and any other open PR for the same thing; the PR text links them (section 1).
+- Search checked open PRs for the same change (e.g. #216 for jj signatures); the PR text links any related ones (section 1).
 - `vendorHash` in `nix/package.nix` matches the new `go.sum` (section 2).
 - `go test -race ./...` and `nix flake check` pass on the head (section 3).
 - Module option changes come with regenerated `docs/generated-module-options.md` (section 2).
