@@ -61,6 +61,11 @@
       "description": "tao12345666333 (personal GitHub account): tao12345666333-org (security reports, repo table), amp-acp-contributing"
     },
     {
+      "name": "nlewo",
+      "source": "./plugins/nlewo",
+      "description": "nlewo (personal GitHub account): nlewo-org (security reports, repo table), comin-contributing"
+    },
+    {
       "name": "tifyr",
       "source": "./plugins/tifyr",
       "description": "tifyr organization (tifyr/gimp3-mcp): tifyr-org (security, repo table), gimp3-mcp-contributing"
