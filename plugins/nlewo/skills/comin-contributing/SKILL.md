@@ -101,8 +101,8 @@ when he can't review (#216).
   headers (go-git/go-git#1578). Affects our `testing-<host>` canaries; production commits are
   GitHub squashes without `change-id`. Open fix in comin's own code: #216 (stalled, see section 0). Ours: #241 (go-git v5.18.0,
   ready since 2026-11-25), which fixes it without new signature code.
-- No clone or fork yet: clone to `~/Develop/github.com/nlewo/comin` with jj, remotes `origin`
-  and `fork` (`kleinbem/comin`).
+- Clone at `~/Develop/github.com/nlewo/comin` with jj, remotes `origin` and `fork`
+  (`kleinbem/comin`); one workspace per PR branch in `comin.ws/`.
 
 ## Review checklist
 
