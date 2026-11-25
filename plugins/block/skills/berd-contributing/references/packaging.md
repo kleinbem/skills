@@ -114,14 +114,22 @@ kleinbem/nixpkgs branch `berd`, `pkgs/by-name/be/berd/package.nix`.
   display or goose needed. Built.
 
 ## Releases
-- Tags `v<semver>`, roughly every 1–3 weeks until 0.6.4 (2026-09-10), none since; main 65 commits
-  ahead on 2026-10-27. Changelog: `CHANGELOG.md` and GitHub releases. Source.
+- Tags `v<semver>`, roughly every 1–3 weeks until 0.6.4 (2026-09-10), then 0.6.5 (2026-11-04,
+  tag 2f9bd51b). 0.6.5's release run failed in the macOS job: the tag has Linux and Windows assets
+  only, no `berd-call` tarball, and the updater feed stayed unpromoted (2026-11-25). Changelog:
+  `CHANGELOG.md` and GitHub releases. Source.
+- 0.6.5 at the tag: goose lock aaif-goose `361003ea`, `berd-call` with `features = ["static"]` in
+  `src-tauri/Cargo.toml`, rust 1.94.1, `CATCH_VERSION` 0.5.1. Source. The build facts above were
+  measured on 0.6.4; recheck them on the 0.6.5 package.
 
 ## Upstream
+- Package: NixOS/nixpkgs#580616 (berd 0.6.5) and #580909 (block-catch 0.5.1), 2026-11-25.
 - No outside PRs (closed automatically); issues through the two forms only (this skill, §0–§1).
 - Issues from packaging (2026-10-29 to 10-31): block/berd#449 sherpa-onnx `shared`, #450 empty
   `Categories=`, #451 deep links and no single instance on Linux, #452 release with #272, #455
   notification listener, #456 goose release (release notes name it since #458), #457
-  move-to-Applications switch, #462 goose serve survives SIGTERM; block/catch#6, #7. The package
-  links each workaround to its issue; #461 (upstream PR, Parakeet archives) is carried as a patch.
+  move-to-Applications switch, #462 goose serve survives SIGTERM; block/catch#6, #7. #452 and #456
+  are closed (2026-11-25); the rest are open without a reply. The package links each workaround to
+  its issue; #461 (Parakeet archives) shipped in 0.6.5, so its patch is gone. Darwin carries
+  `add-plugin-path-for-swift-macros.patch` (swift-rs macro plugins, Brendonovich/swift-rs#87).
 - Other packaging: none found in nixpkgs, nix-community, the AUR or Repology (2026-10-28).
