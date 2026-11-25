@@ -29,6 +29,7 @@ model invocation of manual skills.
 | Arch Linux (not on GitHub) | `archlinux-org` | `aur-contributing` |
 | Noooste (personal account) | `noooste-org` | `garage-ui-contributing` |
 | tao12345666333 (personal account) | `tao12345666333-org` | `amp-acp-contributing` |
+| Brendonovich (personal account) | `brendonovich-org` | `swift-rs-contributing` |
 | nlewo (personal account) | `nlewo-org` | `comin-contributing` |
 | tifyr | `tifyr-org` | `gimp3-mcp-contributing` |
 | anduril | `anduril-org` | `jetpack-nixos-contributing` |
@@ -91,6 +92,7 @@ is authoritative; update this table when one changes):
 | block/catch | yes, after the lead answers an issue | yes | agent drafts, Martin reviews | no policy | DCO, only after Martin reviewed | Conventional Commits |
 | Noooste/garage-ui | yes; features issue first | features | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (PR title only, squash) |
 | tao12345666333/amp-acp | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | Conventional Commits (squash) |
+| Brendonovich/swift-rs | yes; fixes straight to a PR | no | agent drafts, Martin reviews | no policy; one disclosure line | no | free-form (merge commits) |
 | nlewo/comin | yes; maintainer has little review time | no | agent drafts, Martin reviews | no policy; one disclosure line in the PR | no | `<component>: …`, merge commits |
 | tifyr/gimp3-mcp | yes | no | agent drafts, Martin reviews | no policy; repo itself uses `Co-Authored-By: Claude …`; one disclosure line in the PR | no | plain sentence, no prefix |
 | anduril/jetpack-nixos | yes | no (kernel-config reports went issue → PR) | agent drafts, Martin reviews | no policy; merged commits carry `Co-Authored-By: Claude …`; one disclosure line in the PR | no | `<component>: …`, merge commits |
