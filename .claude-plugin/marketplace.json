@@ -61,6 +61,11 @@
       "description": "tao12345666333 (personal GitHub account): tao12345666333-org (security reports, repo table), amp-acp-contributing"
     },
     {
+      "name": "brendonovich",
+      "source": "./plugins/brendonovich",
+      "description": "Brendonovich (personal GitHub account): brendonovich-org (security reports, repo table), swift-rs-contributing"
+    },
+    {
       "name": "nlewo",
       "source": "./plugins/nlewo",
       "description": "nlewo (personal GitHub account): nlewo-org (security reports, repo table), comin-contributing"
