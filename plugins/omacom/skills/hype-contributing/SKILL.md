@@ -23,7 +23,7 @@ omacom/hype --state all`). No `CONTRIBUTING.md`, `AGENTS.md` or PR template. As 
 - **Title:** a plain imperative sentence, no Conventional Commits prefix ("Quit with Ctrl+Q",
   "Keep hype render from overwriting its presentation").
 - **Body:** prose: the problem, what changed, how it was tested (outside PRs like #29 give
-  measurements). One AI disclosure line at the end (org rule). No DCO.
+  measurements). No AI disclosure (not required). No DCO.
 - dhh merges; most changes come from him and from omarchybot, the maintainers' agent. Outside
   PRs do land (mikkovedru 10 of 13, ssandys 3 of 3 as of 2026-11-15), usually without review
   comments. Larger features from outside were closed (#36 macOS port, #39, #33).
@@ -38,7 +38,7 @@ omacom/hype --state all`). No `CONTRIBUTING.md`, `AGENTS.md` or PR template. As 
   the fleet hosts (envfs) and on Arch. Prove such a bug with the nixpkgs build.
 
 ## Review checklist
-- Title is a plain imperative sentence; body explains problem, change and test, plus the
+- Title is a plain imperative sentence; body explains problem, change and test; no
   disclosure line.
 - `bin/test` passes (or the nixpkgs build when the change is about portability).
 - Nothing packaging-only that belongs in omarchy-pkgs.

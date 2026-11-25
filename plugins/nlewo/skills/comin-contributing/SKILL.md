@@ -25,7 +25,7 @@ when he can't review (#216).
 - **No AI policy.** Nothing in the repo addresses AI use or attribution. A Claude-generated PR
   (#147, "Claude/add system manager guide") got a friendly "looks like claude took some unwanted
   initiatives": keep agent output tight and in scope. The agent drafts, Martin reviews and posts;
-  one disclosure line in the PR.
+  no disclosure (not required).
 - **No issue-first rule.** Outside contributors open PRs directly; most merged fixes had no issue.
 - **SSH signature code:** the maintainer doesn't want to maintain SSH signature verification in
   comin. He waits for go-git's verifier plugins (go-git/x#13, built on go-git/go-git#2235) to

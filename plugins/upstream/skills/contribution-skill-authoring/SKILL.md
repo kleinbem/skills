@@ -31,6 +31,8 @@ Principles:
 - **Repo rules win over habits.** Where the project's policy limits the agent (AI disclosure,
   no agent trailers, no automated submissions, humans write texts), quote the policy lines and
   translate them into what the agent does and doesn't do for Martin. That section comes first.
+- **Disclosure only where required.** Record the project's disclosure rule as found; where it has
+  none, the skill says "no disclosure (not required)", never a default line of ours.
 - **Short and plain**, like everything else we write (the `feedback-short-natural-comments`
   memory): result first, no filler, no claims about the project's intentions.
 - **Numbers are examples**, not laws: merge times, counts and samples change; show the command

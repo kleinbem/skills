@@ -16,7 +16,7 @@ No org `.github` repo. Sources: each repo's files and recent PRs via `gh api`. A
 ## 0. Org-wide hard rules
 
 - **AI:** no written policy in any repo; AI-assisted PRs are reviewed normally and the
-  maintainers run AI agents themselves. Add one disclosure line at the end of the body.
+  maintainers run AI agents themselves. No disclosure in PRs (not required); omarchy's agent guide asks for one on agent-filed issues and comments (`omarchy-contributing`).
 - **Bots on every PR:** Greptile Review (omarchy, omarchy-pkgs, omasnap). On omacom/omarchy the
   maintainers' triage agent **omarchybot** reproduces, labels, picks between duplicate PRs and
   closes on the maintainer's behalf; answer it like a maintainer.

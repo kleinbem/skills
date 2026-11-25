@@ -16,8 +16,8 @@ Sources of truth in the repo: `README.md`, `docs/builds.md`, `docs/upstream-sour
 
 ## 0. Hard rules that decide the agent's role
 
-- **AI Policy:** Contributions prepared with AI assistance are accepted. Add the standard disclosure
-  footer at the bottom of the PR description (e.g. `Filed by <agent> on behalf of @kleinbem, who reviewed it.`).
+- **AI Policy:** no written policy; AI-assisted contributions are reviewed normally. No disclosure
+  (not required).
 - **PR Titles:** Clear free-form description prefixed with the package name: `<package>: <summary>`
   (e.g., `quickshell: drop synchronous scanDir to avoid Qt 6.11 plugin reload deadlock`).
 - **Commits:** Conventional git commit messages; signed commits encouraged.

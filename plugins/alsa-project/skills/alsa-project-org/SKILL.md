@@ -15,7 +15,7 @@ Sources of truth: `alsa-project/alsa-ucm-conf` repository history and PR review 
 ## 0. Org-wide hard rules
 
 - **AI Policy:** No explicit ban on AI assistance; contributions must be verified on hardware or against
-  ALSA parser rules (`alsaucm -c ... reload`). Standard disclosure line acceptable.
+  ALSA parser rules (`alsaucm -c ... reload`). No disclosure required, so none is added.
 - **Licensing:** BSD-3-Clause for `alsa-ucm-conf`.
 - **Commits:** Conventional ALSA commit titles: `ucm2: <subsystem>: <device>: <imperative summary>`.
   Signed-off-by (DCO) is customary in ALSA kernel/userspace projects.

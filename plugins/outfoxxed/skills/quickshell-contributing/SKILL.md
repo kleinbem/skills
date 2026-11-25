@@ -14,7 +14,7 @@ Sources of truth: `README.md`, issues #1295, #1104, #941 on `quickshell-mirror/q
 
 ## 0. Hard rules that decide the agent's role
 
-- **AI Policy:** Standard workflow. Agent drafts, Martin reviews and approves. One disclosure line in the PR.
+- **AI Policy:** Standard workflow. Agent drafts, Martin reviews and approves. No disclosure (not required).
 - **Commits:** `<subsystem>: <imperative summary>` (e.g. `interceptor: avoid synchronous directory scan during URL interception`).
 - **Code style:** Modern C++20/C++23 with Qt6, formatted according to project conventions.
 
