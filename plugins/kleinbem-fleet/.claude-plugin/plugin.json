@@ -1,6 +1,6 @@
 {
   "name": "kleinbem-fleet",
-  "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits), retro (post-PR/session learnings), arch-review (deep-module & domain review)",
+  "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits), retro (post-PR/session learnings), arch-review (deep-module & domain review), steward-findings (triaging & fixing coderabbit-steward findings)",
   "author": {
     "name": "Martin Kleinberger"
   }

@@ -43,7 +43,7 @@
     {
       "name": "kleinbem-fleet",
       "source": "./plugins/kleinbem-fleet",
-      "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits)"
+      "description": "The kleinbem fleet: kleinbem-fleet (orientation), jj-workflow (jj in the fleet), agent-ops (running builds, CI and waits), retro (post-PR/session learnings), arch-review (deep-module & domain review), steward-findings (triaging & fixing coderabbit-steward findings)"
     },
     {
       "name": "matepad-pro",
