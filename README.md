@@ -72,6 +72,7 @@ Agent skills from the kleinbem workspace, as a Claude Code plugin marketplace.
 | `kleinbem-fleet` | `jj-workflow` | jj in the fleet: workspaces for concurrent agents, pushing, bookmarks, rebasing PRs with bot commits, signing |
 | `kleinbem-fleet` | `retro` | Post-session or post-PR retrospective: route corrections and CodeRabbit catches into AGENTS.md, ADRs, glossary, skills, or checks |
 | `kleinbem-fleet` | `arch-review` | Strategic architecture and domain-alignment review: glossary/ADRs, hotspot scan for deep modules, boundary tests, merge-danger triage |
+| `kleinbem-fleet` | `steward-findings` | Triaging and fixing CodeRabbit proactive review findings from `coderabbit-steward` via its Bearer API and rolling `cr-findings` issues |
 | `matepad-pro` | `matepad-pro` | Operations, diagnostics, headless APK management, and reverse tunnels for Huawei MatePad Pro |
 
 Contribution skills have three layers: `upstream-contributing` (always loaded) routes to the
