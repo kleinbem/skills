@@ -74,11 +74,12 @@ hardware; checks and full builds go to GitHub runners.
 
 ## 3. Upstream pre-flight
 
-For code PRs to an upstream that runs heavy CI (Mesh-LLM): `kleinbem/mesh-llm-ci` `check.yml`
-(`-f ref=<full sha>`) runs upstream's own planner, Clippy, tests, fmt and repo checks
-on GitHub's runners before a maintainer approves CI. `-f packages="<crates>"` adds macOS and
-Windows rows — but those run `--lib` only, like upstream's macOS lane. About 7–47 min. Other
-upstreams: copy the pattern when their CI needs approval for forks.
+For code PRs to an upstream that runs heavy CI (Mesh-LLM): `kleinbem/mesh-llm-ci` `run.yml`
+(`-f ref=<full sha> -f platform=linux|macos|windows -f toolchain=stable -f script=…`) runs a
+script mirroring upstream's Lint and Test jobs on GitHub's runners (the script and command are in
+`mesh-llm-contributing`, section 2). `check.yml` still runs Mesh-LLM's planner, which upstream
+removed on 2026-11-28, so it is stale. Other upstreams: copy the pattern when their CI needs
+approval for forks.
 
 ## 4. Real hardware
 

@@ -1,6 +1,6 @@
 ---
 name: mesh-llm-contributing
-description: Use when preparing, updating, or reviewing a pull request to Mesh-LLM/mesh-llm (MeshLLM host, Skippy, native runtimes, packaging scripts) to follow its build, validation, commit, attribution and PR-template rules.
+description: Use when preparing, updating, or reviewing a pull request to Mesh-LLM/mesh-llm (MeshLLM host, console, SDKs, packaging scripts; Skippy is in Mesh-LLM/skippy) to follow its build, validation, commit, attribution and PR-template rules.
 disable-model-invocation: true
 ---
 
@@ -12,24 +12,26 @@ PR and issue numbers (`#2577`) refer to Mesh-LLM/mesh-llm unless another reposit
 open them as `https://github.com/Mesh-LLM/mesh-llm/issues/<N>` (GitHub redirects a PR number to the
 PR), or with `gh pr view <N> -R Mesh-LLM/mesh-llm` for a PR and `gh issue view <N> -R Mesh-LLM/mesh-llm` for an issue.
 
-Sources of truth in the repo: `AGENTS.md` (root), `skippy/AGENTS.md`, `mesh/AGENTS.md`,
+Sources of truth in the repo: `AGENTS.md` (root), `mesh/AGENTS.md`, `.github/AGENTS.md` (CI),
 `CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, `.github/instructions/pr.instructions.md`,
-and the repo-local skills in `.agents/skills/` (e.g. `release-notes`, `manage-ci`). Read the ones
-for the touched area before acting; the project moves fast (several merges a day; 42 from
-2026-10-21 to 10-25, 23 of them from forks). Summary as of 2026-11-01; commits, CI parity and
-test environment refreshed 2026-11-18.
+`mesh/docs/design/TESTING.md`, and the repo-local skills in `.agents/skills/` (e.g.
+`release-notes`, `manage-ci`). Read the ones for the touched area before acting; the project moves
+fast (several merges a day, about 60 from 2026-11-14 to 11-28). Summary as of 2026-11-28 (upstream
+main `74c8765c`, right after #3193 moved Skippy out and replaced the CI).
 
 ## 0. Before the first edit (do these, in order)
-1. Read root `AGENTS.md`, the owning product's `AGENTS.md` (Skippy `skippy/`, MeshLLM `mesh/`;
-   Mesh depends on Skippy, never the reverse; both for integration changes) and
-   `.github/instructions/pr.instructions.md`.
+1. Read root `AGENTS.md`, `mesh/AGENTS.md` and `.github/instructions/pr.instructions.md`.
+   Skippy (runtime, CLI, llama.cpp patches) lives in `Mesh-LLM/skippy` since #3193
+   (`skippy-contributing`); mesh-llm uses its crates.io release pinned exactly in the root
+   `Cargo.toml` (`=0.80.4` on 11-28) and loads its packaged runtime. Don't add Skippy source,
+   llama.cpp patches, GPU runtime builds or Skippy tests here (root `AGENTS.md`).
 2. Search open/closed issues and PRs for the problem (`gh search issues|prs --repo Mesh-LLM/mesh-llm`).
 3. Check open PRs that touch the same files (`gh pr view <N> --json files`): the project merges
-   several PRs a day and is moving scripts into Rust automation.
-4. Branch from current `main`; packaged releases (e.g. in nixpkgs) lag behind, and paths move
-   (e.g. `scripts/` → `skippy/scripts/`). The PR branch lives in Mesh-LLM/mesh-llm itself as
-   `kleinbem/<topic>`, not on the fork: Martin has write access (section 5), so CI runs and can be
-   rerun without a maintainer.
+   several PRs a day.
+4. Branch from current `main`; packaged releases (e.g. in nixpkgs) lag behind, and whole trees
+   move (`skippy/` left the repo in #3193; a branch from before it needs a rebase). The PR
+   branch lives in Mesh-LLM/mesh-llm itself as `kleinbem/<topic>`, not on the fork: Martin has
+   write access (section 5), so CI runs and can be rerun without a maintainer.
 5. Read the design docs for the area (`mesh/docs/design/`: crate ownership, testing, message
    protocol) and the notes in `references/` (e.g. `references/config-lifecycle.md` for anything
    in `MeshConfig`). Trace where a value you add goes (load, snapshot, apply, save) before
@@ -86,48 +88,31 @@ merged PRs; numbers are examples):
 - **Protocol and wire changes:** keep them additive (new fields, subprotocol feature strings),
   test a mixed mesh with an older release, and say whether a protocol version bump is needed
   (#2285, #2299, #2316).
-- **Native patches (Skippy):** fold a fix into the patch that owns the code instead of adding a
-  patch (#2258, #2259, #2280, `skippy/AGENTS.md`); bump the ABI in lockstep in the header and
-  `skippy-ffi`, and list the ABI changes in the PR body (#2089, #2252).
+- **Skippy changes** (native patches, ABI, runtime) go to `Mesh-LLM/skippy`. To test a
+  mesh-llm change against an unreleased Skippy, build locally with `scripts/skippy-source.sh
+  <checkout>` or `--ref <branch|pull/N>` (back with `--pinned`; never commit the `Cargo.toml` /
+  `Cargo.lock` it changes), and in the PR put a line `Skippy-Ref: pull/<N>` in the body: the
+  smoke job then builds the runtime and MeshLLM from that source (lint and tests stay on the pin).
 - **Tests:** an extracted test file keeps its env-mutation audit registration (#2291); tests
   pass in the bare Linux lane without extra environment (#2364); every PR of a stack is green at
   its own merge point (#2359, #2374). A gate (a setting that turns something off) needs a test
   that the gated work really doesn't happen, not only that the value parses: pass the request
   in as a closure so the test can make it panic (#2446).
-- **Clean build environments** (as of 2026-10-31): distributions run the whole suite in a clean
-  environment with only the declared build dependencies, often on busy machines. Check every new
-  or changed test against these; each came up as its own PR or issue (several still open):
-  - no network and no CA bundle: a client for local endpoints trusts no roots
-    (`network::local_http::local_http_client`, #2492). Still open on main (2026-10-31 sandbox run):
-    141 tests need a bundle only to build their client, among them the analytics tests
-    `queued_events_are_delivered_as_a_batch_on_shutdown` and
-    `delivered_events_carry_the_privacy_properties_and_no_free_text`; themed PRs planned
-    (skippy-hf-hub first);
-  - only declared tools, no fixed paths: `/bin/bash` (#2604), `/usr/bin/true` (#2699), `sysctl`
-    (#2672), `ps` (#2673);
-  - no usable `HOME`: state only in the test's temp dirs (known open violation, not fixed
-    upstream: the SDK lifecycle tests write the real `~/.mesh-llm`);
-  - a foreign environment: the builder's `MESH_LLM_*` (#2630/#2707), no terminal (#2605); set them
-    with `Command::env` or remove them with `Command::env_remove` on the child, otherwise follow
-    the env-mutation contract;
-  - slow machines: the result must not depend on machine speed: wait for the event or state
-    rather than sleeping, generous bounds, retry only transient failures like ETXTBSY
-    (#2700/#2705, #2670/#2696, #2723 fixed by #2704, #2716/#2720);
-  - the build options packagers use, e.g. the dynamic native runtime (#2629);
-  - startup must not read its own executable in full (debug test binaries are ~2 GB; #2751).
-  A test that really needs network or hardware is `#[ignore]`d with the reason. The product side
-  is in `references/packaging.md`. Upstream's `AGENTS.md` and skills state rules without PR
-  numbers; keep the numbers for PR bodies.
+- **Clean build environments:** root `AGENTS.md` ("Tests in clean build environments") now holds
+  the list our PRs established; check every new or changed test against it. Examples for PR
+  bodies: no CA bundle (#2492), fixed tool paths `/bin/bash` (#2604), `/usr/bin/true` (#2699),
+  `sysctl`/`ps` (#2672, #2673), the builder's `MESH_LLM_*` (#2630/#2707), no terminal (#2605),
+  machine speed (#2700/#2705, #2670/#2696, #2716/#2720), the dynamic runtime (#2629), reading
+  the own executable (#2751). A test that really needs network or hardware is feature-gated or
+  `#[ignore]`d with the reason. The product side is in `references/packaging.md`.
 - **When a maintainer fixes the same thing differently**, close the own PR and the issue with a
   short comment linking theirs, rather than rebasing on top (#2725 after i386's #2704). Verify
   first where the failure reproduces (the Orin for timing flakes; GitHub runners often don't).
-- **Stack:** test threads have 2 MiB, and #2177 removed `RUST_MIN_STACK` from the Windows unit
-  row on purpose, so growth shows. The Linux test job (`ci-rust-tests-slice.yml`) does set
-  `RUST_MIN_STACK=8388608`, and the macOS/Windows unit rows run current stable: a plain
-  `cargo test` on 1.98.1 without it overflows `peer-ingress-2m` in `mesh-llm-host-runtime`,
-  which upstream never sees (a false #3074, closed). Match upstream's environment before filing. Don't propose raising the limit (or `opt-level` tricks as the
-  fix); shrink the frame that grew (#1976 boxed route futures, #2690 split the CLI into
-  flattened `Args` groups). Measure before and after (section 2).
+- **Stack:** test threads have 2 MiB, and since #3193 no CI job sets `RUST_MIN_STACK` (the old
+  Linux job set 8 MiB, which hid an overflow on 1.98.1 and led to a false #3074). Match
+  upstream's environment (toolchain, variables) before filing. Don't propose raising the limit
+  (or `opt-level` tricks as the fix); shrink the frame that grew (#1976 boxed route futures,
+  #2690 split the CLI into flattened `Args` groups). Measure before and after (section 2).
 - **CLI types (`mesh-llm-cli`):** clap derive defines every option of a struct in one function,
   and debug frames add up (clap-rs/clap#5134), so big option sets go into `#[derive(Args)]`
   structs (`Cli`'s groups in `parser/top_level_options.rs`, #2690). `#[command(flatten)]` keeps
@@ -140,57 +125,65 @@ merged PRs; numbers are examples):
   really does (#2690's review: clap_derive defines fields in declaration order, so "returns
   before the subcommands are defined" was false for most groups).
 - **SDK parity** (`AGENTS.md`, since #2703): a public SDK API change is complete only when the
-  native bridge, Rust, Node.js, Swift and Kotlin, their tests, product docs and the website examples
-  under `mesh/website/src/docs/` change together, and Python through a merged companion PR in
-  `Mesh-LLM/mesh-llm-python-sdk` pinned to the same native revision. Never hand-edit generated bindings.
+  native bridge, Rust, Node.js, Python, Swift and Kotlin, their tests, product docs and the website
+  examples under `mesh/website/src/docs/` change together. All five are in this repository now;
+  Python is `mesh/sdk/python` (`"$SDK_PYTHON" -I -B mesh/sdk/python/tests/test_client.py`; CI
+  doesn't run it, so run it yourself). Never hand-edit generated bindings.
 - **Claims:** title and body claim no more than the code does (#2298: "phase 1" instead of
   enforcement; #2377: "one body claim is false"). Reviewers reproduce stated test counts at the
   head commit, so give exact commands and counts.
 
 ## 2. Building and validating
-- Build with `just` only (`just`, `just skippy`, `just mesh`); `cargo build/check` alone is not a
-  complete product build.
+- Build with `just` only (bare `just` = `just build`: downloads the pinned Skippy release's
+  runtime into `target/debug/native-runtimes`, then builds host and console; `just mesh` host
+  only, `just runtime` runtime only). `cargo build/check` alone is not a complete product build.
 - Run Cargo commands one at a time (lock conflicts otherwise).
 - Validate by changed surface (root `AGENTS.md`, "Minimum validation by change type"):
-  - **Rust:** `cargo check -p <crate>`, `cargo test -p <crate> --lib`,
-    `cargo clippy -p <crate> --all-targets -- -D warnings`, and `just no-console-print`. Code
-    reachable from the `mesh-llm` binary (Skippy crates included) also needs
-    `cargo check -p mesh-llm` and `cargo clippy -p mesh-llm --all-targets -- -D warnings`.
+  - **Rust:** `cargo check -p <crate>`, `cargo clippy -p <crate> --all-targets -- -D warnings`,
+    `cargo test -p <crate> --lib` while iterating, and before the PR the full `cargo test -p`
+    for the changed crates and the workspace crates that depend on them (`--lib` skips
+    integration and doc tests, which CI runs). Code reachable from the `mesh-llm` binary also
+    needs `cargo check -p mesh-llm` and `cargo clippy -p mesh-llm --all-targets -- -D warnings`.
     Format with `cargo fmt -p <crate> -- <file>` (never `cargo fmt --all -- <file>`: it loses the
     crate's edition) and run `cargo fmt --all --check` before committing.
-  - **No Python:** the repository's Python tooling is gone and the generic Python gate is retired.
-    Automation is Rust in `tools/xtask` (`cargo xtool …`) behind thin `just` recipes; don't add
-    Python, not even temporary helpers. Since #2530 the Quality gate enforces it: `just
-    ci-crate-lists` rejects Python sources, shebangs and direct interpreter calls not listed in
-    `ci/python-tooling-policy.json`.
-  - **Shell-only:** a syntax check (`bash -n`) plus the nearest contract test.
-  - **CI:** read `.agents/skills/manage-ci/SKILL.md` completely first, then run `just ci-validate`.
-- Script tests call `/bin/bash` and `/usr/bin/true`. On NixOS, run a local copy with the paths
-  substituted (`type -P bash`, `type -P true`; `command -v true` returns the shell builtin), and
-  compare against unmodified `main` to separate host failures from your own (e.g. some CUDA
-  toolkit tests error on hosts without the toolkit, with or without a change).
+  - **Broad change, or a `just` recipe or CI script changed:** `just test-all` (= `just lint`,
+    `just test-rust`, `just test-ui`).
+  - **Automation** is plain `just` recipes and scripts under `scripts/`, tests under
+    `scripts/tests/` wired into `just lint` (ShellCheck plus the script tests). `tools/xtask`,
+    `cargo xtool`, `ci/` and the planner were removed in #3193; don't call or restore them.
+  - **CI:** read `.github/AGENTS.md` and `.agents/skills/manage-ci/SKILL.md` first (both short),
+    run `actionlint` and `just lint`, and update `references/current-inventory.md` with a workflow.
+  - **Env mutation:** any `std::env::set_var`/`remove_var` follows the contract in
+    `mesh/docs/design/TESTING.md` (`#[serial]`, a restoring guard, a `// SAFETY:` comment). The
+    `just check-env-mutation-contract` it names has no recipe at `74c8765c`: check by hand.
+  - `mesh-llm-cli` parser files changed: `just cli-inventory-check` (needs npm).
+- Script tests may call `/bin/bash` and `/usr/bin/true`. On NixOS, run a local copy with the paths
+  substituted (`type -P bash`, `type -P true`; `command -v true` returns the shell builtin), or
+  under `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`.
+  The reverse also holds: envfs serves `/usr/bin/<tool>` from `PATH`, so a hardcoded path that
+  fails in the Nix sandbox passes on the workstation; reproduce with
+  `bwrap --dev-bind / / --tmpfs /usr/bin -- <test binary> <filter>`. Compare against unmodified
+  `main` to separate host failures from your own.
 - Local toolchain (NixOS, kleinbem fleet): no Cargo on `PATH`, so use
   `nix shell nixpkgs#cargo nixpkgs#rustc nixpkgs#clippy nixpkgs#rustfmt nixpkgs#gcc` (add
-  `nixpkgs#protobuf nixpkgs#cmake nixpkgs#pkg-config` for `mesh-llm`). `.cargo/config.toml` routes
-  rustc through `sccache`; without it, run with `CARGO_BUILD_RUSTC_WRAPPER=` (empty). `just`
-  recipes still require `sccache` on `PATH` (`with-lld` checks it), so add `nixpkgs#sccache
-  nixpkgs#lld`, and `nixpkgs#nodejs nixpkgs#pnpm` for `just mesh` (console UI). "mold is
-  unavailable" linker-probe warnings are harmless.
+  `nixpkgs#protobuf nixpkgs#cmake nixpkgs#pkg-config` for `mesh-llm`). Upstream CI uses current
+  stable (no `rust-toolchain.toml`; rustc 1.100.1 on 2026-11-28); nixpkgs' rustc can lag, so
+  confirm a toolchain-dependent finding on stable. `.cargo/config.toml` routes rustc through
+  `sccache`; without it, run with `CARGO_BUILD_RUSTC_WRAPPER=` (empty). `just` recipes still
+  require `sccache` on `PATH` (`with-lld` checks it), so add `nixpkgs#sccache nixpkgs#lld
+  nixpkgs#mold`, and `nixpkgs#nodejs nixpkgs#pnpm` for the console (pnpm 10+). For the runtime,
+  `scripts/fetch-skippy-runtime.sh <dir> cpu` downloads the pinned release's CPU package; point
+  the host at it with `MESH_LLM_NATIVE_RUNTIME_BUNDLE_DIR=<dir>` (and a fresh
+  `MESH_LLM_NATIVE_RUNTIME_CACHE_DIR`), or run `just smoke <dir> <model.gguf>` and
+  `just test-with-runtime <dir>` as CI does.
 - Code rules for new code: no new warnings or `#[allow]`; functions under the Clippy line and
   cognitive-complexity limits; the file-size rule from section 1; no generic `utils`/`common`
   modules.
-- Run locally what the PR's Quality lane runs for the change (`ci-quality-slice.yml`), so the PR
-  doesn't wait for an approval only to fail:
-  - any `std::env::set_var`/`remove_var` added, moved or wrapped:
-    `cargo xtool repository env-mutation-census` (a build script's mutation needs a `SAFETY:`
-    comment that says "build script"; other files have stricter rules);
-  - dependencies changed: `cargo machete`; crates or workspace members changed:
-    `cargo xtool repo-consistency ci-crate-lists`;
-  - `mesh-llm-cli` parser files changed: `just cli-inventory-check` (needs npm).
-- Docs: authored docs live in `mesh/docs/` and `skippy/docs/`; the website copy
-  (`mesh/website/src/docs/pages/`) is synced by the release commits, so edit only the authored file.
-  Some tests read docs (`include_str!`, e.g. `mesh/docs/CLI.md` in the host-runtime plugin config
-  tests): grep for the touched file and run those tests.
+- Docs: authored docs live in `mesh/docs/`; the website pages in `mesh/website/src/docs/pages/`
+  (`config-reference.md`, `analytics.md`, the SDK examples) are maintained source too. Only root
+  `docs/`, the Eleventy output of `just website-build`, is generated: never edit it. A page in
+  both places (`CLI.md`) may need the change twice. Some tests read docs (`include_str!`, e.g.
+  `CLI.md` in the host-runtime `plugin/config/tests.rs`): grep for the touched file and run those.
 - Tests for a fix must fail on the old code: run them once against the code before the fix. Don't
   change process-wide state such as `PATH` inside a test (tests run in parallel, and `set_var` is
   `unsafe` in Rust 2024); re-run the test binary as a child with `--exact <test>` and the
@@ -237,96 +230,76 @@ merged PRs; numbers are examples):
   a throwaway test that dumps `render_help`/`render_long_help` of every command, all options
   unhidden; both byte-identical (#2690).
 - Stack use: a throwaway test that re-runs the overflowing test as a child on a thread of a given
-  size (binary search, 16 KiB steps; dispatch it with `packages=`/`filter=` on all three
-  platforms). Frame sizes: `objdump -d -C` of the debug test binary; frames over a page allocate
-  through a probe loop (`sub $N,%r11`), so add that to the final `sub $M,%rsp`, or every large
-  frame reads as 4 KiB.
-- Pre-flight check on GitHub's runners instead of the workstation, before opening the PR and
-  before every push to its branch (so upstream's CI isn't spent on a failing head): push the head
-  to a `preflight-*` branch on the fork, then
-  `gh workflow run check.yml -R kleinbem/mesh-llm-ci -f ref=<full sha>`.
-  It runs upstream's own planner (`xtask ci plan`), so Clippy, tests and platform rows cover what
-  upstream's PR lanes would, plus fmt, `no-console-print`, the env census, `ci-crate-lists`,
-  `cargo machete` and the CI contracts (`just ci-automation-contracts`, `ci-legacy-contracts`);
-  read its job summary. A 503 "Egress is over the account limit" from sccache is GitHub's cache
-  service, not the change: rerun the failed job later. Take the full SHA from git or the API
-  (`gh pr view <N> --json headRefOid`), never type or complete it. Keep its `toolchain` input at
-  the Rust version of upstream's runner image (the `cargo` version in a recent Quality Clippy log);
-  `platform_toolchain` (default `stable`) drives the macOS/Windows rows, as upstream's do.
-  What stays local: behaviour of a built binary and distribution-specific tests.
-  Upstream lints Clippy on Linux only, and main carries 44 Windows findings (2026-11-09, mostly
-  `tools/xtask` and tests; none on macOS). For a change to code that compiles on Windows, also run
+  size (binary search, 16 KiB steps; run it on all three platforms). Frame sizes: `objdump -d -C`
+  of the debug test binary; frames over a page allocate through a probe loop (`sub $N,%r11`), so
+  add that to the final `sub $M,%rsp`, or every large frame reads as 4 KiB.
+- **Pre-flight on GitHub's runners** (kleinbem/mesh-llm-ci, local clone
+  `~/Develop/github.com/kleinbem/mesh-llm-ci`), before opening the PR and before every push to
+  its branch, so upstream's CI isn't spent on a failing head. Push the head to a `preflight-*`
+  branch on the fork, then mirror upstream's Test job (and Lint on Linux) with `run.yml`:
+  ```bash
+  script="$(cat "$HOME/.agents/skills/mesh-llm-contributing/references/upstream-ci-mirror.sh")"
+  for p in linux macos windows; do
+    gh workflow run run.yml -R kleinbem/mesh-llm-ci -f ref=<full sha> -f platform=$p \
+      -f toolchain=stable -f script="$script"
+  done
+  ```
+  The script (`references/upstream-ci-mirror.sh`) runs `cargo fmt --check` and workspace Clippy
+  on Linux and `cargo test --workspace --locked --no-fail-fast` everywhere, like `just lint` /
+  `just test-rust`; run `just lint`'s ShellCheck and script tests locally when scripts change.
+  `check.yml` is stale since #3193: it still runs the removed planner (`xtask ci plan`), so don't
+  use it on current main. Pass `toolchain=stable` (the input defaults to 1.98.1, older than
+  upstream's). Take the full SHA from git or the API (`gh pr view <N> --json headRefOid`), never
+  type or complete it. `run.yml`'s Windows runner is `windows-2025`, upstream's `windows-2022`.
+  The script passed on Linux on 2026-11-28; check the first macOS and Windows runs before
+  trusting a green row there.
+  What stays local: the console (`just test-ui`), the inference smoke, behaviour of a built
+  binary and distribution-specific tests.
+- Upstream lints Clippy on Linux only, so main can carry Windows- or macOS-only findings. For a
+  change to code that compiles there, also run
   `gh workflow run clippy-diff.yml -R kleinbem/mesh-llm-ci -f repo=kleinbem/mesh-llm
   -f base=<merge-base SHA> -f head=<head SHA> -f platform=windows -f packages='<changed crates, space-separated>'
   -f features=mesh-llm-system/dynamic-native-runtime,mesh-llm-skippy-adapter/dynamic-native-runtime
-  -f toolchain=1.98.1`: it fails only on findings the change adds (#2969: base 1, head 1, 0 new).
+  -f toolchain=stable`: it fails only on findings the change adds (#2969: base 1, head 1, 0 new).
   Pass each feature only when its crate is selected or a selected package names it as a direct
-  dependency (Cargo's rule); omit both for e.g. `xtask` alone, where Cargo rejects them.
-  The macOS and Windows rows run `--lib` only, as upstream's do; for integration tests
-  (`tests/`) on those platforms add `-f targets=all` (kleinbem/mesh-llm-ci#3, until merged
-  dispatch with `--ref macos-all-targets`). macOS code that spawns `ps` or `sysctl` passes on
-  runners and fails in the Nix darwin sandbox; prefer `libc` calls. For a process's identity use
-  what the kernel recorded at exec (`proc_pidinfo` `PROC_PIDT_SHORTBSDINFO` `pbsi_comm`, any
-  account; `sysctl` `KERN_PROCARGS2`'s exec path, same account), not `proc_pidpath`, which
-  follows the file: a renamed executable reports the new name, a deleted one `ENOENT` (#2673).
-  The automatic plan can leave out the platform a change is for: a change inside
-  `cfg(target_os = "macos")` got no macOS row (#2673). Check the run's job list; if the platform
-  is missing, dispatch again with `packages=<crate>` and `filter=`.
-  The pre-flight's CI contracts job runs upstream's "Test CI, packaging, and SDK contracts"
-  (`just ci-automation-contracts`, `just/ci.just`): the `xtask` test binaries with
-  `--features automation-contracts`, among them `--test migration_lifecycle` (the tests of
-  `skippy/scripts/package-native-runtime.sh`). To repeat one test on `run.yml`, build the
-  fixtures first (`cargo build --locked -p xtask --bins --examples`) and set what the recipes set:
-  `MIGRATION_TEST_GIT` (else the cargo-metadata tests return early and pass vacuously) and, for
-  `--test swift_privacy_adapter`, `SPV_ADAPTER_FIXTURE=$PWD/target/debug/examples/swift_privacy_lint_fixture`
-  (else every test fails). Then:
-  `cargo test --locked -p xtask --features automation-contracts --test migration_lifecycle <filter> -- --test-threads=1`.
-  Its fixture hardcodes `/bin/bash` and `/usr/bin/true`; on NixOS run it under
-  `bwrap --dev-bind / / --ro-bind <dir with bash,sh> /bin --ro-bind <dir with true,env> /usr/bin`
-  (envfs doesn't satisfy it). The reverse also holds: envfs serves `/usr/bin/<tool>` from `PATH`,
-  so a hardcoded path that fails in the Nix sandbox passes on the workstation; reproduce with
-  `bwrap --dev-bind / / --tmpfs /usr/bin -- <test binary> <filter>`.
-- Pre-flight details (kleinbem/mesh-llm-ci, local clone `~/Develop/github.com/kleinbem/mesh-llm-ci`):
+  dependency (Cargo's rule). `packages=` is space-separated; a comma list fails "Validate
+  inputs" (#3134).
+- macOS code that spawns `ps` or `sysctl` passes on runners and fails in the Nix darwin sandbox;
+  prefer `libc` calls. For a process's identity use what the kernel recorded at exec
+  (`proc_pidinfo` `PROC_PIDT_SHORTBSDINFO` `pbsi_comm`, any account; `sysctl` `KERN_PROCARGS2`'s
+  exec path, same account), not `proc_pidpath`, which follows the file: a renamed executable
+  reports the new name, a deleted one `ENOENT` (#2673).
+- Pre-flight details:
   - A newer queued run cancels the waiting one (concurrency group).
-  - A `packages=` override sends those crates to the macOS and Windows rows too; crates that build
-    skippy-ffi fail on Windows there because upstream never tests them on Windows. Ignore that
-    row for such manual runs. `filter=` narrows the macOS/Windows test names.
-  - Both workflows take `packages=` space-separated (`'skippy-quantize skippy-correctness'`);
-    `clippy-diff.yml` rejects a comma list at "Validate inputs" (#3134).
-  - A `packages=` run doesn't prepare `.deps/llama.cpp`, so tests that read it fail on Linux
-    there (`skippy-quantize`'s `types::tests`, which read `quantize.cpp`); the planner run
-    passes them (#3134).
-  - The Ubuntu full xtask suite always shows 3 "requires just" failures and one rotating flaky
-    process test: environment, not regressions.
-  - To prove a test fails without the fix, push a no-fix branch and run the pre-flight with
-    `packages=`/`filter=`.
+  - To prove a test fails without the fix, push a no-fix branch and run the same script with a
+    `cargo test -p <crate> <filter>` line instead.
   - jj: pushing the working-copy commit to a `preflight-…` branch makes it immutable, and jj
     quietly starts a new empty `@`. Keep an empty `@` on top (`jj new <change>`) before pushing,
     rebase by change id (`jj rebase -r <change> -d main@origin`, `--ignore-immutable` once
     pushed), never `-r @`, and check the head's description before pushing the PR branch
-    (#2528: an empty head failed the commit-convention check).
+    (#2528 pushed an empty head).
   - Rebase a PR of several commits from its first one (`jj rebase -s <first change> -d
     main@origin`); `-s <bookmark>` moves only the commits from the bookmark on and leaves a
     conflict that deletes the file the first commit added (#2684).
 - Platforms: code under `cfg(unix)` also runs on macOS, and `cfg(not(unix))` on Windows. If a
   platform keeps the old path, say so in the PR with the reason and the equivalent (on #2444 a
   maintainer added the Windows variant himself).
-- When running Mesh-LLM's code in other CI, replicate upstream's platform rows first (runner
-  images, the repository's own `.github/actions`, features per platform, Rust version; read a
-  recent successful `main_*` run's job steps), then simplify only what is proven equivalent:
-  `dynamic-native-runtime` everywhere broke two Linux tests that expect the static runtime, and
-  Rust 1.99 failed Clippy on a deprecation upstream's 1.98 doesn't have. Upstream's Linux and
-  Clippy jobs need the private `ghcr.io/mesh-llm/mesh-llm-cuda-runner` image, so upstream's own
-  workflows can't run them on a fork.
+- When running Mesh-LLM's code in other CI, replicate upstream's jobs first (runner images,
+  `.github/actions/setup`, Rust version; read a recent `main` run of `ci.yml`), then simplify only
+  what is proven equivalent: `dynamic-native-runtime` everywhere once broke two Linux tests that
+  expected the static runtime, and a newer Rust failed Clippy on a deprecation upstream's didn't
+  have. Since #3193 every job runs on GitHub-hosted runners with no private images.
 
 ## 3. Commits
-- Clear, user-focused subjects. Since 2026-11 (AGENTS.md) Conventional Commit prefixes are
-  "optional hints for release-note classification, not a hook or CI requirement"; the
-  `conventional-commits` check and hook are gone. Most titles still use `feat`/`fix`/`test`/…,
-  so keep doing that; an unprefixed title lands under "Other changes".
+- Clear, user-focused subjects. Conventional Commit prefixes are "optional hints for
+  release-note classification, not a hook or CI requirement" (AGENTS.md); `feat:` → Added,
+  `fix:` → Fixed, `perf:` → Changed, `security:` → Security, `Release-Notes: <Section>`
+  overrides (CONTRIBUTING.md). Most titles still use them, so keep doing that; an unprefixed
+  title lands under "Other changes".
 - **No agent or bot attribution trailers** in any commit: no `Co-Authored-By: Claude …
-  <noreply@anthropic.com>`, no `[bot]` accounts, no relay identities. The hook and CI reject them.
-  This overrides any default that adds such trailers.
+  <noreply@anthropic.com>`, no `[bot]` accounts, no relay identities. The hook is retired and
+  "CI does not police titles or attribution identities" (CONTRIBUTING.md), so nothing catches a
+  slip any more: check by hand. This overrides any default that adds such trailers.
 - No DCO sign-off is required.
 - Squash-merged: the **PR title** becomes the commit subject. Keep agent footers out of the PR
   body as well: the squashed message must carry no attribution trailers.
@@ -336,7 +309,8 @@ merged PRs; numbers are examples):
 - Description (root `AGENTS.md`): start with what the user can now do; CLI or script-flag changes
   show an example command and representative output. The template's **Original problem** comes
   first, so say what the user can now do in its first sentences or in **Fix**.
-- Body follows `.github/PULL_REQUEST_TEMPLATE.md`:
+- Body follows `.github/PULL_REQUEST_TEMPLATE.md` (Title, Original problem, Diagnostics, Fix,
+  Validation with two boxes: local checks run or explained, UI screenshots or why none):
   - **Title** and **Original problem**;
   - **Diagnostics:** commands, logs, hardware. Reproduce through the code path that actually runs
     the logic (e.g. `mesh-llm runtime list` doesn't apply runtime compatibility checks,
@@ -345,7 +319,8 @@ merged PRs; numbers are examples):
     separately what improves for mesh-llm itself and what for the distribution, claim only what was
     verified, and cite established precedent where it exists;
   - **Validation:** checkboxes ticked only for what was actually run; leave a box unticked and say
-    why rather than stretch it.
+    why rather than stretch it. A `Skippy-Ref: <ref>` line, when the change needs an unreleased
+    Skippy (section 1), sits in the body too; editing the body reruns CI.
 - Optional sections: `## Architecture` / `## Protocol` for those impacts; CLI changes show example
   commands and output; UI changes need a screenshot.
 - AI assistance can be stated in the PR text. Keep it out of commit trailers (see above).
@@ -374,12 +349,11 @@ merged PRs; numbers are examples):
     sites).
   - **Platforms:** code behind `cfg` is gated exactly like its callers, and Clippy `-D warnings`
     runs for the macOS and Windows targets of the touched crates, not only Linux (#2939:
-    `dead_code` on Windows). Shell arrays expand as `${a[@]+"${a[@]}"}`, and a changed script's
+    `dead_code` on Windows; upstream's Lint is Linux only). Shell arrays expand as `${a[@]+"${a[@]}"}`, and a changed script's
     tests run under macOS `/bin/bash` 3.2 (#2303).
   - **Loopback HTTP clients** trust no CA roots, follow no redirects and ignore proxies, with a
-    test for each property (#2491, #2492, #2577). Mesh code gets one from
-    `mesh_llm_system::local_http::local_http_client_builder()`; Skippy code, which can't depend
-    on Mesh (section 0), builds its own with the same properties.
+    test for each property (#2491, #2492, #2577). Get one from
+    `mesh_llm_system::local_http::local_http_client_builder()`.
   - **No vacuous passes:** assert that the path under test ran, so a fallback (`None`, a skip,
     an early return) fails the test instead of satisfying it (#2720).
   - **Path and environment predicates:** before opening, write down the directory, symlink,
@@ -403,16 +377,29 @@ merged PRs; numbers are examples):
   before opening, not before ready: on #2690 it found two wrong numbers and a false doc claim.
 
 ## 5. CI on the pull request
-Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI work) and
-`.github/workflows/`.
-- Five required checks, one workflow each: Quality, Website, Linux, macOS, Windows. A planner
-  selects the work from the changed paths and crates; unselected lanes succeed without running.
-  A green `PR / macOS` or `PR / Windows` can hide a skipped platform job (`macOS=skipped` on
-  #2672 and #2683, `Windows=skipped` on #2681): a platform-specific change needs its own run on
-  that platform, named in Validation.
-  Quality runs `cargo fmt`, Clippy over the affected crates and their reverse
-  dependencies, CI contracts and consistency (incl. `no-console-print`, the env-mutation census) and
-  `cargo machete`; Linux runs the Rust tests of the affected crates and their reverse dependencies.
+Source: `.github/workflows/ci.yml`, `.github/AGENTS.md`, `.agents/skills/manage-ci/SKILL.md`.
+- Since #3193 one workflow, `ci.yml`, on GitHub-hosted runners (no Depot, no planner, no slices),
+  on `pull_request` (also `edited`, for `Skippy-Ref`), push to `main` and `workflow_dispatch`
+  (input `skippy_ref`). Every job runs on every PR:
+  - **Lint** (ubuntu-24.04): `just lint` = `cargo fmt --all -- --check`, `cargo clippy
+    --workspace --all-targets -- -D warnings`, ShellCheck and the `scripts/tests/` scripts
+    (`just/ci.just`);
+  - **Test** on ubuntu-24.04, macos-15 and windows-2022: `just test-rust --locked
+    --no-fail-fast` (`cargo test --workspace`, integration and doc tests included);
+  - **Console**: `just test-ui`; **Public website**: `scripts/ci-website.sh`;
+  - **Inference smoke (CPU)**, Linux: fetches the pinned Skippy CPU runtime
+    (`scripts/fetch-skippy-runtime.sh skippy-runtime cpu`, or builds the `Skippy-Ref` source),
+    `just mesh`, `just smoke`, a two-node mesh routing smoke with
+    `MESH_LLM_NATIVE_RUNTIME_BUNDLE_DIR`, `just test-with-runtime`;
+  - **CPU host smoke** on macos-15 and windows-2022 (`scripts/ci-cpu-host-smoke.py`).
+  Toolchain: current stable through `.github/actions/setup` (rustc 1.100.1 on 2026-11-28), no
+  `rust-toolchain.toml`, no `RUST_MIN_STACK`.
+- Required checks are still the five names `PR / Quality`, `Linux`, `macOS`, `Windows`,
+  `Website`; in `ci.yml` they are one aggregator job, and each passes only when every job above
+  passed. A red job anywhere turns all five red; read the failing job itself.
+- PR runs share a concurrency group per PR with `cancel-in-progress`: a new push cancels the old
+  run, which is not a failure of its own. Before diagnosing, confirm the run belongs to the
+  current head and really failed (root `AGENTS.md`, "Testing").
 - **Write access since 2026-11-01** (i386 gave Martin write access to Mesh-LLM/mesh-llm, so CI runs
   without approval; #2751):
   - New PR branches go to the upstream repository, named `kleinbem/<topic>` (others use their own
@@ -422,23 +409,20 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
     scratch branches upstream: they clutter the branch list and can start CI.
   - Write access is trust, not a shortcut: never push to `main` or to someone else's branch, never
     merge (maintainers do), no force-push on a PR under review beyond the usual rebase.
-  - A red lane that the change doesn't cause (a known flaky test): rerun only the failed jobs,
-    `gh run rerun <run-id> -R Mesh-LLM/mesh-llm --failed`, after checking the failure (root
-    `AGENTS.md`). With write access this also works on runs of the old fork PRs (#3018, 2026-11-12).
-    A recurring flake gets an issue with the cause and the affected runs (#3028).
+  - A red job that the change doesn't cause (a known flaky test): rerun only the failed jobs,
+    `gh run rerun <run-id> -R Mesh-LLM/mesh-llm --failed`, after checking the failure. A
+    recurring flake gets an issue with the cause and the affected runs (#3028).
   - The repository deletes merged head branches (`delete_branch_on_merge`); delete a
     `kleinbem/<topic>` branch yourself only when its PR is closed without merging.
 - Fork PRs (the ones opened before write access) wait in `action_required` until a maintainer
-  approves the run, and each new push can need approval again: push once the change is complete,
-  not in small steps. Runs left unapproved are closed as "failed" (zero jobs) when the PR merges;
-  those notification emails are harmless.
+  approves the run, and each new push can need approval again: push once the change is complete.
+  Runs left unapproved are closed as "failed" (zero jobs) when the PR merges; harmless.
+- An open PR from before #3193 still carries `skippy/`, `ci/` and `tools/xtask`: rebase it onto
+  current main before expecting the new CI to pass.
 - No self-imposed open-PR queue cap: open ready fixes upstream as soon as they pass pre-flight and
   review rather than holding them locally where they get lost when sessions close. Still group
   fixes by cause (one PR for a class of sandbox failures) rather than one PR per test
   (`nixpkgs-packaging` Phase 2).
-- The first failing job cancels the other lanes of the same revision; a cancelled lane is not a
-  failure of its own.
-- The `ci:canary` label is only for PRs that change CI.
 - CodeRabbit reviews every PR within minutes. Read its comments: fix what is sound, or reply with
   the reason; don't leave them unanswered. It tends to ask for backward compatibility with
   features that were never released; a maintainer said to take that with a grain of salt (#2132).
@@ -450,25 +434,17 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
   head (#2511, #2513, #2565); a P2 can come with "changes requested" (#2422, #2565), P3s are
   usually marked non-blocking. Answer each like a CodeRabbit comment: fix, or one line why not.
   He checks what CodeRabbit raises and the PR declines, and platform edge cases: Windows ACLs
-  (#2684), a running executable renamed or deleted (#2673).
-- A push keeps earlier approvals: main's ruleset has `dismiss_stale_reviews_on_push: false` and
-  `require_last_push_approval: false` (checked 2026-10-29; approvals survived force-pushes on
-  #2528, #2577 and #2605; it dismissed them in #2073 and #2257, so recheck with
-  `gh api repos/Mesh-LLM/mesh-llm/rules/branches/main`). On a fork PR each push still needs a
-  maintainer to approve the CI run again, so push only complete changes there, and don't touch a
-  PR that is approved and green just to rebase it. Upstream branches need no approval, but each
-  push still runs their CI: push complete changes there too.
+  (#2684), a running executable renamed or deleted (#2673). CODEOWNERS: `@i386 @ndizazzo
+  @michaelneale` by default, `/.github/` i386 and ndizazzo, `/mesh/` michaelneale and ndizazzo.
+- A push keeps earlier approvals: main's ruleset has `dismiss_stale_reviews_on_push: false`,
+  `require_last_push_approval: false` and `required_approving_review_count: 0` (checked
+  2026-11-28 with `gh api repos/Mesh-LLM/mesh-llm/rules/branches/main`). Each push still runs CI
+  (and on a fork PR needs approval again), so push only complete changes, and don't touch a PR
+  that is approved and green just to rebase it.
 - Keep "Allow edits by maintainers" on: maintainers fix PRs themselves, and on #2156 they had to
   ask for a cherry-pick because it was off.
 - `main` moves several times a day, so the rebase before every push (`upstream-contributing`)
   matters here more than anywhere.
-- The planner (`.github/actions/plan-ci`) requires a PR head's `ci/slices.yml` and
-  `ci/ownership.yml` to be byte-identical to main's. Every catalog change on main (e.g. #2449,
-  #2474) makes Plan fail on all older PRs ("source slice catalog differs from the protected planner
-  catalog"), even on approved ones, and only a rebase fixes it; check with
-  `git diff <head> origin/main -- ci/slices.yml ci/ownership.yml` before expecting CI to pass.
-  On fork PRs each push needs CI approval again, so rebase all affected PRs in one go, pre-flight
-  first.
 - Maintainers push commits to PR branches (#2444). Fetch the branch's remote (`origin` for an
   upstream branch, `fork` for an old fork PR) before any further push and build on its head;
   pushing a stale local bookmark would overwrite their work.
@@ -476,20 +452,20 @@ Source: `.agents/skills/manage-ci/SKILL.md` (read it completely before any CI wo
 ## Review checklist
 For the review before ready (`upstream-contributing`, section 6):
 - **No agent attribution anywhere**: no trailers in commits, no agent footer in the PR body
-  (section 3).
+  (section 3); no CI catches it now.
 - Title and commits are clear and user-focused; a conventional prefix is optional (AGENTS.md).
-- No new platform `cfg` in a crate missing from
-  `tools/xtask/tests/ci_runner_cache_contract/windows_composition/cfg_census.rs` (the contracts
-  reject it; #3134's executable check had to go for `skippy-correctness`).
 - The repository's patterns (section 1): settings vs env overrides and their tripwires, file size
-  rule, atomic persisted state, additive protocol changes, Skippy patch ownership and ABI,
-  gate tests that prove the gated work doesn't happen, docs following code.
+  rule, atomic persisted state, additive protocol changes, gate tests that prove the gated work
+  doesn't happen, docs following code (`mesh/docs/` and the website pages), SDK parity.
+- Nothing Skippy-side added here (source, patches, runtime builds, Skippy tests; root
+  `AGENTS.md`); a needed Skippy change is its own PR in Mesh-LLM/skippy, tested via `Skippy-Ref`.
 - Claims: test counts and behaviour in the body reproduce at the head commit.
 - Template sections filled (Original problem, Diagnostics naming the introducing PR, Fix,
   Validation with only run boxes ticked); no `TODO` left.
-- The "right before opening" list in section 4, and the pre-flight on the exact head.
+- The "right before opening" list in section 4, and the pre-flight (`run.yml`, not the stale
+  `check.yml`) on the exact head.
 - The independent reviewer's brief asks about sibling sites, `cfg` gating per platform, the
   code's invariants, the repo's own rules and the rules of any program a value is passed on to,
   not only whether the change works.
-- `ci/slices.yml` and `ci/ownership.yml` identical to main's (section 5).
-- New or changed tests pass the clean-build-environment list (section 1).
+- New or changed tests pass the clean-build-environment list (root `AGENTS.md`, section 1) and
+  the full `cargo test -p` of the touched crates, not only `--lib`.
