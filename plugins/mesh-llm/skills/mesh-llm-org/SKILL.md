@@ -10,13 +10,15 @@ disable-model-invocation: true
 Layer 2 of 3: read after `upstream-contributing`, before the repository skill; the repository
 skill wins where they differ. Sources: `Mesh-LLM/mesh-llm` (`CONTRIBUTING.md`, `AGENTS.md`,
 `SECURITY.md`), `Mesh-LLM/mesh-packaging` (`AGENTS.md`); the org's `.github` repo holds only its
-profile. As of 2026-11-03; plugin repos 2026-11-18.
+profile. As of 2026-11-03; plugin repos 2026-11-18; mesh-llm/Skippy split and SDKs 2026-11-28.
 
 ## 0. Attribution
 
-**No agent or bot attribution trailers** in commits or the squashed PR message (mesh-llm's hook
-and CI reject `Co-Authored-By: Claude …`, `[bot]` accounts and relay identities). AI help may be
-stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says otherwise.
+**No agent or bot attribution trailers** in commits or the squashed PR message: no
+`Co-Authored-By: Claude …`, `[bot]` accounts or relay identities. mesh-llm's hook and CI check
+are retired (its `CONTRIBUTING.md`: "CI does not police titles or attribution identities"), but
+the rule stands, so check by hand. AI help may be stated in the PR text. Assume the same for
+every Mesh-LLM repo until a repo says otherwise.
 
 ## 1. Org-wide facts
 
@@ -32,7 +34,8 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 - **How the repos relate:** `mesh-llm` is the product host and moves several times a day. Skippy
   (the inference runtime, CLI, and `llama.cpp` patch queue) now lives in its own public repository
   `Mesh-LLM/skippy` (transferred in `Mesh-LLM/skippy#108`, consumed externally by `mesh-llm` in
-  `Mesh-LLM/mesh-llm#3193`). Skippy pins an upstream `ggml-org/llama.cpp` commit in
+  `Mesh-LLM/mesh-llm#3193`, merged 2026-11-28): mesh-llm pins Skippy's crates.io release exactly
+  and downloads its published runtime, with no Skippy source left in the tree. Skippy pins an upstream `ggml-org/llama.cpp` commit in
   `llama_cpp/upstream.txt` and applies its own patch queue; the `Mesh-LLM/llama.cpp` fork
   holds experiment branches (last pushed 2026-08-30) and is not where fixes go. `mesh-packaging`
   owns distribution (Docker images, native packages, Homebrew via `homebrew-tap`); its scripts are
@@ -41,8 +44,9 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
   `Mesh-LLM/capsules-plugin`), most on the `Mesh-LLM/example-plugin` CI standard; they depend
   on `mesh-llm-plugin` by git rev, since crates.io stops at 0.78.1. Releases up to 0.78 bundled
   default plugins under `plugins/` (#2546, #2520); #2977 stopped that for 0.79, and users get
-  them from the Hugging Face catalog `meshllm/plugin-catalog`. The Python SDK lives in `Mesh-LLM/mesh-llm-python-sdk`; a public
-  SDK change in mesh-llm needs a companion PR there (mesh-llm `AGENTS.md`, #2703).
+  them from the Hugging Face catalog `meshllm/plugin-catalog`. All five SDKs, Python included
+  (`mesh/sdk/python`), are maintained inside mesh-llm (its `AGENTS.md`, "SDK parity invariant");
+  `Mesh-LLM/mesh-llm-python-sdk` was last pushed 2026-11-13.
 - **No DCO sign-off** except in capsules-plugin (`dco` check); Conventional Commits; CodeRabbit reviews mesh-llm PRs and expects answers.
 
 ## 2. Repositories
@@ -52,7 +56,7 @@ stated in the PR text. Assume the same for every Mesh-LLM repo until a repo says
 | Mesh-LLM/mesh-llm | `mesh-llm-contributing` | Martin has write access since 2026-11-01 (PR branches upstream, `kleinbem/<topic>`); pre-flight CI in kleinbem/mesh-llm-ci |
 | Mesh-LLM/skippy | `skippy-contributing` | Skippy inference runtime, CLI, `llama.cpp` patch queue; public fork PRs need workflow approval and must pass the `PR checks` acceptance-criteria gate |
 | Mesh-LLM/mesh-packaging | `mesh-packaging-contributing` | repackages release archives only (deb, Arch, OCI, Homebrew, npm); bundle contents are fixed in mesh-llm |
-| Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK, versioned separately; every other tracked file pinned in `sdk-inputs.json`; companion PRs for SDK changes |
+| Mesh-LLM/mesh-llm-python-sdk | `mesh-llm-python-sdk-contributing` | Python SDK and compatibility clients; mesh-llm now keeps its Python SDK in-tree (`mesh/sdk/python`), so check this repo's role before a PR |
 | Mesh-LLM/capsules-plugin | `capsules-plugin-contributing` | the capsules plugin; run by Ethan Zhang's agent through issue claims; DCO required |
 | Mesh-LLM/openai-endpoint-plugin | `openai-endpoint-plugin-contributing` | attaches an external OpenAI-compatible server; small, few PRs |
 | Mesh-LLM/homebrew-tap, mesh-app, the llama.cpp fork, the other `*-plugin` repos | none yet | |

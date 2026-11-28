@@ -41,9 +41,10 @@ and no `CODEOWNERS`. As of 2026-11-17: 46 PRs, nearly all from `ndizazzo` (agent
 
 ## 1. Before starting
 
-- Search here and in Mesh-LLM/mesh-llm: bundle contents (file modes, duplicate libraries,
-  licenses, the `tools/` binary, glibc floor) are produced by mesh-llm's
-  `skippy/scripts/package-native-runtime.sh` and release workflow, and get fixed there. Only
+- Search here, in Mesh-LLM/mesh-llm and in Mesh-LLM/skippy: bundle contents (file modes, duplicate libraries,
+  licenses, the `tools/` binary, glibc floor) are produced upstream and get fixed there: the
+  runtime by Mesh-LLM/skippy's `scripts/package-native-runtime.sh` (in mesh-llm until
+  Mesh-LLM/mesh-llm#3193), the host archive by mesh-llm's `release.yml`. Only
   what this repo adds (layout, metadata, dependencies, QA, images, formula) is fixed here.
 - The product-v2 schema exists twice (`schemas/product-v2.schema.json` here and in mesh-llm)
   and the release plan byte-compares them at the upstream commit. A contract change is a

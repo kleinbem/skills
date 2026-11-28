@@ -3,11 +3,15 @@
 Facts a distribution package (nixpkgs) depends on. Verified at upstream `main` 3c8fb75a45fd
 (2026-10-27, between v0.78.1 and 0.79.0), from the source and with the nixpkgs build of that commit
 (NixOS/nixpkgs#571722's bump). Paths move often: grep the names before trusting a path.
+Since #3193 (2026-11-28) Skippy is its own repository, Mesh-LLM/skippy: the Skippy paths below
+are now relative to that repository, and mesh-llm uses Skippy's crates.io release (pinned exactly
+in the root `Cargo.toml`) and the runtime that release publishes.
 
 ## Products
 
-- One repository, one Cargo workspace, one version and release tag: `mesh/` (MeshLLM) and `skippy/`
-  (Skippy). Mesh depends on Skippy (`mesh-llm-host-runtime` uses Skippy crates), never the reverse.
+- Two repositories since #3193: Mesh-LLM/mesh-llm (`mesh/`, MeshLLM) and Mesh-LLM/skippy, each
+  with its own version and release. Mesh depends on Skippy (`mesh-llm-host-runtime` uses Skippy
+  crates), never the reverse; `scripts/skippy-pin.sh` names the Skippy commit matching the pin.
 - Release binaries: `mesh-llm` (crate `mesh-llm`, default features `web-ui`, `dynamic-native-runtime`,
   `payments`, the same set `mesh/scripts/build-host.sh` uses) and `skippy` (crate `skippy-cli`,
   built with `--features dynamic-native-runtime`, which is not a default feature).
@@ -18,23 +22,25 @@ Facts a distribution package (nixpkgs) depends on. Verified at upstream `main` 3
 
 ## Build
 
-- The llama.cpp pin is in `skippy/llama_cpp/upstream.txt` (was `third_party/llama.cpp/` until 0.78)
-  plus a patch queue applied with `git am`; nixpkgs resolves the `bNNNNN` tag for the pin.
-- `skippy/scripts/package-native-runtime.sh` builds a bundle; for distributions:
+- The llama.cpp pin is in Skippy's `llama_cpp/upstream.txt` (was `third_party/llama.cpp/` until
+  0.78) plus a patch queue applied with `git am`; nixpkgs resolves the `bNNNNN` tag for the pin.
+- Skippy's `scripts/package-native-runtime.sh` builds a bundle; for distributions:
   `--keep-runpath`, `--no-model-package-tool` (#2392), `--id-suffix` (#2526);
   `MESH_LLM_NATIVE_RUNTIME_RANK` sets the bundle's rank. It always also writes a release archive
   (no flag to skip it).
-- The packaging and CI tooling is Rust (`tools/xtask`, `cargo xtool …`), no Python.
+- mesh-llm's packaging and CI tooling is `just` recipes and `scripts/` (`tools/xtask` removed in
+  #3193). `just build` downloads the pinned Skippy runtime unless `MESH_LLM_RUNTIME_FROM_SOURCE=1`
+  or the release has no package for the machine.
 - Build scripts honour `PROTOC` (#2448). The repo's `.cargo/config.toml` routes builds through
   sccache and its own linker drivers: remove it in a sandboxed build.
 
 ## Native runtime
 
-- Owned by Skippy: crate `skippy-native-runtime`, design in `skippy/docs/design/NATIVE_RUNTIMES.md`.
+- Owned by Skippy: crate `skippy-native-runtime`, design in Skippy's `docs/design/NATIVE_RUNTIMES.md`.
   Both `mesh-llm` and `skippy` load it.
-- Manifests need `schema_version: 2`; `runtime.release_version` comes from
-  `skippy/crates/skippy-native-runtime/RUNTIME_VERSION` (own version, not the product version), and
-  loading needs an exact `skippy_abi` match.
+- Manifests need `schema_version: 2`; `runtime.release_version` is Skippy's runtime version, not
+  MeshLLM's (it came from `skippy/crates/skippy-native-runtime/RUNTIME_VERSION` before the split),
+  and loading needs an exact `skippy_abi` match.
 - Bundle search: explicit dirs, `MESH_LLM_NATIVE_RUNTIME_BUNDLE_DIR` (path list), next to the
   executable, `<prefix>/lib/mesh-llm/<version>/native-runtimes`, Homebrew, user cache
   (`MESH_LLM_NATIVE_RUNTIME_CACHE_DIR`, default `~/.cache/mesh-llm/native-runtimes`), download.
@@ -45,7 +51,7 @@ Facts a distribution package (nixpkgs) depends on. Verified at upstream `main` 3
 - CUDA bundles are accepted only when a CUDA toolkit is detected on the host (ldconfig,
   `LD_LIBRARY_PATH`, `/usr/local/cuda*`, `resolver.rs` `CudaToolkitNotDetected`). A bundle that
   reaches CUDA through its runpath needs `MESH_LLM_CUDA_TOOLKIT_MAJOR` (documented override in
-  `skippy/crates/skippy-native-runtime/README.md`).
+  Skippy's `crates/skippy-native-runtime/README.md`).
 - glibc is read from the running process (`gnu_get_libc_version`, #2438).
 
 ## Logs and state (checked with the built binary)
@@ -93,13 +99,13 @@ with a module (NixOS `services.mesh-llm`) don't need it.
 
 ## Tests
 
-- Upstream CI runs `cargo test` in the dev profile; the macOS lane runs `--lib` only, Linux the
-  affected crates in full. In a sandbox: terminal width (#2605), runtime loading in tests (#2629),
+- Upstream CI runs `cargo test --workspace` in the dev profile on Linux, macOS and Windows
+  (since #3193; before, macOS ran `--lib` only and Linux the affected crates). In a sandbox: terminal width (#2605), runtime loading in tests (#2629),
   the bundle-dir env leak (#2630), timing tests; on darwin, iroh needs ICU
   (`sandboxProfile` allowing `/usr/share/icu`) and Metal can't create a command queue
   (`GGML_METAL_DEVICES=0`).
-- `cargo test --workspace` unifies features, so `skippy-package-builder` is built with the dynamic
-  runtime there and its binary can't load one: `tests/local_inspect.rs` fails. That's a workspace
+- In Skippy's workspace (since #3193), `cargo test --workspace` unifies features, so
+  `skippy-package-builder` is built with the dynamic runtime there and its binary can't load one: `tests/local_inspect.rs` fails. That's a workspace
   test artifact, not a user bug (the binary isn't shipped); skip that test, not the crate.
   `successful_artifact_hook_may_leave_verified_copies_for_rechecking` hardcodes `/usr/bin/true`.
 - `lock_cost::concurrent_commit_calls_stay_within_the_ingress_budget` asserts only in release
